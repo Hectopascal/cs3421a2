@@ -112,13 +112,19 @@ public class Terrain {
      * 
      * TO BE COMPLETED
      * 
+     * Uses Bilinear Interpolation
+     * 
      * @param x
      * @param z
      * @return
      */
     public double altitude(double x, double z) {
         double altitude = 0;
-        
+        int xInt = (int) x;
+        int zInt = (int) z;
+        if(xInt == x && zInt == z) {
+        	altitude = getGridAltitude(xInt, zInt);
+        }
         
         
         return altitude;
