@@ -113,6 +113,8 @@ public class Terrain {
      * TO BE COMPLETED
      * 
      * Uses Bilinear Interpolation
+     * Reference: http://supercomputingblog.com/graphics/coding-bilinear-interpolation/
+     * 
      * 
      * @param x
      * @param z
@@ -125,8 +127,22 @@ public class Terrain {
         if(xInt == x && zInt == z) {
         	altitude = getGridAltitude(xInt, zInt);
         }
-        
-        
+        else {
+	        int x1 = (int) Math.floor(x);
+	        int x2 = (int) Math.ceil(x);
+	        int z1 = (int) Math.floor(z);
+	        int z2 = (int) Math.ceil(z);
+	        
+	        double r1 = (((x2 - x) / (x2 - x1)) * getGridAltitude(x1, z1));
+	        r1 += (((x - x1) / (x2 - x1)) * getGridAltitude(x2, z1));
+	        double r2 = (((x2 - x) / (x2 - x1)) * getGridAltitude(x1, z2));
+	        r2 += (((x - x1) / (x2 - x1)) * getGridAltitude(x2, z2));
+	        
+	        double p = (((z2 - z) / (z2 - z1)) * r1);
+	        p += (((z - z1) / (z2 - z1)) * r2);
+	        
+	        altitude = p;
+        }
         return altitude;
     }
 
