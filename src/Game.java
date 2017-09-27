@@ -58,19 +58,28 @@ public class Game extends JFrame implements GLEventListener{
 	@Override
 	public void display(GLAutoDrawable drawable) {
 		// TODO Auto-generated method stub
-		
+    	GL2 gl = drawable.getGL().getGL2();
+
+    	gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+    	
+    	gl.glMatrixMode(GL2.GL_MODELVIEW);
+        gl.glLoadIdentity();
+       
+    	this.myTerrain.drawGame(gl);
+    	gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);
 	}
 
 	@Override
 	public void dispose(GLAutoDrawable drawable) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
+	//Probably incomplete
 	public void init(GLAutoDrawable drawable) {
-		// TODO Auto-generated method stub
-		
+    	GL2 gl = drawable.getGL().getGL2();
+    	gl.glEnable(GL2.GL_DEPTH_TEST);
+    	gl.glEnable(GL2.GL_CULL_FACE);
+    	gl.glCullFace(GL2.GL_BACK);
 	}
 
 	@Override

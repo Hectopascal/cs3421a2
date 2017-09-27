@@ -2,6 +2,8 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jogamp.opengl.GL2;
+
 
 
 /**
@@ -146,6 +148,20 @@ public class Terrain {
         return altitude;
     }
 
+    public void drawGame(GL2 gl) {
+    	draw(gl);
+    	for(Tree t : this.myTrees) {
+    		t.draw(gl);
+    	}
+    	for(Road r : this.myRoads) {
+    		r.draw(gl);
+    	}
+    }
+    
+    public void draw(GL2 gl) {
+    	//TODO
+    }
+    
     /**
      * Add a tree at the specified (x,z) point. 
      * The tree's y coordinate is calculated from the altitude of the terrain at that point.
