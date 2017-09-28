@@ -187,45 +187,46 @@ public class Terrain {
 		            		y2 = 1-(2*(j))/(height-1);
 			            	  
 		            	} else {
-		            		/* A(x1,y1)	 B new (x1,y1)
+		            		/* A(x1,y1)	 B (x2,y2)
 		            		 * 	 o_______o
 		            		 *   |\		|
 		            		 *   | \	|
 		            		 *   |  \	|
 		            		 *   |    \	|
 		            		 *  o|_____\|o
-		            		 * C (x2,y2)  D new (x2,y2)
+		            		 * C new(x1,y1)  D new(x2,y2)
 		            		 * 
 		            		 * Drawing in counterclockwise, 
 		            		 * B->A->D, D->A->C
 		            		 */
 		            		
-		            		//Draw bottom left triangle
+		            		//Draw top right triangle
 			            	System.out.println("Triangle 1");
 
-		            		gl.glVertex3f(x2,y2,(float)myAltitude[(int)i+1][(int)j-1]);
-		            		gl.glVertex3f(x1,y1,(float)myAltitude[(int)i][(int)j-1]);
+		            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j-1]/2-1,y2);
+		            		gl.glVertex3f(x1,(float)myAltitude[(int)i][(int)j-1]/2-1,y1);
 
 			            	System.out.print("("+x1+","+y1+") "+"("+x2+","+y2+") ");
 			            	
 		            		x2 = (2*(i+1))/(width-1)-1;
 		            		y2 = 1-(2*(j))/(height-1);
 		            		System.out.println("("+x2+","+y2+") ");
-		            		gl.glVertex3f(x2,y2,(float)myAltitude[(int)i+1][(int)j]);
+		            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j]/2-1,y2);
 		            		
 		            		
-		            		//Draw top right triangle
+		            		//Draw bottom triangle
+		            		gl.glColor3f(1-(i+0.5f)/width, (i+0.5f)/width,(j+0.5f)/height);
 		            		System.out.println("Triangle 2");
 
-		            		gl.glVertex3f(x2,y2,(float)myAltitude[(int)i+1][(int)j]);
-		            		gl.glVertex3f(x1,y1,(float)myAltitude[(int)i][(int)j-1]);
+		            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j]/2-1,y2);
+		            		gl.glVertex3f(x1,(float)myAltitude[(int)i][(int)j-1]/2-1,y1);
 
 			            	System.out.print("("+x1+","+y1+") "+"("+x2+","+y2+") ");
 		            		x1 = (2*i)/(width-1)-1;
 		            		y1 =1-(2*j)/(height-1);
 
 		            		System.out.println("("+x1+","+y1+") ");
-		            		gl.glVertex3f(x1,y1,(float)myAltitude[(int)i][(int)j]);
+		            		gl.glVertex3f(x1,(float)myAltitude[(int)i][(int)j]/2-1,y1);
 		            		
 		            	}
 		            	
