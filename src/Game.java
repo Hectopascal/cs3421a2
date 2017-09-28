@@ -59,7 +59,7 @@ public class Game extends JFrame implements GLEventListener{
 	public void display(GLAutoDrawable drawable) {
 		// TODO Auto-generated method stub
     	GL2 gl = drawable.getGL().getGL2();
-
+    	gl.glEnable(GL2.GL_DEPTH_TEST);
     	gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
     	
     	gl.glMatrixMode(GL2.GL_MODELVIEW);

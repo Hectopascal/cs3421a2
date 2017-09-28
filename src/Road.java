@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jogamp.opengl.GL2;
+
 /**
  * COMMENT: Comment Road 
  *
@@ -143,6 +145,11 @@ public class Road {
         // this should never happen
         throw new IllegalArgumentException("" + i);
     }
+
+	public void draw(GL2 gl) {
+		// TODO Auto-generated method stub
+		
+	}
 
 
 }
