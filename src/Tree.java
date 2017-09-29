@@ -21,7 +21,7 @@ public class Tree {
     }
     
     public void draw(GL2 gl) {
-    	//TODO
+
     }
 
 }

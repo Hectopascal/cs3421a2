@@ -2,8 +2,8 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
-
 
 
 /**
@@ -159,7 +159,88 @@ public class Terrain {
     }
     
     public void draw(GL2 gl) {
-    	//TODO
+    	 gl.glMatrixMode(GL2.GL_MODELVIEW);
+         gl.glPushMatrix();
+         float width = mySize.width;
+         float height = mySize.height;
+         float i,j; 
+         float x1=0;
+         float y1=0;
+         float x2=0;
+         float y2=0;
+         
+            for (i = 0; i < width-1; i+=1.0) {
+	        	 
+	        	 gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
+	        	 System.out.println("CURRENT I IS "+i);
+	        	 gl.glPolygonOffset(0.5f, 0.5f);
+	        	 gl.glBegin(GL2.GL_TRIANGLES);
+	        	 	
+		            for ( j = 0; j < height; j+=1.0) {
+		            	System.out.println("CURRENT J IS "+j);
+		            	gl.glColor3f(1-i/width, i/width,j/height);
+		            	
+		            	if(j==0) {
+		            		x1 = (2*i)/(width-1)-1;
+		            		y1 =1-(2*j)/(height-1);
+		            		x2 = (2*(i+1))/(width-1)-1;
+		            		y2 = 1-(2*(j))/(height-1);
+			            	  
+		            	} else {
+		            		/* A(x1,y1)	 B (x2,y2)
+		            		 * 	 o_______o
+		            		 *   |\		|
+		            		 *   | \	|
+		            		 *   |  \	|
+		            		 *   |    \	|
+		            		 *  o|_____\|o
+		            		 * C new(x1,y1)  D new(x2,y2)
+		            		 * 
+		            		 * Drawing in counterclockwise, 
+		            		 * B->A->D, D->A->C
+		            		 */
+		            		
+		            		//Draw top right triangle
+			            	System.out.println("Triangle 1");
+
+		            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j-1]/2-1,y2);
+		            		gl.glVertex3f(x1,(float)myAltitude[(int)i][(int)j-1]/2-1,y1);
+
+			            	System.out.print("("+x1+","+y1+") "+"("+x2+","+y2+") ");
+			            	
+		            		x2 = (2*(i+1))/(width-1)-1;
+		            		y2 = 1-(2*(j))/(height-1);
+		            		System.out.println("("+x2+","+y2+") ");
+		            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j]/2-1,y2);
+		            		
+		            		
+		            		//Draw bottom triangle
+		            		gl.glColor3f(1-(i+0.5f)/width, (i+0.5f)/width,(j+0.5f)/height);
+		            		System.out.println("Triangle 2");
+
+		            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j]/2-1,y2);
+		            		gl.glVertex3f(x1,(float)myAltitude[(int)i][(int)j-1]/2-1,y1);
+
+			            	System.out.print("("+x1+","+y1+") "+"("+x2+","+y2+") ");
+		            		x1 = (2*i)/(width-1)-1;
+		            		y1 =1-(2*j)/(height-1);
+
+		            		System.out.println("("+x1+","+y1+") ");
+		            		gl.glVertex3f(x1,(float)myAltitude[(int)i][(int)j]/2-1,y1);
+		            		
+		            	}
+		            	
+		            	
+		            	
+		             }
+		             
+                 gl.glEnd();
+                 
+	         }
+	        
+         gl.glPopMatrix();
+         gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);
+     	
     }
     
     /**
