@@ -112,7 +112,7 @@ public class MathUtil {
      * suppose our v is type of object have x,y,z
      * if array use v[0],v[1],v[2] instead
      */
-    public static double[][] translationMatrix(type v) {
+    public static double[][] translationMatrix(Coord v) {
         double[][] resultMatrix = new double[4][4];
         resultMatrix[0] = new double[] {1,0,0,v.x};
         resultMatrix[1] = new double[] {0,1,0,v.y};

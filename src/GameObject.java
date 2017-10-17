@@ -4,16 +4,18 @@ public class GameObject {
     public  ArrayList<GameObject> all_object = new ArrayList<GameObject>();
     public static final GameObject ROOT = new GameObject(null);
 
-    public type getRotation(){
+    public Coord getRotation(){
         // need type and implementation
-
+        return null;
     }
 
-    public type getPosition(){
+    public Coord getPosition(){
         // need type and implementation
+        return null;
     }
 
-    public type getScale(){
+    public Coord getScale(){
         // need type and implementation
+        return null;
     }
 }

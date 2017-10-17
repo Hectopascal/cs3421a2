@@ -59,14 +59,18 @@ public class Camera extends GameObject {
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         //  2. set the view matrix to account for the camera's position         
         gl.glLoadIdentity();
-        int size = (int)this.getScale();
-
+        //int size = (int)this.getScale();
+        Coord Translated = getPosition();
+        Coord Rotate = getRotation();
+        Coord Scale = getScale();
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
         // apply the view transform
-        gl.glScaled(1.0 /size,1.0/size,1);
-        gl.glRotated(-this.getRotation(), 0, 0, 1);
-        gl.glTranslated(-this.getPosition()[0], -this.getPosition()[1], 0);
+        gl.glScaled(1.0 /Scale.x,1.0/Scale.y,1/Scale.z);
+        gl.glRotated(-Rotate.x, 1.0, 0.0, 0.0);
+        gl.glRotated(-Rotate.y, 0.0, 1.0, 0.0);
+        gl.glRotated(-Rotate.z, 0.0, 0.0, 1.0);
+        gl.glTranslated(-Translated.x, -Translated.y, -Translated.z);
 
     }
 
