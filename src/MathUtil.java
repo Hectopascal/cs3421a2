@@ -222,4 +222,8 @@ public class MathUtil {
         resultMatrix[3] = new double[] {0,0,0,1};
         return resultMatrix;
     }
+
+    public static Coord translationVector(double[][] matrix){
+        return new Coord(matrix[0][3],matrix[1][3],matrix[2][3]);
+    }
 }
