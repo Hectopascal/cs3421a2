@@ -45,6 +45,10 @@ public class GameObject {
     // some helper?
     public Coord getRotation(){
         // need type and implementation
+    }
+
+    public Coord getPosition(){
+        // a vector was returned 
         Coord parentPosition;
         Coord parentRotation;
         Coord parentScale;
@@ -59,18 +63,15 @@ public class GameObject {
         }
         Coord copy = GlobalPosition;
         double [][] localMatrix = MathUtil.translationMatrix4(copy);
-        double [][] parentMatrix = MathUtil.rotationMatrixXYZ(parentPosition);
-        double [][] RTmatrix = MathUtil.multiply4(parentMatrix,localMatrix);
+        double [][] parentRotateMatrix = MathUtil.rotationMatrixXYZ(parentRotation);
+        double [][] RTmatrix = MathUtil.multiply4(parentRotateMatrix,localMatrix);
 
         Coord intermidateV = MathUtil.translationVector(RTmatrix);
-        // intermidateV need a power 
-        //intermidateV.
-        return null;
-    }
+        // intermidateV need a power
+        intermidateV.multiplySelfAndScale(parentScale);
 
-    public Coord getPosition(){
-        // need type and implementation
-        return null;
+        Coord result = intermidateV.add(parentPosition);
+        return result;
     }
 
     public Coord getScale(){
