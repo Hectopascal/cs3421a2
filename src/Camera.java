@@ -14,10 +14,11 @@ import com.jogamp.opengl.glu.GLU;
 public class Camera extends GameObject {
 
     private float[] myBackground;
+    public double farPlane;
 
     public Camera(GameObject parent) {
         super(parent);
-
+        farPlane = 1000.0;
         myBackground = new float[4];
     }
 
@@ -43,7 +44,19 @@ public class Camera extends GameObject {
         
         gl.glClearColor(myBackground[0],myBackground[1],myBackground[2],myBackground[3]);
         //  1. clear the view to the background colour
-        
+        gl.glClearStencil(0x00);
+        gl.glEnable(GL2.GL_CULL_FACE);
+        gl.glEnable(GL2.GL_DEPTH_TEST);
+        gl.glEnable(GL2.GL_STENCIL_TEST);
+        gl.glColorMask(true,true,true,true);
+        gl.glDepthMask(true);
+        gl.glClearDepth(farPlane);
+        gl.glStencilMask(0x00);
+        gl.glStencilFunc(GL2.GL_EQUAL, 0x00, 0x00);
+        gl.glStencilOp(GL2.GL_KEEP, GL2.GL_KEEP, GL2.GL_KEEP);
+        gl.glClear(GL2.GL_STENCIL_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT | GL2.GL_COLOR_BUFFER_BIT);
+
+        gl.glMatrixMode(GL2.GL_MODELVIEW);
         //  2. set the view matrix to account for the camera's position         
         gl.glLoadIdentity();
         int size = (int)this.getScale();
