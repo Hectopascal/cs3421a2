@@ -1,6 +1,11 @@
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.glu.GLU;
 
 /**
@@ -11,7 +16,7 @@ import com.jogamp.opengl.glu.GLU;
  *
  * @author malcolmr
  */
-public class Camera extends GameObject {
+public class Camera extends GameObject implements GLEventListener, KeyListener {
 
     private float[] myBackground;
     public double farPlane;
@@ -102,4 +107,91 @@ public class Camera extends GameObject {
         // coordinate system (left, right, bottom, top)
         myGLU.gluOrtho2D(left, right, bottom, top);                
     }
+
+    
+    
+    
+    /*------------------------------------*
+     * KEY LISTENER FUNCTIONS			  *
+     * -----------------------------------*/
+     
+    
+	@Override
+	public void keyPressed(KeyEvent e) {
+		
+	    switch (e.getKeyCode()) {
+		  
+		    case KeyEvent.VK_UP:
+		    	//move forwards
+				break;
+		    case KeyEvent.VK_DOWN:
+			    //move backwards
+			    break;	
+		    case KeyEvent.VK_LEFT:
+		    	//rotate camera left
+		    	break;
+		    	
+		    case KeyEvent.VK_RIGHT:
+		    	//rotate camera right
+		    	break;
+		    default:
+			    break;
+		 }
+		 System.out.println(e.getKeyCode());
+		
+	}
+
+	@Override
+	public void display(GLAutoDrawable arg0) {
+    	GL2 gl = arg0.getGL().getGL2();
+
+    	gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+    	
+    	gl.glMatrixMode(GL2.GL_MODELVIEW);
+        gl.glLoadIdentity();
+        
+        //DO STUFF TO CHANGE CAMERAS?????????????
+        
+	}
+
+	
+
+	@Override
+	public void init(GLAutoDrawable arg0) {
+		GL2 gl2 = arg0.getGL().getGL2();
+		setView(gl2);
+    	gl2.glEnable(GL2.GL_DEPTH_TEST);
+		
+	}
+
+	@Override
+	public void reshape(GLAutoDrawable arg0, int arg1, int arg2, int arg3, int arg4) {
+		GL2 gl = arg0.getGL().getGL2();
+	    
+        gl.glMatrixMode(GL2.GL_PROJECTION);
+        gl.glLoadIdentity();
+
+    	gl.glFrustum(-2,2,-2,2,1,8);
+     
+	}
+	
+	//-------------------- Functions that can be left empty (?)
+	
+	@Override
+	public void dispose(GLAutoDrawable arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

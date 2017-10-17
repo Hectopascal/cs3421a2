@@ -108,9 +108,9 @@ public class LevelIO {
         JSONArray trees = new JSONArray();
         for (Tree t : terrain.trees()) {
             JSONObject j = new JSONObject();
-            double[] position = t.getPosition();
-            j.put("x", position[0]);
-            j.put("z", position[2]);
+            Coord position = t.getPosition();
+            j.put("x", position.x);
+            j.put("z", position.z);
             trees.put(j);
         }
         json.put("trees", trees);

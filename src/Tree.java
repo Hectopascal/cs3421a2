@@ -7,18 +7,19 @@ import com.jogamp.opengl.util.gl2.GLUT;
  *
  * @author malcolmr
  */
-public class Tree {
+public class Tree extends GameObject {
 
-    private double[] myPos;
+    private Coord myPos;
     
-    public Tree(double x, double y, double z) {
-        myPos = new double[3];
-        myPos[0] = x;
-        myPos[1] = y;
-        myPos[2] = z;
+    public Tree(double x, double y, double z, GameObject parent) {
+    	super(parent);
+        myPos = new Coord(x,y,z);
     }
-    
-    public double[] getPosition() {
+    public Tree(Coord coords, GameObject parent) {
+    	super(parent);
+    	myPos = coords;
+    }
+    public Coord getPosition() {
         return myPos;
     }
     
@@ -26,7 +27,7 @@ public class Tree {
         GLUT glut = new GLUT();
         GLU glu = new GLU();
         gl.glPushMatrix();
-        gl.glTranslated(myPos[0],myPos[1],myPos[2]);
+        gl.glTranslated(myPos.x,myPos.y,myPos.z);
 
     }
 

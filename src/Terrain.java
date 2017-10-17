@@ -11,7 +11,7 @@ import com.jogamp.opengl.GL2;
  *
  * @author malcolmr
  */
-public class Terrain {
+public class Terrain extends GameObject{
 
     private Dimension mySize;
     private double[][] myAltitude;
@@ -25,7 +25,8 @@ public class Terrain {
      * @param width The number of vertices in the x-direction
      * @param depth The number of vertices in the z-direction
      */
-    public Terrain(int width, int depth) {
+    public Terrain(int width, int depth, GameObject parent) {
+    	super(parent);
         mySize = new Dimension(width, depth);
         myAltitude = new double[width][depth];
         myTrees = new ArrayList<Tree>();
@@ -33,8 +34,16 @@ public class Terrain {
         mySunlight = new float[3];
     }
     
-    public Terrain(Dimension size) {
-        this(size.width, size.height);
+    public Terrain(int width, int depth) {
+    	super(null);
+        mySize = new Dimension(width, depth);
+        myAltitude = new double[width][depth];
+        myTrees = new ArrayList<Tree>();
+        myRoads = new ArrayList<Road>();
+        mySunlight = new float[3];
+    }
+    public Terrain(Dimension size, GameObject parent) {
+        this(size.width, size.height, parent);
     }
 
     public Dimension size() {
@@ -171,9 +180,10 @@ public class Terrain {
          
             for (i = 0; i < width-1; i+=1.0) {
 	        	 
-	        	 gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
+	        	 gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
 	        	 System.out.println("CURRENT I IS "+i);
-	        	 gl.glPolygonOffset(0.5f, 0.5f);
+	        	 //gl.glPolygonOffset(0.5f, 0.5f);
+	        	 //gl.glCullFace(GL2.GL_BACK);
 	        	 gl.glBegin(GL2.GL_TRIANGLES);
 	        	 	
 		            for ( j = 0; j < height; j+=1.0) {
@@ -252,7 +262,7 @@ public class Terrain {
      */
     public void addTree(double x, double z) {
         double y = altitude(x, z);
-        Tree tree = new Tree(x, y, z);
+        Tree tree = new Tree(x, y, z, this);
         myTrees.add(tree);
     }
 
