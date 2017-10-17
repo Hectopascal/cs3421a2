@@ -45,10 +45,11 @@ public class GameObject {
     // some helper?
     public Coord getRotation(){
         // need type and implementation
+        return null;
     }
 
     public Coord getPosition(){
-        // a vector was returned 
+        // a vector was returned
         Coord parentPosition;
         Coord parentRotation;
         Coord parentScale;

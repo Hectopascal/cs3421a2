@@ -44,7 +44,7 @@ public class Coord {
     }
 
     public static Coord multiply(Coord left, Coord right){
-        return new Coord(left.x*right.x,left.y*right.y,left.z*right.z);;
+        return new Coord(left.x*right.x,left.y*right.y,left.z*right.z);
     }
 
     public static Coord add(Coord left,Coord right){
