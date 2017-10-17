@@ -94,7 +94,7 @@ public class MathUtil {
 
     /**
      * 2D translation
-     * @param pos for v
+     * @param v
      * @return
      */
     public static double[][] translationMatrix(double[] v) {
@@ -112,7 +112,7 @@ public class MathUtil {
      * suppose our v is type of object have x,y,z
      * if array use v[0],v[1],v[2] instead
      */
-    public static double[][] translationMatrix(Coord v) {
+    public static double[][] translationMatrix4(Coord v) {
         double[][] resultMatrix = new double[4][4];
         resultMatrix[0] = new double[] {1,0,0,v.x};
         resultMatrix[1] = new double[] {0,1,0,v.y};
@@ -127,7 +127,7 @@ public class MathUtil {
      * @param angle in degrees
      * @return
      */
-    public static double[][] rotationMatrix(double angle) {
+    public static double[][] rotationMatrix3(double angle) {
         double[][] resultMatrix = new double[3][3];
         double sin = Math.sin(angle * Math.PI/180);
         double cos = Math.cos(angle * Math.PI/180);
@@ -145,9 +145,11 @@ public class MathUtil {
      */
     public static double[][] rotationMatrixX(double xAngle) {
         double[][] resultMatrix = new double[4][4];
+        double sin = Math.sin(Math.toRadians(xAngle));
+        double cos = Math.cos(Math.toRadians(xAngle));
         resultMatrix[0] = new double[] {1,0,0,0};
-        resultMatrix[1] = new double[] {0,Math.cos(Math.toRadians(xAngle)),-Math.sin(Math.toRadians(xAngle)),0};
-        resultMatrix[2] = new double[] {0,Math.sin(Math.toRadians(xAngle)),Math.cos(Math.toRadians(xAngle)),0};
+        resultMatrix[1] = new double[] {0,cos,-sin,0};
+        resultMatrix[2] = new double[] {0,sin,cos,0};
         resultMatrix[3] = new double[] {0,0,0,1};
         return resultMatrix;
     }
@@ -160,9 +162,11 @@ public class MathUtil {
      */
     public static double[][] rotationMatrixY(double yAngle) {
         double[][] resultMatrix = new double[4][4];
-        resultMatrix[0] = new double[] {Math.cos(Math.toRadians(yAngle)),0,Math.sin(Math.toRadians(yAngle)),0};
+        double cos = Math.cos(Math.toRadians(yAngle));
+        double sin = Math.sin(Math.toRadians(yAngle));
+        resultMatrix[0] = new double[] {cos,0,sin,0};
         resultMatrix[1] = new double[] {0,1,0,0};
-        resultMatrix[2] = new double[] {-Math.sin(Math.toRadians(yAngle)),0,Math.cos(Math.toRadians(yAngle)),0};
+        resultMatrix[2] = new double[] {-sin,0,cos,0};
         resultMatrix[3] = new double[] {0,0,0,1};
         return resultMatrix;
     }
@@ -175,13 +179,20 @@ public class MathUtil {
      */
     public static double[][] rotationMatrixZ(double zAngle) {
         double[][] resultMatrix = new double[4][4];
-        resultMatrix[0] = new double[] {Math.cos(Math.toRadians(zAngle)),-Math.sin(Math.toRadians(zAngle)),0,0};
-        resultMatrix[1] = new double[] {Math.sin(Math.toRadians(zAngle)),Math.cos(Math.toRadians(zAngle)),0,0};
+        double cos = Math.cos(Math.toRadians(zAngle));
+        double sin = Math.sin(Math.toRadians(zAngle));
+        resultMatrix[0] = new double[] {cos,-sin,0,0};
+        resultMatrix[1] = new double[] {sin,cos,0,0};
         resultMatrix[2] = new double[] {0,0,1,0};
         resultMatrix[3] = new double[] {0,0,0,1};
         return resultMatrix;
     }
 
+
+    public static double[][] rotationMatrixXYZ(Coord r){
+        return MathUtil.multiply4(MathUtil.multiply4(MathUtil.rotationMatrixX(r.x),
+                MathUtil.rotationMatrixY(r.y)),MathUtil.rotationMatrixZ(r.z));
+    }
     /**
      * A 2D scale matrix that scales both axes by the same factor
      *
@@ -189,7 +200,7 @@ public class MathUtil {
      * @return
      */
     public static double[][] scaleMatrix(double scale) {
-        double[][] resultMatrix = new double[3][];
+        double[][] resultMatrix = new double[3][3];
         resultMatrix[0] = new double[] {scale,0,0};
         resultMatrix[1] = new double[] {0,scale,0};
         resultMatrix[2] = new double[] {0,0,1};
@@ -204,7 +215,7 @@ public class MathUtil {
      */
 
     public static double[][] scaleMatrix4(double scale) {
-        double[][] resultMatrix = new double[4][];
+        double[][] resultMatrix = new double[4][4];
         resultMatrix[0] = new double[] {scale,0,0,0};
         resultMatrix[1] = new double[] {0,scale,0,0};
         resultMatrix[2] = new double[] {0,0,scale,0};
