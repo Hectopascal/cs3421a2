@@ -80,6 +80,7 @@ public class Game extends JFrame implements GLEventListener{
     	gl.glEnable(GL2.GL_DEPTH_TEST);
     	gl.glEnable(GL2.GL_CULL_FACE);
     	gl.glCullFace(GL2.GL_BACK);
+    	
 	}
 
 	@Override

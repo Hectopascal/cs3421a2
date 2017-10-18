@@ -158,7 +158,7 @@ public class Terrain extends GameObject{
     }
 
     public void drawGame(GL2 gl) {
-    	draw(gl);
+    	//draw(gl);
     	for(Tree t : this.myTrees) {
     		t.draw(gl);
     	}
@@ -168,7 +168,8 @@ public class Terrain extends GameObject{
     }
     
     public void draw(GL2 gl) {
-    	 gl.glMatrixMode(GL2.GL_MODELVIEW);
+    	System.out.println("WTF");
+    	 /*gl.glMatrixMode(GL2.GL_MODELVIEW);
          gl.glPushMatrix();
          float width = mySize.width;
          float height = mySize.height;
@@ -208,7 +209,7 @@ public class Terrain extends GameObject{
 		            		 * 
 		            		 * Drawing in counterclockwise, 
 		            		 * B->A->D, D->A->C
-		            		 */
+		            		 
 		            		
 		            		//Draw top right triangle
 			            	System.out.println("Triangle 1");
@@ -250,7 +251,7 @@ public class Terrain extends GameObject{
 	        
          gl.glPopMatrix();
          gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);
-     	
+     	*/
     }
     
     /**
