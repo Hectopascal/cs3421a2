@@ -8,7 +8,9 @@ import com.jogamp.opengl.util.gl2.GLUT;
  * @author malcolmr
  */
 public class Tree extends GameObject {
-
+    private static final int SLICES = 32;
+    private static final double CYLINDER_RADIUS = 0.1;
+    private static final double HEIGHT = 1;
     private Coord myPos;
     
     public Tree(double x, double y, double z, GameObject parent) {
@@ -24,10 +26,7 @@ public class Tree extends GameObject {
     }
     
     public void draw(GL2 gl) {
-        GLUT glut = new GLUT();
-        GLU glu = new GLU();
-        gl.glPushMatrix();
-        gl.glTranslated(myPos.x,myPos.y,myPos.z);
+
 
     }
 
