@@ -157,19 +157,27 @@ public class Terrain extends GameObject{
         return altitude;
     }
 
-    public void drawGame(GL2 gl) {
-    	//draw(gl);
+    public void draw(GL2 gl) {
+    	drawTerrain(gl);
+    	drawTrees(gl);
+    	drawRoads(gl);
+    }
+    public void drawTrees(GL2 gl) {
     	for(Tree t : this.myTrees) {
+    		gl.glPushMatrix();
+    		//gl.glTranslated(t.getPosition().x,  t.getPosition().y,  t.getPosition().z);
     		t.draw(gl);
-    	}
-    	for(Road r : this.myRoads) {
-    		r.draw(gl);
+    		gl.glPopMatrix();
     	}
     }
-    
-    public void draw(GL2 gl) {
-    	System.out.println("WTF");
-    	 /*gl.glMatrixMode(GL2.GL_MODELVIEW);
+    public void drawRoads(GL2 gl) {
+    	for(Road r : this.myRoads) {
+    		gl.glPushMatrix();
+    		r.draw(gl);
+    		gl.glPopMatrix();
+    	}
+    }
+    public void drawTerrain(GL2 gl) {
          gl.glPushMatrix();
          float width = mySize.width;
          float height = mySize.height;
@@ -208,7 +216,7 @@ public class Terrain extends GameObject{
 		            		 * C new(x1,y1)  D new(x2,y2)
 		            		 * 
 		            		 * Drawing in counterclockwise, 
-		            		 * B->A->D, D->A->C
+		            		 * B->A->D, D->A->C*/
 		            		 
 		            		
 		            		//Draw top right triangle
@@ -251,7 +259,7 @@ public class Terrain extends GameObject{
 	        
          gl.glPopMatrix();
          gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);
-     	*/
+     	
     }
     
     /**

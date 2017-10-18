@@ -65,7 +65,7 @@ public class Game extends JFrame implements GLEventListener{
     	gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
        
-    	this.myTerrain.drawGame(gl);
+    	this.myTerrain.draw(gl);
     	gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);
 	}
 
