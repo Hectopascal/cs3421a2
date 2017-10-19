@@ -7,6 +7,7 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.util.gl2.GLUT;
 
 /**
  * The camera is a GameObject that can be moved, rotated and scaled like any other.
@@ -20,11 +21,18 @@ public class Camera extends GameObject implements GLEventListener, KeyListener {
 
     private float[] myBackground;
     public double farPlane;
-
+    public Coord coords;
+    public int angle = 0;
+    
     public Camera(GameObject parent) {
         super(parent);
+        coords = new Coord(0,0,0);
         farPlane = 1000.0;
         myBackground = new float[4];
+        myBackground[0] = 0;
+        myBackground[1] = 0.6f;
+        myBackground[2] = 0.9f;
+        myBackground[3] = 1;
     }
 
     public Camera() {
@@ -45,8 +53,6 @@ public class Camera extends GameObject implements GLEventListener, KeyListener {
    
     
     public void setView(GL2 gl) {
-
-        
         gl.glClearColor(myBackground[0],myBackground[1],myBackground[2],myBackground[3]);
         //  1. clear the view to the background colour
         gl.glClearStencil(0x00);
@@ -65,9 +71,9 @@ public class Camera extends GameObject implements GLEventListener, KeyListener {
         //  2. set the view matrix to account for the camera's position         
         gl.glLoadIdentity();
         //int size = (int)this.getScale();
-        Coord Translated = getPosition();
-        Coord Rotate = getRotation();
-        Coord Scale = getScale();
+        Coord Translated = this.GlobalPosition;
+        Coord Rotate = this.GlobalRotation;
+        Coord Scale = this.GlobalScale;
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
         // apply the view transform
@@ -78,12 +84,12 @@ public class Camera extends GameObject implements GLEventListener, KeyListener {
         gl.glTranslated(-Translated.x, -Translated.y, -Translated.z);
 
     }
-
-    public void reshape(GL2 gl, int x, int y, int width, int height) {
-        
+    
+    @Override
+    public void reshape(GLAutoDrawable arg0 , int x, int y, int width, int height) {
         // match the projection aspect ratio to the viewport
         // to avoid stretching
-        
+        GL2 gl = arg0.getGL().getGL2();
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
 
@@ -105,7 +111,12 @@ public class Camera extends GameObject implements GLEventListener, KeyListener {
         }        
         GLU myGLU = new GLU();
         // coordinate system (left, right, bottom, top)
-        myGLU.gluOrtho2D(left, right, bottom, top);                
+
+        //gl.glOrtho(-3,3,-3,3,1,10);  
+        gl.glFrustum(-1,1,-1,1,-1,5);
+        //gl.glOrtho(-1,1,-1,1,-1,5);  
+        //myGLU.gluOrtho2D(left, right, bottom, top);    
+
     }
 
     
@@ -118,26 +129,25 @@ public class Camera extends GameObject implements GLEventListener, KeyListener {
     
 	@Override
 	public void keyPressed(KeyEvent e) {
+		//uphill rotates on x (pitch), rotate left/right is heading (y)
 		
 	    switch (e.getKeyCode()) {
-		  
 		    case KeyEvent.VK_UP:
-		    	//move forwards
+		    	coords.z+=1;
 				break;
 		    case KeyEvent.VK_DOWN:
-			    //move backwards
+			    coords.z-=1;
 			    break;	
 		    case KeyEvent.VK_LEFT:
-		    	//rotate camera left
+		    	angle = (angle + 10) % 360;
 		    	break;
-		    	
 		    case KeyEvent.VK_RIGHT:
-		    	//rotate camera right
+		    	angle = (angle - 10) % 360;
 		    	break;
 		    default:
 			    break;
 		 }
-		 System.out.println(e.getKeyCode());
+		 System.out.println(angle);
 		
 	}
 
@@ -145,34 +155,43 @@ public class Camera extends GameObject implements GLEventListener, KeyListener {
 	public void display(GLAutoDrawable arg0) {
     	GL2 gl = arg0.getGL().getGL2();
 
-    	gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+    	//gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
     	
     	gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
+
+        GLU glu = new GLU();
+        //glu.gluLookAt(2,4,3,0,0,0,0,1,0);
+        //gl.glRotated(-45, 0, 0, 1);
+        //gl.glRotated(-10, 0, 1, 0);
+        //gl.glRotated(15, 1, 0, 0);
+        //gl.glTranslated(0, -1,-3);
         
-        //DO STUFF TO CHANGE CAMERAS?????????????
-        
+        //Aim camera
+        this.setPosition(new Coord(coords.x,coords.y,coords.z));
+
+        this.setRotation(new Coord(0,angle,0));
+        //gl.glTranslated(coords.x,coords.y,coords.z);
+    	gl.glRotated (angle, 0,1, 0);  //Y axis
+    	
+    	GLUT glut = new GLUT();
+    	glut.glutSolidTeapot(1);
+    	
 	}
 
 	
 
 	@Override
 	public void init(GLAutoDrawable arg0) {
-		GL2 gl2 = arg0.getGL().getGL2();
-		setView(gl2);
-    	gl2.glEnable(GL2.GL_DEPTH_TEST);
-		
-	}
-
-	@Override
-	public void reshape(GLAutoDrawable arg0, int arg1, int arg2, int arg3, int arg4) {
 		GL2 gl = arg0.getGL().getGL2();
-	    
-        gl.glMatrixMode(GL2.GL_PROJECTION);
-        gl.glLoadIdentity();
-
-    	gl.glFrustum(-2,2,-2,2,1,8);
-     
+		
+		setView(gl);
+    	gl.glEnable(GL2.GL_DEPTH_TEST);
+    	  
+    	// enable lighting
+        //gl.glEnable(GL2.GL_LIGHTING);
+        //gl.glEnable(GL2.GL_LIGHT0);
+        //gl.glEnable(GL2.GL_NORMALIZE);
 	}
 	
 	//-------------------- Functions that can be left empty (?)

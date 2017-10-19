@@ -18,7 +18,10 @@ public class Terrain extends GameObject{
     private List<Tree> myTrees;
     private List<Road> myRoads;
     private float[] mySunlight;
-
+    private MyTexture[] myTextures;
+    
+    private String textureFileName1 = "src/textures/grass.bmp";
+    private String bmpExt = "bmp";
     /**
      * Create a new terrain
      *
@@ -35,7 +38,7 @@ public class Terrain extends GameObject{
     }
     
     public Terrain(int width, int depth) {
-    	super(null);
+    	super(GameObject.ROOT);
         mySize = new Dimension(width, depth);
         myAltitude = new double[width][depth];
         myTrees = new ArrayList<Tree>();
@@ -156,45 +159,77 @@ public class Terrain extends GameObject{
         }
         return altitude;
     }
-
-    public void drawGame(GL2 gl) {
-    	draw(gl);
+    public void initAll(GL2 gl) {
+    	init(gl);
     	for(Tree t : this.myTrees) {
-    		t.draw(gl);
+    		t.init(gl);
     	}
     	for(Road r : this.myRoads) {
-    		r.draw(gl);
+    		r.init(gl);
     	}
+    }
+    public void init(GL2 gl) {
+    	myTextures = new MyTexture[1];
+    	myTextures[0] = new MyTexture(gl, textureFileName1, bmpExt,true);
+    	
     }
     
     public void draw(GL2 gl) {
-    	 gl.glMatrixMode(GL2.GL_MODELVIEW);
-         gl.glPushMatrix();
-         float width = mySize.width;
-         float height = mySize.height;
-         float i,j; 
-         float x1=0;
-         float y1=0;
-         float x2=0;
-         float y2=0;
-         
-            for (i = 0; i < width-1; i+=1.0) {
-	        	 
-	        	 gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
-	        	 System.out.println("CURRENT I IS "+i);
-	        	 //gl.glPolygonOffset(0.5f, 0.5f);
-	        	 //gl.glCullFace(GL2.GL_BACK);
-	        	 gl.glBegin(GL2.GL_TRIANGLES);
-	        	 	
-		            for ( j = 0; j < height; j+=1.0) {
-		            	System.out.println("CURRENT J IS "+j);
-		            	gl.glColor3f(1-i/width, i/width,j/height);
-		            	
-		            	if(j==0) {
-		            		x1 = (2*i)/(width-1)-1;
-		            		y1 =1-(2*j)/(height-1);
-		            		x2 = (2*(i+1))/(width-1)-1;
-		            		y2 = 1-(2*(j))/(height-1);
+    	drawTerrain(gl);
+    	drawTrees(gl);
+    	drawRoads(gl);
+    }
+    public void drawTrees(GL2 gl) {
+    	for(Tree t : this.myTrees) {
+    		gl.glPushMatrix();
+    		gl.glTranslated(t.getPosition().x,  t.getPosition().y,  t.getPosition().z);
+    		t.draw(gl);
+    		gl.glPopMatrix();
+    	}
+    }
+    public void drawRoads(GL2 gl) {
+    	for(Road r : this.myRoads) {
+    		gl.glPushMatrix();
+    		r.draw(gl);
+    		gl.glPopMatrix();
+    	}
+    }
+    public void drawTerrain(GL2 gl) {
+		 gl.glPushMatrix();
+		 float matAmbAndDif1[] = {0.0f, 0.0f, 0.0f, 1.0f};
+		 float matAmbAndDif2[] = {0.0f, 0.9f, 0.0f, 1.0f};
+		 float matSpec[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		 float matShine[] = { 20.0f };
+		
+		 // Material properties
+		 gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif2,0);
+		 gl.glMaterialfv(GL2.GL_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif1,0);
+		 gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, matSpec,0);
+		 gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, matShine,0);
+		 
+		 float width = mySize.width;
+		 float height = mySize.height;
+		 float i,j; 
+		 float x1=0;
+		 float y1=0;
+		 float x2=0;
+		 float y2=0;
+         //a grimy calculation for triangle mesh that works
+        for (i = 0; i < width-1; i+=1.0) {
+        	 
+        	 gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
+        	 gl.glPolygonOffset(0.5f, 0.5f);
+        	 //gl.glCullFace(GL2.GL_BACK);
+        	 gl.glBegin(GL2.GL_TRIANGLES);
+        	 	
+	            for ( j = 0; j < height; j+=1.0) {
+	            	gl.glColor3f(1-i/width, i/width,j/height);
+	            	
+	            	if(j==0) {
+	            		x1 = (2*i)/(width-1)-1;
+	            		y1 =1-(2*j)/(height-1);
+	            		x2 = (2*(i+1))/(width-1)-1;
+	            		y2 = 1-(2*(j))/(height-1);
 			            	  
 		            	} else {
 		            		/* A(x1,y1)	 B (x2,y2)
@@ -207,35 +242,30 @@ public class Terrain extends GameObject{
 		            		 * C new(x1,y1)  D new(x2,y2)
 		            		 * 
 		            		 * Drawing in counterclockwise, 
-		            		 * B->A->D, D->A->C
-		            		 */
+		            		 * B->A->D, D->A->C*/
+		            		 
 		            		
 		            		//Draw top right triangle
-			            	System.out.println("Triangle 1");
-
+		            		gl.glBindTexture(GL2.GL_TEXTURE_2D, myTextures[0].getTextureId());
 		            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j-1]/2-1,y2);
 		            		gl.glVertex3f(x1,(float)myAltitude[(int)i][(int)j-1]/2-1,y1);
-
-			            	System.out.print("("+x1+","+y1+") "+"("+x2+","+y2+") ");
 			            	
 		            		x2 = (2*(i+1))/(width-1)-1;
 		            		y2 = 1-(2*(j))/(height-1);
-		            		System.out.println("("+x2+","+y2+") ");
+		            		//System.out.println("("+x2+","+y2+") ");
 		            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j]/2-1,y2);
 		            		
-		            		
+		            		gl.glBindTexture(GL2.GL_TEXTURE_2D, myTextures[0].getTextureId());
 		            		//Draw bottom triangle
 		            		gl.glColor3f(1-(i+0.5f)/width, (i+0.5f)/width,(j+0.5f)/height);
-		            		System.out.println("Triangle 2");
-
+		            		
 		            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j]/2-1,y2);
 		            		gl.glVertex3f(x1,(float)myAltitude[(int)i][(int)j-1]/2-1,y1);
-
-			            	System.out.print("("+x1+","+y1+") "+"("+x2+","+y2+") ");
+		            		
 		            		x1 = (2*i)/(width-1)-1;
 		            		y1 =1-(2*j)/(height-1);
 
-		            		System.out.println("("+x1+","+y1+") ");
+		            		//System.out.println("("+x1+","+y1+") ");
 		            		gl.glVertex3f(x1,(float)myAltitude[(int)i][(int)j]/2-1,y1);
 		            		
 		            	}
@@ -247,6 +277,7 @@ public class Terrain extends GameObject{
                  gl.glEnd();
                  
 	         }
+
 	        
          gl.glPopMatrix();
          gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);
