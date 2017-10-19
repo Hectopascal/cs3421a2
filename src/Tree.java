@@ -57,16 +57,6 @@ public class Tree extends GameObject {
         gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_DIFFUSE, new float[]{material.diffuse.x, material.diffuse.y, material.diffuse.z}, 0);
         gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, new float[]{material.specular.x, material.specular.y, material.specular.z}, 0);
         gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SHININESS, new float[]{material.phong.x, material.phong.y, material.phong.z}, 0);
-        gl.glBegin(GL2.GL_TRIANGLES);
-        gl.glNormal3d(0.0, 0.0, -1.0);
-        gl.glVertex3d(-0.1, 0.0, 0.0);
-        gl.glVertex3d(0.1, 0.0, 0.0);
-        gl.glVertex3d(0.0, 1.0, 0.0);
-        gl.glNormal3d(1.0, 0.0, 0.0);
-        gl.glVertex3d(0.0, 0.0, -0.1);
-        gl.glVertex3d(0.0, 0.0, 0.1);
-        gl.glVertex3d(0.0, 1.0, 0.0);
-        gl.glEnd();
 
     	GLUT glut = new GLUT();
     	
