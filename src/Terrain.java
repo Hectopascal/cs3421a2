@@ -190,88 +190,87 @@ public class Terrain extends GameObject{
     	}
     }
     public void drawTerrain(GL2 gl) {
-         gl.glPushMatrix();
-     	 float matAmbAndDif1[] = {0.0f, 0.0f, 0.0f, 1.0f};
-     	 float matAmbAndDif2[] = {0.0f, 0.9f, 0.0f, 1.0f};
-     	 float matSpec[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-     	 float matShine[] = { 20.0f };
+		 gl.glPushMatrix();
+		 float matAmbAndDif1[] = {0.0f, 0.0f, 0.0f, 1.0f};
+		 float matAmbAndDif2[] = {0.0f, 0.9f, 0.0f, 1.0f};
+		 float matSpec[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		 float matShine[] = { 20.0f };
+		
+		 // Material properties
+		 gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif2,0);
+		 gl.glMaterialfv(GL2.GL_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif1,0);
+		 gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, matSpec,0);
+		 gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, matShine,0);
+		 
+		 float width = mySize.width;
+		 float height = mySize.height;
+		 float i,j; 
+		 float x1=0;
+		 float y1=0;
+		 float x2=0;
+		 float y2=0;
+         //a grimy calculation for triangle mesh that works
+        for (i = 0; i < width-1; i+=1.0) {
+        	 
+        	 gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
+        	 gl.glPolygonOffset(0.5f, 0.5f);
+        	 //gl.glCullFace(GL2.GL_BACK);
+        	 gl.glBegin(GL2.GL_TRIANGLES);
+        	 	
+	            for ( j = 0; j < height; j+=1.0) {
+	            	gl.glColor3f(1-i/width, i/width,j/height);
+	            	
+	            	if(j==0) {
+	            		x1 = (2*i)/(width-1)-1;
+	            		y1 =1-(2*j)/(height-1);
+	            		x2 = (2*(i+1))/(width-1)-1;
+	            		y2 = 1-(2*(j))/(height-1);
+		            	  
+	            	} else {
+	            		/* A(x1,y1)	 B (x2,y2)
+	            		 * 	 o_______o
+	            		 *   |\		|
+	            		 *   | \	|
+	            		 *   |  \	|
+	            		 *   |    \	|
+	            		 *  o|_____\|o
+	            		 * C new(x1,y1)  D new(x2,y2)
+	            		 * 
+	            		 * Drawing 2 triangles in counterclockwise, 
+	            		 * B->A->D, D->A->C*/
+	            		 
+	            		
+	            		//Draw top right triangle
 
-      	 // Material properties
-     	 gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif2,0);
-     	 gl.glMaterialfv(GL2.GL_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif1,0);
-     	 gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, matSpec,0);
-     	 gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, matShine,0);
-         
-         float width = mySize.width;
-         float height = mySize.height;
-         float i,j; 
-         float x1=0;
-         float y1=0;
-         float x2=0;
-         float y2=0;
-         
-            for (i = 0; i < width-1; i+=1.0) {
-	        	 
-	        	 gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
-	        	 gl.glPolygonOffset(0.5f, 0.5f);
-	        	 //gl.glCullFace(GL2.GL_BACK);
-	        	 gl.glBegin(GL2.GL_TRIANGLES);
-	        	 	
-		            for ( j = 0; j < height; j+=1.0) {
-		            	gl.glColor3f(1-i/width, i/width,j/height);
+	            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j-1]/2-1,y2);
+	            		gl.glVertex3f(x1,(float)myAltitude[(int)i][(int)j-1]/2-1,y1);
 		            	
-		            	if(j==0) {
-		            		x1 = (2*i)/(width-1)-1;
-		            		y1 =1-(2*j)/(height-1);
-		            		x2 = (2*(i+1))/(width-1)-1;
-		            		y2 = 1-(2*(j))/(height-1);
-			            	  
-		            	} else {
-		            		/* A(x1,y1)	 B (x2,y2)
-		            		 * 	 o_______o
-		            		 *   |\		|
-		            		 *   | \	|
-		            		 *   |  \	|
-		            		 *   |    \	|
-		            		 *  o|_____\|o
-		            		 * C new(x1,y1)  D new(x2,y2)
-		            		 * 
-		            		 * Drawing in counterclockwise, 
-		            		 * B->A->D, D->A->C*/
-		            		 
-		            		
-		            		//Draw top right triangle
+	            		x2 = (2*(i+1))/(width-1)-1;
+	            		y2 = 1-(2*(j))/(height-1);
+	            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j]/2-1,y2);
+	            		
+	            		
+	            		//Draw bottom triangle
+	            		gl.glColor3f(1-(i+0.5f)/width, (i+0.5f)/width,(j+0.5f)/height);
+	            		
+	            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j]/2-1,y2);
+	            		gl.glVertex3f(x1,(float)myAltitude[(int)i][(int)j-1]/2-1,y1);
+	            		
+	            		x1 = (2*i)/(width-1)-1;
+	            		y1 =1-(2*j)/(height-1);
 
-		            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j-1]/2-1,y2);
-		            		gl.glVertex3f(x1,(float)myAltitude[(int)i][(int)j-1]/2-1,y1);
-			            	
-		            		x2 = (2*(i+1))/(width-1)-1;
-		            		y2 = 1-(2*(j))/(height-1);
-		            		//System.out.println("("+x2+","+y2+") ");
-		            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j]/2-1,y2);
-		            		
-		            		
-		            		//Draw bottom triangle
-		            		gl.glColor3f(1-(i+0.5f)/width, (i+0.5f)/width,(j+0.5f)/height);
-		            		
-		            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j]/2-1,y2);
-		            		gl.glVertex3f(x1,(float)myAltitude[(int)i][(int)j-1]/2-1,y1);
-		            		
-		            		x1 = (2*i)/(width-1)-1;
-		            		y1 =1-(2*j)/(height-1);
-
-		            		//System.out.println("("+x1+","+y1+") ");
-		            		gl.glVertex3f(x1,(float)myAltitude[(int)i][(int)j]/2-1,y1);
-		            		
-		            	}
-		            	
-		            	
-		            	
-		             }
-		             
-                 gl.glEnd();
-                 
-	         }
+	            		//System.out.println("("+x1+","+y1+") ");
+	            		gl.glVertex3f(x1,(float)myAltitude[(int)i][(int)j]/2-1,y1);
+	            		
+	            	}
+	            	
+	            	
+	            	
+	             }
+	             
+             gl.glEnd();
+             
+         }
 	        
          gl.glPopMatrix();
          gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);
