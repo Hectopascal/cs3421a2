@@ -121,7 +121,8 @@ public class Game extends JFrame implements GLEventListener{
     	gl.glCullFace(GL2.GL_BACK);
     	gl.glTexEnvf(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE); 
     	gl.glEnable(GL2.GL_TEXTURE_2D); 
-    	
+    	gl.glEnable(GL2.GL_LIGHTING);
+    	setLighting(gl);
     	myTerrain.initAll(gl);
 	}
 
@@ -135,7 +136,7 @@ public class Game extends JFrame implements GLEventListener{
 		
 		gl.glEnable(GL2.GL_LIGHT0);
         // Light property vectors.
-    	float lightAmb[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+    	float lightAmb[] = { 0.0f, 0.0f, 0.0f, 1.0f };
     	float lightDifAndSpec[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		globAmb[0] = 0.1f;
@@ -147,7 +148,8 @@ public class Game extends JFrame implements GLEventListener{
     	gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, lightDifAndSpec,0);
     	//gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, (new float[] {1,2,10}),0);
     	//Global light properties
-    	gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, globAmb,0); // Global ambient light.
+    	//gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, globAmb,0); // Global ambient light.
+    	
     	gl.glLightModeli(GL2.GL_LIGHT_MODEL_LOCAL_VIEWER, GL2.GL_TRUE); // Enable local viewpoint.
     	
     	drawAndPositionLights(gl);
@@ -204,6 +206,6 @@ public class Game extends JFrame implements GLEventListener{
         		gl.glLineWidth(1.0f);
         	}
         }gl.glPopMatrix();
-        gl.glEnable(GL2.GL_LIGHTING);
+        
 	}
 }

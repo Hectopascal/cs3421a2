@@ -230,6 +230,7 @@ public class Terrain extends GameObject{
 	            		y1 =1-(2*j)/(height-1);
 	            		x2 = (2*(i+1))/(width-1)-1;
 	            		y2 = 1-(2*(j))/(height-1);
+
 			            	  
 		            	} else {
 		            		/* A(x1,y1)	 B (x2,y2)

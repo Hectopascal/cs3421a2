@@ -56,7 +56,7 @@ public class Tree extends GameObject {
 	    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, matShine,0);
 	    	gl.glBindTexture(GL2.GL_TEXTURE_2D, treeTextures[0].getTextureId()); 
     		gl.glRotated(90, -90, 0, 0);
-    		glut.glutSolidCylinder(0.1, 1, 40, 40);
+    		glut.glutSolidCylinder(0.1, 1.5, 40, 40);
     	gl.glPopMatrix();
     	//Leaves
     	gl.glPushMatrix();
@@ -65,7 +65,8 @@ public class Tree extends GameObject {
     		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, matShine2,0);
     		gl.glBindTexture(GL2.GL_TEXTURE_2D, treeTextures[1].getTextureId()); 
     		gl.glTranslated(0, 1.5, 0);
-    		glut.glutSolidSphere(0.55, 40, 40);
+    		glut.glutSolidTeapot(0.5);
+    		//glut.glutSolidSphere(0.55, 40, 40);
     	gl.glPopMatrix();
     	
     	gl.glDisable(gl.GL_TEXTURE_GEN_S); //enable texture coordinate generation
