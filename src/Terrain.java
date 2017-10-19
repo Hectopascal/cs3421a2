@@ -18,7 +18,10 @@ public class Terrain extends GameObject{
     private List<Tree> myTrees;
     private List<Road> myRoads;
     private float[] mySunlight;
-
+    private MyTexture[] myTextures;
+    
+    private String textureFileName1 = "src/textures/grass.bmp";
+    private String bmpExt = "bmp";
     /**
      * Create a new terrain
      *
@@ -166,6 +169,8 @@ public class Terrain extends GameObject{
     	}
     }
     public void init(GL2 gl) {
+    	myTextures = new MyTexture[1];
+    	myTextures[0] = new MyTexture(gl, textureFileName1, bmpExt,true);
     	
     }
     
@@ -190,6 +195,7 @@ public class Terrain extends GameObject{
     	}
     }
     public void drawTerrain(GL2 gl) {
+    	gl.glEnable(GL2.GL_TEXTURE_2D); 
          gl.glPushMatrix();
      	 float matAmbAndDif1[] = {0.0f, 0.0f, 0.0f, 1.0f};
      	 float matAmbAndDif2[] = {0.0f, 0.9f, 0.0f, 1.0f};
@@ -241,7 +247,7 @@ public class Terrain extends GameObject{
 		            		 
 		            		
 		            		//Draw top right triangle
-
+		            		gl.glBindTexture(GL2.GL_TEXTURE_2D, myTextures[0].getTextureId());
 		            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j-1]/2-1,y2);
 		            		gl.glVertex3f(x1,(float)myAltitude[(int)i][(int)j-1]/2-1,y1);
 			            	
@@ -250,7 +256,7 @@ public class Terrain extends GameObject{
 		            		//System.out.println("("+x2+","+y2+") ");
 		            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j]/2-1,y2);
 		            		
-		            		
+		            		gl.glBindTexture(GL2.GL_TEXTURE_2D, myTextures[0].getTextureId());
 		            		//Draw bottom triangle
 		            		gl.glColor3f(1-(i+0.5f)/width, (i+0.5f)/width,(j+0.5f)/height);
 		            		

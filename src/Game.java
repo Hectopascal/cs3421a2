@@ -25,6 +25,15 @@ public class Game extends JFrame implements GLEventListener{
 	private float xAngle = 0.0f, yAngle = 0.0f; // Rotation angles of white light.
 	private int p = 1; // Positional light 1, directional 0
 	
+    
+    // Camera positioning
+    private static int xAngleCam = 0;
+    private static int yAngleCam = 0;
+    private static int zAngleCam = 0;
+    private static double x = 0;
+    private static double y = -1;
+    private static double z = -1;
+	
     public Game(Terrain terrain) {
     	super("Assignment 2");
         myTerrain = terrain;
@@ -81,12 +90,19 @@ public class Game extends JFrame implements GLEventListener{
         gl.glLoadIdentity();
         setLighting(gl);
         // set the view matrix based on the camera position
-        //myCamera.setView(gl); 
+        myCamera.setView(gl);
+        gl.glTranslated(x, y-0.25, -1);
+	 	gl.glRotated(xAngleCam, 1, 0, 0);
         GLU glu = new GLU();
         //First 3 arguments are location of the view
         //Second 3 arguments are what point to look at
         //Last 3 arguments are the UP Vector (which way is up I guess?)
-        glu.gluLookAt(0.0, myTerrain.getGridAltitude(0, 0), 0.0, 1.5,myTerrain.getGridAltitude(0, 0), 1.0, 0.0, 1.0, 0.0);
+    	/*glu.gluLookAt(	0.0f, 0.0f, 10.0f,
+    			2.0f, 1.0f,  0.0f,
+    			0.0f, 1.0f,  0.0f);
+*/
+    	
+
         // draw the scene tree
         GameObject.ROOT.draw(gl);  
         
