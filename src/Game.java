@@ -2,6 +2,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLJPanel;
+import com.jogamp.opengl.glu.GLU;
+
 import javax.swing.JFrame;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.gl2.GLUT;
@@ -79,8 +81,12 @@ public class Game extends JFrame implements GLEventListener{
         gl.glLoadIdentity();
         setLighting(gl);
         // set the view matrix based on the camera position
-        myCamera.setView(gl); 
-
+        //myCamera.setView(gl); 
+        GLU glu = new GLU();
+        //First 3 arguments are location of the view
+        //Second 3 arguments are what point to look at
+        //Last 3 arguments are the UP Vector (which way is up I guess?)
+        glu.gluLookAt(0.0, myTerrain.getGridAltitude(0, 0), 0.0, 1.5,myTerrain.getGridAltitude(0, 0), 1.0, 0.0, 1.0, 0.0);
         // draw the scene tree
         GameObject.ROOT.draw(gl);  
         
@@ -135,8 +141,8 @@ public class Game extends JFrame implements GLEventListener{
 	private void drawAndPositionLights(GL2 gl){
     	GLUT glut = new GLUT();
     	//p will be 1 for positional and 0 for directional
-    	float lightPos0[] = { 0.0f, 0.0f, 3.0f, p };
-    	float lightPos1[] = { 1.0f, 2.0f, 0.0f, 1.0f };
+    	float lightPos0[] = { 1.0f, 2.0f, 0.0f, p };
+    	//float lightPos1[] = { 1.0f, 2.0f, 0.0f, 1.0f };
         
     	// Light0 positioned 
     	// sphere (positional light)

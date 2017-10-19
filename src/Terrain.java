@@ -191,6 +191,17 @@ public class Terrain extends GameObject{
     }
     public void drawTerrain(GL2 gl) {
          gl.glPushMatrix();
+     	 float matAmbAndDif1[] = {0.0f, 0.0f, 0.0f, 1.0f};
+     	 float matAmbAndDif2[] = {0.0f, 0.9f, 0.0f, 1.0f};
+     	 float matSpec[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+     	 float matShine[] = { 20.0f };
+
+      	 // Material properties
+     	 gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif2,0);
+     	 gl.glMaterialfv(GL2.GL_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif1,0);
+     	 gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, matSpec,0);
+     	 gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, matShine,0);
+         
          float width = mySize.width;
          float height = mySize.height;
          float i,j; 
