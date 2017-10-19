@@ -218,20 +218,33 @@ public class Terrain extends GameObject{
 	            double[] botLeft = {x, myAltitude[x][z], z};
 	            double[] topRight = {x+1, myAltitude[x+1][z+1], z+1};
 	            double[] topLeft = {x+1, myAltitude[x+1][z], z};
+	            double[] normals = getNormal(botLeft, topRight, topLeft);
 		        gl.glBindTexture(GL2.GL_TEXTURE_2D, myTextures[0].getTextureId());
 	            gl.glBegin(GL2.GL_TRIANGLES);{
-
+	            	gl.glNormal3d(normals[0], normals[1], normals[2]);
+	            	gl.glTexCoord2d(botLeft[0],botLeft[2]);
 		        	gl.glVertex3d(botLeft[0],botLeft[1],botLeft[2]);
+		        	gl.glNormal3d(normals[0], normals[1], normals[2]);
+		        	gl.glTexCoord2d(topRight[0], topRight[2]);
 		        	gl.glVertex3d(topRight[0],topRight[1],topRight[2]);
+		        	gl.glNormal3d(normals[0], normals[1], normals[2]);
+		        	gl.glTexCoord2d(topLeft[0], topLeft[2]);
 		        	gl.glVertex3d(topLeft[0],topLeft[1],topLeft[2]);
 	        	}gl.glEnd();   		
 		        gl.glBindTexture(GL2.GL_TEXTURE_2D, myTextures[0].getTextureId());
 		        //Corner for bottom right triangle
 		        double[] botRight = {x, myAltitude[x][z+1],z+1};
+		        normals = getNormal(botLeft, botRight, topRight);
 		        gl.glBindTexture(GL2.GL_TEXTURE_2D, myTextures[0].getTextureId());
 		        gl.glBegin(GL2.GL_TRIANGLES);{
+		        	gl.glNormal3d(normals[0], normals[1], normals[2]);
+		        	gl.glTexCoord2d(botLeft[0], botLeft[2]);
 		        	gl.glVertex3d(botLeft[0], botLeft[1], botLeft[2]);
+		        	gl.glNormal3d(normals[0], normals[1], normals[2]);
+		        	gl.glTexCoord2d(botRight[0], botRight[2]);
 		        	gl.glVertex3d(botRight[0], botRight[1], botRight[2]);
+		        	gl.glNormal3d(normals[0], normals[1], normals[2]);
+		        	gl.glTexCoord2d(topRight[0], topRight[2]);
 		        	gl.glVertex3d(topRight[0], topRight[1], topRight[2]);
 		        }
 		        gl.glEnd();
@@ -267,6 +280,21 @@ public class Terrain extends GameObject{
         Road road = new Road(width, spine);
         myRoads.add(road);        
     }
-
+    /*Copied from week 4 Exercises */
+    double [] cross(double u [], double v[]){
+    	double crossProduct[] = new double[3];
+    	crossProduct[0] = u[1]*v[2] - u[2]*v[1];
+    	crossProduct[1] = u[2]*v[0] - u[0]*v[2];
+    	crossProduct[2] = u[0]*v[1] - u[1]*v[0];
+    	
+    	return crossProduct;
+    }
+    
+    //Assumes correct winding order
+    double [] getNormal(double[] p0, double[] p1, double[] p2){
+    	double u[] = {p1[0] - p0[0], p1[1] - p0[1], p1[2] - p0[2]};
+    	double v[] = {p2[0] - p0[0], p2[1] - p0[1], p2[2] - p0[2]}; 	
+    	return cross(u,v);   	
+    }
 
 }
