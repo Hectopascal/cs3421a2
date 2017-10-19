@@ -8,6 +8,8 @@ import com.jogamp.opengl.util.gl2.GLUT;
  * @author malcolmr
  */
 public class Tree extends GameObject {
+
+    private Color material;
     private static final int SLICES = 32;
     private static final double CYLINDER_RADIUS = 0.1;
     private static final double HEIGHT = 1;
@@ -18,7 +20,7 @@ public class Tree extends GameObject {
 	private float matSpec[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	private float matShine[] = { 0.0f };
 	private float matShine2[] = { 20.0f };
-    
+
     private Coord myPos;
     
     private MyTexture treeTextures[];
@@ -29,11 +31,15 @@ public class Tree extends GameObject {
     public Tree(double x, double y, double z, GameObject parent) {
     	super(parent);
         myPos = new Coord(x,y,z);
+        this.GlobalPosition = new Coord(x,y,z);
+        material = new Color();
+        material.diffuse = new ColorObject(0.9f,0.6f,0.2f,0.0f);
     }
     public Tree(Coord coords, GameObject parent) {
     	super(parent);
-    	myPos = coords;
+    	this.GlobalPosition = coords;
     }
+
     public Coord getPosition() {
         return myPos;
     }
@@ -45,6 +51,23 @@ public class Tree extends GameObject {
     }
     
     public void draw(GL2 gl) {
+
+        gl.glColor3d(0.0, 0.0, 0.0);
+        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, new float[]{material.ambient.x, material.ambient.y, material.ambient.z}, 0);
+        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_DIFFUSE, new float[]{material.diffuse.x, material.diffuse.y, material.diffuse.z}, 0);
+        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, new float[]{material.specular.x, material.specular.y, material.specular.z}, 0);
+        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SHININESS, new float[]{material.phong.x, material.phong.y, material.phong.z}, 0);
+        gl.glBegin(GL2.GL_TRIANGLES);
+        gl.glNormal3d(0.0, 0.0, -1.0);
+        gl.glVertex3d(-0.1, 0.0, 0.0);
+        gl.glVertex3d(0.1, 0.0, 0.0);
+        gl.glVertex3d(0.0, 1.0, 0.0);
+        gl.glNormal3d(1.0, 0.0, 0.0);
+        gl.glVertex3d(0.0, 0.0, -0.1);
+        gl.glVertex3d(0.0, 0.0, 0.1);
+        gl.glVertex3d(0.0, 1.0, 0.0);
+        gl.glEnd();
+
     	GLUT glut = new GLUT();
     	
     	gl.glEnable(gl.GL_TEXTURE_GEN_S); //enable texture coordinate generation
