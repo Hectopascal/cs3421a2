@@ -7,6 +7,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 
 
 
+
 /**
  * COMMENT: Comment Game 
  *
@@ -15,7 +16,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 public class Game extends JFrame implements GLEventListener{
 
     private Terrain myTerrain;
-
+    private Camera myCamera;
     public Game(Terrain terrain) {
     	super("Assignment 2");
         myTerrain = terrain;
@@ -30,8 +31,14 @@ public class Game extends JFrame implements GLEventListener{
     	  GLProfile glp = GLProfile.getDefault();
           GLCapabilities caps = new GLCapabilities(glp);
           GLJPanel panel = new GLJPanel();
+          
+          myCamera = new Camera(GameObject.ROOT);
+          myCamera.setScale(new Coord(3,3,3));
+          panel.addGLEventListener(myCamera);
+          panel.addKeyListener(myCamera);
+          panel.setFocusable(true);   
+          
           panel.addGLEventListener(this);
- 
           // Add an animator to call 'display' at 60fps        
           FPSAnimator animator = new FPSAnimator(60);
           animator.add(panel);
@@ -64,8 +71,14 @@ public class Game extends JFrame implements GLEventListener{
     	
     	gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
-       
-    	this.myTerrain.drawGame(gl);
+        
+        // set the view matrix based on the camera position
+        myCamera.setView(gl); 
+
+        // draw the scene tree
+        GameObject.ROOT.draw(gl);  
+        
+    	//this.myTerrain.drawGame(gl);
     	gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);
 	}
 

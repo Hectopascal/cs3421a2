@@ -35,7 +35,7 @@ public class Terrain extends GameObject{
     }
     
     public Terrain(int width, int depth) {
-    	super(null);
+    	super(GameObject.ROOT);
         mySize = new Dimension(width, depth);
         myAltitude = new double[width][depth];
         myTrees = new ArrayList<Tree>();
@@ -158,7 +158,7 @@ public class Terrain extends GameObject{
     }
 
     public void drawGame(GL2 gl) {
-    	draw(gl);
+    	//draw(gl);
     	for(Tree t : this.myTrees) {
     		t.draw(gl);
     	}
@@ -181,13 +181,11 @@ public class Terrain extends GameObject{
             for (i = 0; i < width-1; i+=1.0) {
 	        	 
 	        	 gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
-	        	 System.out.println("CURRENT I IS "+i);
 	        	 //gl.glPolygonOffset(0.5f, 0.5f);
-	        	 //gl.glCullFace(GL2.GL_BACK);
+	        	 gl.glCullFace(GL2.GL_BACK);
 	        	 gl.glBegin(GL2.GL_TRIANGLES);
 	        	 	
 		            for ( j = 0; j < height; j+=1.0) {
-		            	System.out.println("CURRENT J IS "+j);
 		            	gl.glColor3f(1-i/width, i/width,j/height);
 		            	
 		            	if(j==0) {
@@ -211,31 +209,26 @@ public class Terrain extends GameObject{
 		            		 */
 		            		
 		            		//Draw top right triangle
-			            	System.out.println("Triangle 1");
 
 		            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j-1]/2-1,y2);
 		            		gl.glVertex3f(x1,(float)myAltitude[(int)i][(int)j-1]/2-1,y1);
-
-			            	System.out.print("("+x1+","+y1+") "+"("+x2+","+y2+") ");
 			            	
 		            		x2 = (2*(i+1))/(width-1)-1;
 		            		y2 = 1-(2*(j))/(height-1);
-		            		System.out.println("("+x2+","+y2+") ");
+		            		//System.out.println("("+x2+","+y2+") ");
 		            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j]/2-1,y2);
 		            		
 		            		
 		            		//Draw bottom triangle
 		            		gl.glColor3f(1-(i+0.5f)/width, (i+0.5f)/width,(j+0.5f)/height);
-		            		System.out.println("Triangle 2");
-
+		            		
 		            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j]/2-1,y2);
 		            		gl.glVertex3f(x1,(float)myAltitude[(int)i][(int)j-1]/2-1,y1);
-
-			            	System.out.print("("+x1+","+y1+") "+"("+x2+","+y2+") ");
+		            		
 		            		x1 = (2*i)/(width-1)-1;
 		            		y1 =1-(2*j)/(height-1);
 
-		            		System.out.println("("+x1+","+y1+") ");
+		            		//System.out.println("("+x1+","+y1+") ");
 		            		gl.glVertex3f(x1,(float)myAltitude[(int)i][(int)j]/2-1,y1);
 		            		
 		            	}

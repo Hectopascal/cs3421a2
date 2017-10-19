@@ -1,7 +1,6 @@
 
 import com.jogamp.opengl.GL2;
 
-
 import java.util.ArrayList;
 public class GameObject {
     public ArrayList<GameObject> all_object = new ArrayList<GameObject>();
@@ -14,6 +13,7 @@ public class GameObject {
     public Coord GlobalPosition;
     public Coord GlobalRotation;
     public Coord GlobalScale;
+    
     // constructor
     public GameObject (GameObject parent){
         this.parent = parent;
@@ -44,8 +44,8 @@ public class GameObject {
 
     // some helper?
     public Coord getRotation(){
-        // need type and implementation
-        return null;
+    	//TODO
+    	return GlobalRotation;
     }
 
     public Coord getPosition(){
@@ -76,7 +76,19 @@ public class GameObject {
     }
 
     public Coord getScale(){
-        // need type and implementation
-        return null;
+    	Coord scale = GlobalScale;
+    	GameObject p = this.parent;
+    	while(p!=null) {
+	    	scale.x = scale.x*p.getScale().x;
+	    	scale.y = scale.y*p.getScale().y;
+	    	scale.z = scale.z*p.getScale().z;
+	        p=p.parent;
+    	}
+    	return scale;
     }
+    public void setScale(Coord coord) { this.GlobalScale =coord;}
+
+    public void setRotation(Coord coord) { this.GlobalRotation =coord;}
+
+    public void setPosition(Coord coord) { this.GlobalPosition =coord;}
 }
