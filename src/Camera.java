@@ -29,6 +29,10 @@ public class Camera extends GameObject implements GLEventListener, KeyListener {
         coords = new Coord(0,0,0);
         farPlane = 1000.0;
         myBackground = new float[4];
+        myBackground[0] = 0;
+        myBackground[1] = 0.6f;
+        myBackground[2] = 0.9f;
+        myBackground[3] = 1;
     }
 
     public Camera() {
@@ -67,7 +71,6 @@ public class Camera extends GameObject implements GLEventListener, KeyListener {
         //  2. set the view matrix to account for the camera's position         
         gl.glLoadIdentity();
         //int size = (int)this.getScale();
-
         Coord Translated = this.GlobalPosition;
         Coord Rotate = this.GlobalRotation;
         Coord Scale = this.GlobalScale;
@@ -152,7 +155,7 @@ public class Camera extends GameObject implements GLEventListener, KeyListener {
 	public void display(GLAutoDrawable arg0) {
     	GL2 gl = arg0.getGL().getGL2();
 
-    	gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+    	//gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
     	
     	gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();

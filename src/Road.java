@@ -8,7 +8,7 @@ import com.jogamp.opengl.GL2;
  *
  * @author malcolmr
  */
-public class Road {
+public class Road extends GameObject{
 
     private List<Double> myPoints;
     private double myWidth;
@@ -17,12 +17,19 @@ public class Road {
      * Create a new road starting at the specified point
      */
     public Road(double width, double x0, double y0) {
+    	super(GameObject.ROOT);
         myWidth = width;
         myPoints = new ArrayList<Double>();
         myPoints.add(x0);
         myPoints.add(y0);
     }
-
+    public Road(double width, double x0, double y0, GameObject parent) {
+    	super(parent);
+        myWidth = width;
+        myPoints = new ArrayList<Double>();
+        myPoints.add(x0);
+        myPoints.add(y0);
+    }
     /**
      * Create a new road with the specified spine 
      *
@@ -30,13 +37,21 @@ public class Road {
      * @param spine
      */
     public Road(double width, double[] spine) {
+    	super(GameObject.ROOT);
         myWidth = width;
         myPoints = new ArrayList<Double>();
         for (int i = 0; i < spine.length; i++) {
             myPoints.add(spine[i]);
         }
     }
-
+    public Road(double width, double[] spine,GameObject parent) {
+    	super(parent);
+        myWidth = width;
+        myPoints = new ArrayList<Double>();
+        for (int i = 0; i < spine.length; i++) {
+            myPoints.add(spine[i]);
+        }
+    }
     /**
      * The width of the road.
      * 
@@ -146,6 +161,33 @@ public class Road {
         throw new IllegalArgumentException("" + i);
     }
 	public void draw(GL2 gl) {
+        int numPoints = myPoints.size();
+        //gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+       
+        //gl.glColor4d(0.0, 0.0, 0.0, 1);
+        gl.glLoadIdentity(); 
+        gl.glPointSize(20);
+        
+        /*
+        gl.glBegin(GL2.GL_LINE_STRIP);
+        gl.glColor3d(1, 1, 1);
+    	gl.glVertex3d(1,1,1);
+    	gl.glVertex3d(0.5,0.5,0.5);
+    	gl.glEnd();*/
+        
+        gl.glColor3d(1, 0, 1);
+        gl.glBegin(GL2.GL_POINTS);
+        //double tIncrement = 1.0/numPoints;
+        double tIncrement = ((double)this.size())/numPoints;
+        System.out.println("numPoints " + numPoints + " " + tIncrement);
+        for(int i = 0; i < numPoints*this.size(); i++){        		
+        	double t = i*tIncrement;   
+        	System.out.println("t " + t);
+        	gl.glVertex3d(this.point(t)[0],0,this.point(t)[1]);
+        }
+        gl.glVertex2dv(this.controlPoint(this.size()*3),0);
+        gl.glEnd();
+        
 	}
 	public void init(GL2 gl) {
 		

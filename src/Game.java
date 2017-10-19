@@ -44,7 +44,7 @@ public class Game extends JFrame implements GLEventListener{
 
           myCamera.setPosition(new Coord(1,2,1));
           myCamera.setRotation(new Coord(10,20,10));
-          myCamera.setScale(new Coord(2,2,2));
+          myCamera.setScale(new Coord(3,3,3));
           panel.addGLEventListener(myCamera);
           panel.addKeyListener(myCamera);
           panel.setFocusable(true);   
