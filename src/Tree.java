@@ -11,7 +11,21 @@ public class Tree extends GameObject {
     private static final int SLICES = 32;
     private static final double CYLINDER_RADIUS = 0.1;
     private static final double HEIGHT = 1;
+    
+    //Material Properties
+	private float matAmbAndDif1[] = {0.0f, 0.9f, 0.0f, 1.0f};
+	private float matAmbAndDif2[] = {1.0f, 1.0f, 1.0f, 1.0f};
+	private float matSpec[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	private float matShine[] = { 0.0f };
+	private float matShine2[] = { 20.0f };
+    
     private Coord myPos;
+    
+    private MyTexture treeTextures[];
+    private String textureFileName1 = "src/textures/treeTrunk.bmp";
+    private String textureFileName2 = "src/textures/bricks.bmp";
+    private String bmpExt = "bmp";
+    
     public Tree(double x, double y, double z, GameObject parent) {
     	super(parent);
         myPos = new Coord(x,y,z);
@@ -24,17 +38,37 @@ public class Tree extends GameObject {
         return myPos;
     }
     
+    public void init(GL2 gl) {
+    	treeTextures = new MyTexture[2];
+    	treeTextures[0] = new MyTexture(gl,textureFileName1,bmpExt,true);
+    	treeTextures[1] = new MyTexture(gl,textureFileName2,bmpExt,true);
+    }
+    
     public void draw(GL2 gl) {
     	GLUT glut = new GLUT();
+    	
+    	gl.glEnable(gl.GL_TEXTURE_GEN_S); //enable texture coordinate generation
+	    gl.glEnable(gl.GL_TEXTURE_GEN_T);
     	//Trunk
     	gl.glPushMatrix();
+	    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif2,0);
+	    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, matSpec,0);
+	    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, matShine,0);
+	    	gl.glBindTexture(GL2.GL_TEXTURE_2D, treeTextures[0].getTextureId()); 
     		gl.glRotated(90, -90, 0, 0);
-    		glut.glutSolidCylinder(0.1, 1.5, 40, 40);
+    		glut.glutSolidCylinder(0.1, 1, 40, 40);
     	gl.glPopMatrix();
     	//Leaves
     	gl.glPushMatrix();
+    		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif1,0);
+    		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, matSpec,0);
+    		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, matShine2,0);
+    		gl.glBindTexture(GL2.GL_TEXTURE_2D, treeTextures[1].getTextureId()); 
     		gl.glTranslated(0, 1.5, 0);
     		glut.glutSolidSphere(0.55, 40, 40);
     	gl.glPopMatrix();
+    	
+    	gl.glDisable(gl.GL_TEXTURE_GEN_S); //enable texture coordinate generation
+	    gl.glDisable(gl.GL_TEXTURE_GEN_T);
     }
 }

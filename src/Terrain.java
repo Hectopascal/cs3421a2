@@ -156,7 +156,19 @@ public class Terrain extends GameObject{
         }
         return altitude;
     }
-
+    public void initAll(GL2 gl) {
+    	init(gl);
+    	for(Tree t : this.myTrees) {
+    		t.init(gl);
+    	}
+    	for(Road r : this.myRoads) {
+    		r.init(gl);
+    	}
+    }
+    public void init(GL2 gl) {
+    	
+    }
+    
     public void draw(GL2 gl) {
     	drawTerrain(gl);
     	drawTrees(gl);
@@ -165,7 +177,7 @@ public class Terrain extends GameObject{
     public void drawTrees(GL2 gl) {
     	for(Tree t : this.myTrees) {
     		gl.glPushMatrix();
-    		//gl.glTranslated(t.getPosition().x,  t.getPosition().y,  t.getPosition().z);
+    		gl.glTranslated(t.getPosition().x,  t.getPosition().y,  t.getPosition().z);
     		t.draw(gl);
     		gl.glPopMatrix();
     	}

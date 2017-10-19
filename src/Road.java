@@ -147,4 +147,7 @@ public class Road {
     }
 	public void draw(GL2 gl) {
 	}
+	public void init(GL2 gl) {
+		
+	}
 }
