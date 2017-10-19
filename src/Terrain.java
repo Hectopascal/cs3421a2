@@ -195,6 +195,7 @@ public class Terrain extends GameObject{
     	}
     }
     public void drawTerrain(GL2 gl) {
+    	 gl.glEnable(GL2.GL_TEXTURE_2D);
 		 gl.glPushMatrix();
 		 float matAmbAndDif1[] = {0.0f, 0.0f, 0.0f, 1.0f};
 		 float matAmbAndDif2[] = {0.0f, 0.9f, 0.0f, 1.0f};
@@ -210,79 +211,36 @@ public class Terrain extends GameObject{
 		 float width = mySize.width;
 		 float height = mySize.height;
 		 float i,j; 
-		 float x1=0;
-		 float y1=0;
-		 float x2=0;
-		 float y2=0;
          //a grimy calculation for triangle mesh that works
-        for (i = 0; i < width-1; i+=1.0) {
-        	 
-        	 gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
-        	 gl.glPolygonOffset(0.5f, 0.5f);
-        	 //gl.glCullFace(GL2.GL_BACK);
-        	 gl.glBegin(GL2.GL_TRIANGLES);
-        	 	
-	            for ( j = 0; j < height; j+=1.0) {
-	            	gl.glColor3f(1-i/width, i/width,j/height);
-	            	
-	            	if(j==0) {
-	            		x1 = (2*i)/(width-1)-1;
-	            		y1 =1-(2*j)/(height-1);
-	            		x2 = (2*(i+1))/(width-1)-1;
-	            		y2 = 1-(2*(j))/(height-1);
+        for (int x = 0; x+1 < width; x+=1.0) {
+	        for (int z = 0; z+1 < height; z+=1.0) {
+	        	//Corners for top left triangle
+	            double[] botLeft = {x, myAltitude[x][z], z};
+	            double[] topRight = {x+1, myAltitude[x+1][z+1], z+1};
+	            double[] topLeft = {x+1, myAltitude[x+1][z], z};
+		        gl.glBindTexture(GL2.GL_TEXTURE_2D, myTextures[0].getTextureId());
+	            gl.glBegin(GL2.GL_TRIANGLES);{
 
-			            	  
-		            	} else {
-		            		/* A(x1,y1)	 B (x2,y2)
-		            		 * 	 o_______o
-		            		 *   |\		|
-		            		 *   | \	|
-		            		 *   |  \	|
-		            		 *   |    \	|
-		            		 *  o|_____\|o
-		            		 * C new(x1,y1)  D new(x2,y2)
-		            		 * 
-		            		 * Drawing in counterclockwise, 
-		            		 * B->A->D, D->A->C*/
-		            		 
-		            		
-		            		//Draw top right triangle
-		            		gl.glBindTexture(GL2.GL_TEXTURE_2D, myTextures[0].getTextureId());
-		            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j-1]/2-1,y2);
-		            		gl.glVertex3f(x1,(float)myAltitude[(int)i][(int)j-1]/2-1,y1);
-			            	
-		            		x2 = (2*(i+1))/(width-1)-1;
-		            		y2 = 1-(2*(j))/(height-1);
-		            		//System.out.println("("+x2+","+y2+") ");
-		            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j]/2-1,y2);
-		            		
-		            		gl.glBindTexture(GL2.GL_TEXTURE_2D, myTextures[0].getTextureId());
-		            		//Draw bottom triangle
-		            		gl.glColor3f(1-(i+0.5f)/width, (i+0.5f)/width,(j+0.5f)/height);
-		            		
-		            		gl.glVertex3f(x2,(float)myAltitude[(int)i+1][(int)j]/2-1,y2);
-		            		gl.glVertex3f(x1,(float)myAltitude[(int)i][(int)j-1]/2-1,y1);
-		            		
-		            		x1 = (2*i)/(width-1)-1;
-		            		y1 =1-(2*j)/(height-1);
-
-		            		//System.out.println("("+x1+","+y1+") ");
-		            		gl.glVertex3f(x1,(float)myAltitude[(int)i][(int)j]/2-1,y1);
-		            		
-		            	}
+		        	gl.glVertex3d(botLeft[0],botLeft[1],botLeft[2]);
+		        	gl.glVertex3d(topRight[0],topRight[1],topRight[2]);
+		        	gl.glVertex3d(topLeft[0],topLeft[1],topLeft[2]);
+	        	}gl.glEnd();   		
+		        gl.glBindTexture(GL2.GL_TEXTURE_2D, myTextures[0].getTextureId());
+		        //Corner for bottom right triangle
+		        double[] botRight = {x, myAltitude[x][z+1],z+1};
+		        gl.glBindTexture(GL2.GL_TEXTURE_2D, myTextures[0].getTextureId());
+		        gl.glBegin(GL2.GL_TRIANGLES);{
+		        	gl.glVertex3d(botLeft[0], botLeft[1], botLeft[2]);
+		        	gl.glVertex3d(botRight[0], botRight[1], botRight[2]);
+		        	gl.glVertex3d(topRight[0], topRight[1], topRight[2]);
+		        }
+		        gl.glEnd();
 		            	
-		            	
-		            	
-		             }
-		             
-                 gl.glEnd();
+		     }
                  
-	         }
-
-	        
+	     } 
          gl.glPopMatrix();
-         gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);
-     	
+         gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);	
     }
     
     /**
