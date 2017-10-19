@@ -50,6 +50,9 @@ public class Game extends JFrame implements GLEventListener{
           GLJPanel panel = new GLJPanel();
           
           myCamera = new Camera(GameObject.ROOT);
+
+          myCamera.setPosition(new Coord(1,2,1));
+          myCamera.setRotation(new Coord(10,20,10));
           myCamera.setScale(new Coord(3,3,3));
           panel.addGLEventListener(myCamera);
           panel.addKeyListener(myCamera);
@@ -88,21 +91,16 @@ public class Game extends JFrame implements GLEventListener{
     	
     	gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
-        setLighting(gl);
+        //setLighting(gl);
         // set the view matrix based on the camera position
         myCamera.setView(gl);
         gl.glTranslated(x, y-0.25, -1);
 	 	gl.glRotated(xAngleCam, 1, 0, 0);
-        GLU glu = new GLU();
-        //First 3 arguments are location of the view
-        //Second 3 arguments are what point to look at
-        //Last 3 arguments are the UP Vector (which way is up I guess?)
     	/*glu.gluLookAt(	0.0f, 0.0f, 10.0f,
     			2.0f, 1.0f,  0.0f,
     			0.0f, 1.0f,  0.0f);
 */
     	
-
         // draw the scene tree
         GameObject.ROOT.draw(gl);  
         

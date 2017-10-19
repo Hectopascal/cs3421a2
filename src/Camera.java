@@ -29,6 +29,10 @@ public class Camera extends GameObject implements GLEventListener, KeyListener {
         coords = new Coord(0,0,0);
         farPlane = 1000.0;
         myBackground = new float[4];
+        myBackground[0] = 0;
+        myBackground[1] = 0.6f;
+        myBackground[2] = 0.9f;
+        myBackground[3] = 1;
     }
 
     public Camera() {
@@ -67,7 +71,6 @@ public class Camera extends GameObject implements GLEventListener, KeyListener {
         //  2. set the view matrix to account for the camera's position         
         gl.glLoadIdentity();
         //int size = (int)this.getScale();
-
         Coord Translated = this.GlobalPosition;
         Coord Rotate = this.GlobalRotation;
         Coord Scale = this.GlobalScale;
@@ -110,9 +113,9 @@ public class Camera extends GameObject implements GLEventListener, KeyListener {
         // coordinate system (left, right, bottom, top)
 
         //gl.glOrtho(-3,3,-3,3,1,10);  
-
-        gl.glOrtho(-1,1,-1,1,-1,5);  
-        myGLU.gluOrtho2D(left, right, bottom, top);    
+        gl.glFrustum(-1,1,-1,1,-1,5);
+        //gl.glOrtho(-1,1,-1,1,-1,5);  
+        //myGLU.gluOrtho2D(left, right, bottom, top);    
 
     }
 
@@ -152,20 +155,23 @@ public class Camera extends GameObject implements GLEventListener, KeyListener {
 	public void display(GLAutoDrawable arg0) {
     	GL2 gl = arg0.getGL().getGL2();
 
-    	gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+    	//gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
     	
     	gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
 
         GLU glu = new GLU();
-        glu.gluLookAt(2,4,3,0,0,0,0,1,0);
-        gl.glRotated(-45, 0, 0, 1);
+        //glu.gluLookAt(2,4,3,0,0,0,0,1,0);
+        //gl.glRotated(-45, 0, 0, 1);
         //gl.glRotated(-10, 0, 1, 0);
-        gl.glRotated(15, 1, 0, 0);
+        //gl.glRotated(15, 1, 0, 0);
         //gl.glTranslated(0, -1,-3);
         
         //Aim camera
-        gl.glTranslated(coords.x,coords.y,coords.z);
+        this.setPosition(new Coord(coords.x,coords.y,coords.z));
+
+        this.setRotation(new Coord(0,angle,0));
+        //gl.glTranslated(coords.x,coords.y,coords.z);
     	gl.glRotated (angle, 0,1, 0);  //Y axis
     	
     	GLUT glut = new GLUT();

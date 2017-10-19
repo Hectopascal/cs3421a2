@@ -1,7 +1,7 @@
 
-import com.jogamp.opengl.GL2;
-
 import java.util.ArrayList;
+
+import com.jogamp.opengl.GL2;
 public class GameObject {
     public ArrayList<GameObject> all_object = new ArrayList<GameObject>();
 
