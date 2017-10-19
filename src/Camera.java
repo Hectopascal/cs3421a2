@@ -110,9 +110,9 @@ public class Camera extends GameObject implements GLEventListener, KeyListener {
         // coordinate system (left, right, bottom, top)
 
         //gl.glOrtho(-3,3,-3,3,1,10);  
-
-        gl.glOrtho(-1,1,-1,1,-1,5);  
-        myGLU.gluOrtho2D(left, right, bottom, top);    
+        gl.glFrustum(-1,1,-1,1,-1,5);
+        //gl.glOrtho(-1,1,-1,1,-1,5);  
+        //myGLU.gluOrtho2D(left, right, bottom, top);    
 
     }
 
@@ -158,14 +158,17 @@ public class Camera extends GameObject implements GLEventListener, KeyListener {
         gl.glLoadIdentity();
 
         GLU glu = new GLU();
-        glu.gluLookAt(2,4,3,0,0,0,0,1,0);
-        gl.glRotated(-45, 0, 0, 1);
+        //glu.gluLookAt(2,4,3,0,0,0,0,1,0);
+        //gl.glRotated(-45, 0, 0, 1);
         //gl.glRotated(-10, 0, 1, 0);
-        gl.glRotated(15, 1, 0, 0);
+        //gl.glRotated(15, 1, 0, 0);
         //gl.glTranslated(0, -1,-3);
         
         //Aim camera
-        gl.glTranslated(coords.x,coords.y,coords.z);
+        this.setPosition(new Coord(coords.x,coords.y,coords.z));
+
+        this.setRotation(new Coord(0,angle,0));
+        //gl.glTranslated(coords.x,coords.y,coords.z);
     	gl.glRotated (angle, 0,1, 0);  //Y axis
     	
     	GLUT glut = new GLUT();

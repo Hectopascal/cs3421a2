@@ -212,9 +212,9 @@ public class Terrain extends GameObject{
          
             for (i = 0; i < width-1; i+=1.0) {
 	        	 
-	        	 gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
-	        	 //gl.glPolygonOffset(0.5f, 0.5f);
-	        	 gl.glCullFace(GL2.GL_BACK);
+	        	 gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
+	        	 gl.glPolygonOffset(0.5f, 0.5f);
+	        	 //gl.glCullFace(GL2.GL_BACK);
 	        	 gl.glBegin(GL2.GL_TRIANGLES);
 	        	 	
 		            for ( j = 0; j < height; j+=1.0) {
