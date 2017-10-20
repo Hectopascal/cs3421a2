@@ -173,12 +173,13 @@ public class Terrain extends GameObject{
     	myTextures[0] = new MyTexture(gl, textureFileName1, bmpExt,true);
     	
     }
-    
-    public void draw(GL2 gl) {
+    @Override
+    public void drawSelf(GL2 gl) {
     	drawTerrain(gl);
     	drawTrees(gl);
     	drawRoads(gl);
     }
+    
     public void drawTrees(GL2 gl) {
     	for(Tree t : this.myTrees) {
     		gl.glPushMatrix();

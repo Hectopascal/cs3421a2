@@ -31,13 +31,13 @@ public class Tree extends GameObject {
     public Tree(double x, double y, double z, GameObject parent) {
     	super(parent);
         myPos = new Coord(x,y,z);
-        this.GlobalPosition = new Coord(x,y,z);
+        this.myTranslation = new Coord(x,y,z);
         material = new Color();
         material.diffuse = new ColorObject(0.9f,0.6f,0.2f,0.0f);
     }
     public Tree(Coord coords, GameObject parent) {
     	super(parent);
-    	this.GlobalPosition = coords;
+    	this.myTranslation = coords;
     }
 
     public Coord getPosition() {

@@ -73,16 +73,16 @@ public class MathUtil {
      * Multiply a vector by a matrix
      *
      * @param m A 4x4 matrix
-     * @param v A 3x1 vector
+     * @param v A 4x1 vector
      * @return
      */
     public static double[] multiply(double[][] m, double[] v) {
 
         double[] u = new double[3];
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             u[i] = 0;
-            for (int j = 0; j < 3; j++) {
+            for (int j = 0; j < 4; j++) {
                 u[i] += m[i][j] * v[j];
             }
         }
@@ -208,7 +208,7 @@ public class MathUtil {
     }
 
     /**
-     * A 3D scale matrix that scales both axes by the same factor
+     * A 3D scale matrix that scales three axes by the same factor
      *
      * @param scale
      * @return
@@ -222,8 +222,27 @@ public class MathUtil {
         resultMatrix[3] = new double[] {0,0,0,1};
         return resultMatrix;
     }
+    //* scales by coords for each dimension
+    public static double[][] scaleMatrix4(Coord scale) {
+        double[][] resultMatrix = new double[4][4];
+        resultMatrix[0] = new double[] {scale.x,0,0,0};
+        resultMatrix[1] = new double[] {0,scale.y,0,0};
+        resultMatrix[2] = new double[] {0,0,scale.z,0};
+        resultMatrix[3] = new double[] {0,0,0,1};
+        return resultMatrix;
+    }
 
     public static Coord translationVector(double[][] matrix){
         return new Coord(matrix[0][3],matrix[1][3],matrix[2][3]);
     }
+    
+    //generates 4 by 4 identity
+	public static double[][] identityMatrix() {
+		double[][] resultMatrix = new double[4][4];
+        resultMatrix[0] = new double[] {1,0,0,0};
+        resultMatrix[1] = new double[] {0,1,0,0};
+        resultMatrix[2] = new double[] {0,0,1,0};
+        resultMatrix[3] = new double[] {0,0,0,1};
+		return resultMatrix;
+	}
 }

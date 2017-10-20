@@ -71,9 +71,9 @@ public class Camera extends GameObject implements GLEventListener, KeyListener {
         //  2. set the view matrix to account for the camera's position         
         gl.glLoadIdentity();
         //int size = (int)this.getScale();
-        Coord Translated = this.GlobalPosition;
-        Coord Rotate = this.GlobalRotation;
-        Coord Scale = this.GlobalScale;
+        Coord Translated = this.myTranslation;
+        Coord Rotate = this.myRotation;
+        Coord Scale = this.myScale;
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
         // apply the view transform
