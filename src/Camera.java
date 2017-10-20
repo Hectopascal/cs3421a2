@@ -90,9 +90,12 @@ public class Camera extends GameObject implements GLEventListener, KeyListener {
         // match the projection aspect ratio to the viewport
         // to avoid stretching
         GL2 gl = arg0.getGL().getGL2();
-        gl.glMatrixMode(GL2.GL_PROJECTION);
+        gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
-
+        GLU myGLU = new GLU();
+        
+        //myGLU.gluPerspective(90, -90, 0.1,1);
+       
         double top, bottom, left, right;
         
         if (width > height) {
@@ -109,13 +112,12 @@ public class Camera extends GameObject implements GLEventListener, KeyListener {
             left = -1;
             right = 1;                        
         }        
-        GLU myGLU = new GLU();
         // coordinate system (left, right, bottom, top)
 
         //gl.glOrtho(-3,3,-3,3,1,10);  
-        gl.glFrustum(-1,1,-1,1,-1,5);
-        //gl.glOrtho(-1,1,-1,1,-1,5);  
-        //myGLU.gluOrtho2D(left, right, bottom, top);    
+        //gl.glFrustum(-1,1,-1,1,-1,5);
+        //gl.glOrtho(-1,1,-1,1,-1,5); 
+        myGLU.gluOrtho2D(left, right, bottom, top);    
 
     }
 
@@ -159,24 +161,19 @@ public class Camera extends GameObject implements GLEventListener, KeyListener {
     	
     	gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
-
-        GLU glu = new GLU();
-        //glu.gluLookAt(2,4,3,0,0,0,0,1,0);
-        //gl.glRotated(-45, 0, 0, 1);
-        //gl.glRotated(-10, 0, 1, 0);
-        //gl.glRotated(15, 1, 0, 0);
-        //gl.glTranslated(0, -1,-3);
+        GLU myGLU = new GLU();
+        myGLU.gluPerspective(90, -90, 0.1,1);
+        myGLU.gluLookAt(2,4,3,0,0,0,0,1,0);
         
-        //Aim camera
-        this.setPosition(new Coord(coords.x,coords.y,coords.z));
-
-        this.setRotation(new Coord(0,angle,0));
-        //gl.glTranslated(coords.x,coords.y,coords.z);
-    	gl.glRotated (angle, 0,1, 0);  //Y axis
+	        gl.glTranslated(coords.x,coords.y,coords.z);
+	        
+	        //Aim camera
+	        //this.setPosition(new Coord(coords.x,coords.y,coords.z));
+	        this.setRotation(new Coord(0,angle,0));
+	        //gl.glTranslated(coords.x,coords.y,coords.z);
+	    	gl.glRotated (angle, 0,1, 0);  //Y axis
     	
-    	GLUT glut = new GLUT();
-    	glut.glutSolidTeapot(1);
-    	
+	    	
 	}
 
 	
