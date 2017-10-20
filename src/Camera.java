@@ -151,7 +151,7 @@ public class Camera implements GLEventListener, KeyListener {
 		    default:
 			    break;
 		 }
-		 System.out.println(angle);
+		 //System.out.println(angle);
 		
 	}
 

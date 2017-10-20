@@ -201,7 +201,6 @@ public class Terrain {
 		 
 		 float width = mySize.width;
 		 float height = mySize.height;
-		 float i,j; 
          //a grimy calculation for triangle mesh that works
         for (int x = 0; x+1 < width; x+=1.0) {
 	        for (int z = 0; z+1 < height; z+=1.0) {
@@ -222,7 +221,6 @@ public class Terrain {
 		        	gl.glTexCoord2d(topLeft[0], topLeft[2]);
 		        	gl.glVertex3d(topLeft[0],topLeft[1],topLeft[2]);
 	        	}gl.glEnd();   		
-		        gl.glBindTexture(GL2.GL_TEXTURE_2D, myTextures[0].getTextureId());
 		        //Corner for bottom right triangle
 		        double[] botRight = {x, myAltitude[x][z+1],z+1};
 		        normals = getNormal(botLeft, botRight, topRight);
@@ -244,7 +242,6 @@ public class Terrain {
                  
 	     } 
          gl.glPopMatrix();
-         gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);	
     }
     
     /**

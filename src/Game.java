@@ -1,8 +1,8 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import com.jogamp.newt.event.KeyEvent;
-import com.jogamp.newt.event.KeyListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.glu.GLU;
@@ -19,7 +19,7 @@ import com.jogamp.opengl.util.gl2.GLUT;
  *
  * @author malcolmr
  */
-public class Game extends JFrame implements GLEventListener, KeyListener{
+public class Game extends JFrame implements GLEventListener, KeyListener {
 
     private Terrain myTerrain;
     private Camera myCamera;
@@ -64,8 +64,11 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
           myCamera.setPosition(new Coord(1,2,1));
           myCamera.setRotation(new Coord(10,20,10));
           myCamera.setScale(new Coord(3,3,3));
-          panel.addGLEventListener(myCamera);
-          panel.addKeyListener(myCamera);
+          //panel.addGLEventListener(myCamera);
+          //panel.addKeyListener(myCamera);
+          panel.addGLEventListener(this);
+          panel.addKeyListener(this);
+          
           panel.setFocusable(true);   
           
           panel.addGLEventListener(this);
@@ -104,18 +107,33 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         gl.glLoadIdentity();
         //setLighting(gl);
         // set the view matrix based on the camera position
-        myCamera.setView(gl);
+        //myCamera.setView(gl);
         GLU glu = new GLU();
         gl.glTranslated(x, y-0.25, -1);
 	 	gl.glRotated(xAngleCam, 1, 0, 0);
-	 	//double[] avatarPos = myAvatar.getPosition();
-    	//glu.gluLookAt(avatarPos[0], avatarPos[1], avatarPos[2], avatarPos[0], avatarPos[1], avatarPos[2]+1, 0.0, 1.0, 0.0);
-        // draw the scene tree
-        //GameObject.ROOT.draw(gl);
+	 	gl.glRotated(-myAvatar.getRotation(), 0, 1, 0);
+	 	double[] avatarPos = myAvatar.getPosition();
+    	glu.gluLookAt(avatarPos[0], avatarPos[1], avatarPos[2], avatarPos[0], avatarPos[1], avatarPos[2]+1, 0.0, 1.0, 0.0);
+
+    	setLighting(gl);
     	myTerrain.draw(gl);
         myAvatar.draw(gl);
-    	//this.myTerrain.drawGame(gl);
+
     	gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);
+    	
+    	if(forwardPressed) {
+    		goForwards();
+    	}
+    	if (backwardsPressed) {
+    		goBackwards();
+    	}
+    	if(leftPressed) {
+    		this.myAvatar.rotateLeft();
+    	}
+    	if(rightPressed) {
+    		this.myAvatar.rotateRight();
+    	}
+    	
 	}
 
 	@Override
@@ -221,7 +239,6 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         
 	}
 
-	@Override
 	public void keyPressed(KeyEvent e) {
 		switch (e.getKeyCode()) {
 			case KeyEvent.VK_UP:
@@ -241,7 +258,6 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 		}
 	}
 
-	@Override
 	public void keyReleased(KeyEvent e) {
 		switch (e.getKeyCode()) {
 			case KeyEvent.VK_UP:
@@ -261,4 +277,20 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 		}
 		
 	}
+	public void goForwards() {
+		myAvatar.goForwards(myTerrain.size());
+		myAvatar.setAltitude(myTerrain.altitude(myAvatar.getPosition()[0], myAvatar.getPosition()[2]));
+	}
+	public void goBackwards() {
+		myAvatar.goBackwards(myTerrain.size());
+		myAvatar.setAltitude(myTerrain.altitude(myAvatar.getPosition()[0], myAvatar.getPosition()[2]));
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 }

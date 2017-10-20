@@ -163,10 +163,10 @@ public class Road {
         gl.glBegin(GL2.GL_POINTS);
         //double tIncrement = 1.0/numPoints;
         double tIncrement = ((double)this.size())/numPoints;
-        System.out.println("numPoints " + numPoints + " " + tIncrement);
+        //System.out.println("numPoints " + numPoints + " " + tIncrement);
         for(int i = 0; i < numPoints*this.size(); i++){        		
         	double t = i*tIncrement;   
-        	System.out.println("t " + t);
+        	//System.out.println("t " + t);
         	gl.glVertex3d(this.point(t)[0],0,this.point(t)[1]);
         }
         gl.glVertex2dv(this.controlPoint(this.size()*3),0);
