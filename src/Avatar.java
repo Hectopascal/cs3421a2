@@ -39,12 +39,12 @@ public class Avatar{
 	}
 	
 	public void rotateLeft() {
-		this.myRotation = (this.myRotation + 1) % 360;
+		this.myRotation = (this.myRotation - 1) % 360;
 		this.myDirection = (int)(this.myRotation/90);
 		System.out.println(this.myRotation);
 	}
 	public void rotateRight() {
-		this.myRotation = (this.myRotation - 1) % 360;
+		this.myRotation = (this.myRotation + 1) % 360;
 		if(this.myRotation < 0.0) {
 			this.myRotation = 360 + this.myRotation;
 		}
@@ -68,7 +68,9 @@ public class Avatar{
 		gl.glPopMatrix();
 	}
 	public void goForwards(Dimension size) {
-		System.out.println("Moving");
+		System.out.println(myPosition[0]);
+		System.out.println(myPosition[1]);
+		System.out.println(myPosition[2]);
 		switch(myDirection) {
 			case 0:
 				if((this.myPosition[2]+0.05) <= size.height-1) {
@@ -93,6 +95,9 @@ public class Avatar{
 		}
 	}
 	public void goBackwards(Dimension size) {
+		System.out.println(myPosition[0]);
+		System.out.println(myPosition[1]);
+		System.out.println(myPosition[2]);
     	switch (this.myDirection) {
     	case 0: 
     		if ((this.myPosition[2]-0.05) >= 0)

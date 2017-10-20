@@ -145,8 +145,8 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 	public void init(GLAutoDrawable drawable) {
     	GL2 gl = drawable.getGL().getGL2();
     	gl.glEnable(GL2.GL_DEPTH_TEST);
-    	gl.glEnable(GL2.GL_CULL_FACE);
-    	gl.glCullFace(GL2.GL_BACK);
+    	//gl.glEnable(GL2.GL_CULL_FACE);
+    	//gl.glCullFace(GL2.GL_BACK);
     	gl.glTexEnvf(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE); 
     	gl.glEnable(GL2.GL_TEXTURE_2D); 
     	gl.glEnable(GL2.GL_LIGHTING);
@@ -279,11 +279,11 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 	}
 	public void goForwards() {
 		myAvatar.goForwards(myTerrain.size());
-		myAvatar.setAltitude(myTerrain.altitude(myAvatar.getPosition()[0], myAvatar.getPosition()[2]));
+		myAvatar.setAltitude(myTerrain.getGridAltitude((int)myAvatar.getPosition()[0], (int)myAvatar.getPosition()[2]));
 	}
 	public void goBackwards() {
 		myAvatar.goBackwards(myTerrain.size());
-		myAvatar.setAltitude(myTerrain.altitude(myAvatar.getPosition()[0], myAvatar.getPosition()[2]));
+		myAvatar.setAltitude(myTerrain.getGridAltitude((int)myAvatar.getPosition()[0], (int)myAvatar.getPosition()[2]));
 	}
 
 	@Override
