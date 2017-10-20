@@ -8,7 +8,7 @@ import com.jogamp.opengl.GL2;
  *
  * @author malcolmr
  */
-public class Road extends GameObject{
+public class Road {
 
     private List<Double> myPoints;
     private double myWidth;
@@ -17,14 +17,6 @@ public class Road extends GameObject{
      * Create a new road starting at the specified point
      */
     public Road(double width, double x0, double y0) {
-    	super(GameObject.ROOT);
-        myWidth = width;
-        myPoints = new ArrayList<Double>();
-        myPoints.add(x0);
-        myPoints.add(y0);
-    }
-    public Road(double width, double x0, double y0, GameObject parent) {
-    	super(parent);
         myWidth = width;
         myPoints = new ArrayList<Double>();
         myPoints.add(x0);
@@ -37,21 +29,13 @@ public class Road extends GameObject{
      * @param spine
      */
     public Road(double width, double[] spine) {
-    	super(GameObject.ROOT);
         myWidth = width;
         myPoints = new ArrayList<Double>();
         for (int i = 0; i < spine.length; i++) {
             myPoints.add(spine[i]);
         }
     }
-    public Road(double width, double[] spine,GameObject parent) {
-    	super(parent);
-        myWidth = width;
-        myPoints = new ArrayList<Double>();
-        for (int i = 0; i < spine.length; i++) {
-            myPoints.add(spine[i]);
-        }
-    }
+
     /**
      * The width of the road.
      * 

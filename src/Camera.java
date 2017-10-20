@@ -17,26 +17,28 @@ import com.jogamp.opengl.util.gl2.GLUT;
  *
  * @author malcolmr
  */
-public class Camera extends GameObject implements GLEventListener, KeyListener {
+public class Camera implements GLEventListener, KeyListener {
 
     private float[] myBackground;
     public double farPlane;
     public Coord coords;
     public int angle = 0;
     
-    public Camera(GameObject parent) {
-        super(parent);
+    Coord myTranslation;
+    Coord myRotation;
+    Coord myScale;
+    
+    public Camera() {
         coords = new Coord(0,0,0);
+        this.myTranslation = new Coord(0.0,0.0,0.0);
+        this.myRotation = new Coord(0.0,0.0,0.0);
+        this.myScale = new Coord(1.0,1.0,1.0);
         farPlane = 1000.0;
         myBackground = new float[4];
         myBackground[0] = 0;
         myBackground[1] = 0.6f;
         myBackground[2] = 0.9f;
         myBackground[3] = 1;
-    }
-
-    public Camera() {
-        this(GameObject.ROOT);
     }
     
     public float[] getBackground() {
@@ -168,9 +170,9 @@ public class Camera extends GameObject implements GLEventListener, KeyListener {
         //gl.glTranslated(0, -1,-3);
         
         //Aim camera
-        this.setPosition(new Coord(coords.x,coords.y,coords.z));
+        this.myTranslation = new Coord(coords.x,coords.y,coords.z);
 
-        this.setRotation(new Coord(0,angle,0));
+        this.myRotation = new Coord(0,angle,0);
         //gl.glTranslated(coords.x,coords.y,coords.z);
     	gl.glRotated (angle, 0,1, 0);  //Y axis
     	
@@ -179,7 +181,15 @@ public class Camera extends GameObject implements GLEventListener, KeyListener {
     	
 	}
 
-	
+    public void setPosition(Coord t) {
+    	this.myTranslation = t;
+    }
+    public void setRotation(Coord r) {
+    	this.myRotation = r;
+    }
+    public void setScale(Coord s) {
+    	this.myScale = s;
+    }
 
 	@Override
 	public void init(GLAutoDrawable arg0) {

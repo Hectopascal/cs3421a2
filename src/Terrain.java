@@ -11,7 +11,7 @@ import com.jogamp.opengl.GL2;
  *
  * @author malcolmr
  */
-public class Terrain extends GameObject{
+public class Terrain {
 
     private Dimension mySize;
     private double[][] myAltitude;
@@ -28,25 +28,16 @@ public class Terrain extends GameObject{
      * @param width The number of vertices in the x-direction
      * @param depth The number of vertices in the z-direction
      */
-    public Terrain(int width, int depth, GameObject parent) {
-    	super(parent);
-        mySize = new Dimension(width, depth);
-        myAltitude = new double[width][depth];
-        myTrees = new ArrayList<Tree>();
-        myRoads = new ArrayList<Road>();
-        mySunlight = new float[3];
-    }
-    
     public Terrain(int width, int depth) {
-    	super(GameObject.ROOT);
         mySize = new Dimension(width, depth);
         myAltitude = new double[width][depth];
         myTrees = new ArrayList<Tree>();
         myRoads = new ArrayList<Road>();
         mySunlight = new float[3];
     }
-    public Terrain(Dimension size, GameObject parent) {
-        this(size.width, size.height, parent);
+
+    public Terrain(Dimension size) {
+        this(size.width, size.height);
     }
 
     public Dimension size() {
@@ -173,8 +164,7 @@ public class Terrain extends GameObject{
     	myTextures[0] = new MyTexture(gl, textureFileName1, bmpExt,true);
     	
     }
-    @Override
-    public void drawSelf(GL2 gl) {
+    public void draw(GL2 gl) {
     	drawTerrain(gl);
     	drawTrees(gl);
     	drawRoads(gl);
@@ -266,7 +256,7 @@ public class Terrain extends GameObject{
      */
     public void addTree(double x, double z) {
         double y = altitude(x, z);
-        Tree tree = new Tree(x, y, z, this);
+        Tree tree = new Tree(x, y, z);
         myTrees.add(tree);
     }
 

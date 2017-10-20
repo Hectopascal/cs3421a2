@@ -7,7 +7,7 @@ import com.jogamp.opengl.util.gl2.GLUT;
  *
  * @author malcolmr
  */
-public class Tree extends GameObject {
+public class Tree {
 
     private Color material;
     private static final int SLICES = 32;
@@ -28,16 +28,10 @@ public class Tree extends GameObject {
     private String textureFileName2 = "src/textures/bricks.bmp";
     private String bmpExt = "bmp";
     
-    public Tree(double x, double y, double z, GameObject parent) {
-    	super(parent);
+    public Tree(double x, double y, double z) {
         myPos = new Coord(x,y,z);
-        this.myTranslation = new Coord(x,y,z);
         material = new Color();
         material.diffuse = new ColorObject(0.9f,0.6f,0.2f,0.0f);
-    }
-    public Tree(Coord coords, GameObject parent) {
-    	super(parent);
-    	this.myTranslation = coords;
     }
 
     public Coord getPosition() {
