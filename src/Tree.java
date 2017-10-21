@@ -15,8 +15,8 @@ public class Tree {
     private static final double HEIGHT = 1;
     
     //Material Properties
-	private float matAmbAndDif1[] = {0.0f, 0.9f, 0.0f, 1.0f};
-	private float matAmbAndDif2[] = {1.0f, 1.0f, 1.0f, 1.0f};
+	private float matAmbAndDif1[] = {0.0f, 0.9f, 0.0f, 1.0f}; //Green
+	private float matAmbAndDif2[] = {1.0f, 1.0f, 1.0f, 1.0f}; //White
 	private float matSpec[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	private float matShine[] = { 0.0f };
 	private float matShine2[] = { 20.0f };
@@ -46,6 +46,7 @@ public class Tree {
     
     public void draw(GL2 gl) {
         gl.glColor3d(0.0, 0.0, 0.0);
+
         gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, new float[]{material.ambient.x, material.ambient.y, material.ambient.z}, 0);
         gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_DIFFUSE, new float[]{material.diffuse.x, material.diffuse.y, material.diffuse.z}, 0);
         gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, new float[]{material.specular.x, material.specular.y, material.specular.z}, 0);
@@ -62,16 +63,20 @@ public class Tree {
 	    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, matShine,0);
 	    	gl.glBindTexture(GL2.GL_TEXTURE_2D, treeTextures[0].getTextureId()); 
     		gl.glRotated(90, -90, 0, 0);
+    		gl.glFrontFace(GL2.GL_CW);
     		glut.glutSolidCylinder(0.1, 1.5, 40, 40);
+    		gl.glFrontFace(GL2.GL_CCW);
     	gl.glPopMatrix();
     	//Leaves
     	gl.glPushMatrix();
-    		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif1,0);
-    		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, matSpec,0);
-    		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, matShine2,0);
+    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif2,0);
+    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, matSpec,0);
+    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, matShine,0);
     		gl.glBindTexture(GL2.GL_TEXTURE_2D, treeTextures[1].getTextureId()); 
     		gl.glTranslated(0, 1.5, 0);
+    		gl.glFrontFace(GL2.GL_CW);
     		glut.glutSolidTeapot(0.5);
+    		gl.glFrontFace(GL2.GL_CCW);
     		//glut.glutSolidSphere(0.55, 40, 40);
     	gl.glPopMatrix();
     	

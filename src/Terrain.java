@@ -20,7 +20,7 @@ public class Terrain {
     private float[] mySunlight;
     private MyTexture[] myTextures;
     
-    private String textureFileName1 = "src/textures/grass.bmp";
+    private String textureFileName1 = "src/textures/water.bmp";
     private String bmpExt = "bmp";
     /**
      * Create a new terrain
@@ -268,7 +268,7 @@ public class Terrain {
 		 float height = mySize.height;
          //a grimy calculation for triangle mesh that works
 
-	    gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_LINE);
+	    gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);
         for (int x = 0; x+1 < width; x+=1.0) {
 	        for (int z = 0; z+1 < height; z+=1.0) {
 	        	//Corners for top left triangle
@@ -310,9 +310,6 @@ public class Terrain {
 		        gl.glEnd();
 		            	
 		     }
-                 
-	      
-       
 	     } 
     }
     
