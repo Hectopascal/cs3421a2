@@ -131,10 +131,10 @@ public class Avatar{
 		}
 	}
 	public void goBackwards(Dimension size) {
-		/*               |       sin rule: a/sin(A) == b/sin(B) == c/sin(C)
-		        |\  |--/    We move 0.05 on the diagonal so
-		        | \ | /     b = 0.05/sin(90) * sin(B)
-		        |  \|/      c = 0.05/sin(90) * sin(90-B)
+				/*               |       Use trig to find x and z lengths (Q1)
+		        |\  |--/    sin(angle) * 0.5 = x
+		        | \ | /     cos(angle) * 0.5 = z
+		        |  \|/      
 		     -------------- Where b is X movement in quadrant 1/3, and Z movement in quad 2/4  
 		           /|\    | c is X movement in quad 2/4, and Z movement in quad 1/3
 		          / | \   | Q1: +X +Z
@@ -144,33 +144,36 @@ public class Avatar{
 		*/
 		final double movement = -0.05;
 		double angleFromQuadrant = this.myRotation % 90;
-		double xMove = (movement/Math.sin(Math.toRadians(angleFromQuadrant))) * (Math.sin(Math.toRadians(90-angleFromQuadrant)));
-		double zMove = (movement/Math.sin(Math.toRadians(90-angleFromQuadrant))) * (Math.sin(Math.toRadians(angleFromQuadrant)));
-		double temp;
+		double xMove;
+		double zMove;
 		switch (myDirection) {
 		
 		case 0: 
-			//Do nothing, both positive
+			xMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
+			zMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
 			break;
 		case 1: 
 			//Positive x, negative z
-			temp = xMove;
-			xMove = zMove;
-			zMove = temp;
+			xMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
+			zMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
 			zMove = -zMove;
 			break;
 		case 2: 
 			//Negative x, negative z
+			xMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
+			zMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
 			xMove = -xMove;
 			zMove = -zMove;
 			break;
 		case 3: 
 			//Negative x, positive z
-			temp = xMove;
-			xMove = zMove;
-			zMove = temp;
+			xMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
+			zMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
 			xMove = -xMove;
 			break;
+		default:
+			xMove = 0;
+			zMove = 0;
 		}
 		if(this.myPosition[0] + xMove >= 0 && this.myPosition[0] + xMove <= size.width - 1){
 			if(this.myPosition[2]+zMove >= 0 && this.myPosition[2] + zMove <= size.height - 1) {
