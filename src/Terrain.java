@@ -169,7 +169,7 @@ public class Terrain {
     		drawTerrain(gl);
     	gl.glPopMatrix();
     	drawTrees(gl);
-    	drawRoads(gl);
+    	//drawRoads(gl);
     }
     
     public void drawTrees(GL2 gl) {
