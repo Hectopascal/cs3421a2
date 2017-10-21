@@ -155,6 +155,7 @@ public class Terrain {
     		t.init(gl);
     	}
     	for(Road r : this.myRoads) {
+    		r.setTerrain(this);
     		r.init(gl);
     	}
     }
@@ -169,7 +170,7 @@ public class Terrain {
     		drawTerrain(gl);
     	gl.glPopMatrix();
     	drawTrees(gl);
-    	//drawRoads(gl);
+    	drawRoads(gl);
     }
     
     public void drawTrees(GL2 gl) {
@@ -214,9 +215,11 @@ public class Terrain {
 	            	gl.glNormal3d(normals[0], normals[1], normals[2]);
 	            	gl.glTexCoord2d(botLeft[0],botLeft[2]);
 		        	gl.glVertex3d(botLeft[0],botLeft[1],botLeft[2]);
+		        	
 		        	gl.glNormal3d(normals[0], normals[1], normals[2]);
 		        	gl.glTexCoord2d(topRight[0], topRight[2]);
 		        	gl.glVertex3d(topRight[0],topRight[1],topRight[2]);
+		        	
 		        	gl.glNormal3d(normals[0], normals[1], normals[2]);
 		        	gl.glTexCoord2d(topLeft[0], topLeft[2]);
 		        	gl.glVertex3d(topLeft[0],topLeft[1],topLeft[2]);
