@@ -36,7 +36,9 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     private boolean aPressed = false;
     private boolean sPressed = false;
     private boolean dPressed = false;
-    
+
+    private float[] lightPos = new float[3];
+	private int angleC;
     public Game(Terrain terrain) {
     	super("Assignment 2");
         myTerrain = terrain;
@@ -272,5 +274,52 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 		
 	}
 
+	public void changeLight(GL2 gl) {
+
+		// Change Light Position
+		float ambVal;
+		double incAngle = (2 * Math.PI / 360);
+		double radius = Math.hypot((myTerrain.size().getWidth()/2-myTerrain.getSunlight()[0]),
+				(0-myTerrain.getSunlight()[1]));
+		double initAngle = Math.atan(myTerrain.getSunlight()[0]/myTerrain.getSunlight()[0]);
+
+		// Calculate new light position
+		lightPos[0] = (float) (radius * Math.sin(incAngle*angleC + initAngle));
+		lightPos[1] = (float) (radius * Math.cos(incAngle*angleC + initAngle));
+		lightPos[2] = myTerrain.getSunlight()[2];
+
+		// Set Ambient Light
+		if (lightPos[1] >= 0) {
+			ambVal = (float) (lightPos[1]/radius + 0.1f);
+			float lightAmb[] = { ambVal, ambVal, ambVal, 1.0f };
+			gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, lightAmb,0);
+		} else {
+			float lightAmb[] = {0.3f, 0.3f, 0.3f, 1.0f};
+			gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, lightAmb,0); // Global ambient light.
+		}
+
+
+		float lightDif0[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		float lightSpec0[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+
+		gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, lightDif0,0);
+		gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, lightSpec0,0);
+		gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, lightPos,0);
+
+
+
+		// Material
+		float matAmbAndDif[] = {0.5f, 0.5f, 0.5f, 0.5f};
+		float matSpec[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		float matShine[] = { 50.0f };
+		float emm[] = {0.0f, 0.0f, 0.0f, 1.0f};
+
+		// Material properties of teapot
+		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif,0);
+		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, matSpec,0);
+		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, matShine,0);
+		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_EMISSION, emm,0);
+	}
 
 }
