@@ -31,11 +31,12 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     private boolean backwardsPressed = false;
     private boolean leftPressed = false;
     private boolean rightPressed = false;
-    
     private boolean wPressed = false;
     private boolean aPressed = false;
     private boolean sPressed = false;
     private boolean dPressed = false;
+    
+    private boolean firstPersonMode = false;
     
     public Game(Terrain terrain) {
     	super("Assignment 2");
@@ -92,11 +93,18 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     	gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
     	
         GLU glu = new GLU();
- 		gl.glTranslated(0, -1.25, -1);
-	 	gl.glRotated(-myAvatar.getRotation(), 0, 1, 0);
- 		glu.gluLookAt(myAvatar.getPosition()[0], myAvatar.getPosition()[1], myAvatar.getPosition()[2], myAvatar.getPosition()[0], 
-				myAvatar.getPosition()[1], myAvatar.getPosition()[2]+1, 0.0, 1.0, 0.0);
- 		
+        if(this.firstPersonMode) {
+	 		gl.glTranslated(0, -1.25, -1);
+		 	gl.glRotated(-myAvatar.getRotation(), 0, 1, 0);
+	 		glu.gluLookAt(myAvatar.getPosition()[0], myAvatar.getPosition()[1], myAvatar.getPosition()[2], myAvatar.getPosition()[0], 
+					myAvatar.getPosition()[1], myAvatar.getPosition()[2]+1, 0.0, 1.0, 0.0);
+        }
+        else {
+	 		gl.glTranslated(0, -1.3, 0);
+		 	gl.glRotated(-myAvatar.getRotation(), 0, 1, 0);
+	 		glu.gluLookAt(myAvatar.getPosition()[0], myAvatar.getPosition()[1], myAvatar.getPosition()[2], myAvatar.getPosition()[0], 
+					myAvatar.getPosition()[1], myAvatar.getPosition()[2]+1, 0.0, 1.0, 0.0);
+        }
     	setLighting(gl);
     	
     	myTerrain.draw(gl);   	
@@ -200,6 +208,10 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 				break;
 			case KeyEvent.VK_D:
 				this.dPressed = true;
+				break;
+			case KeyEvent.VK_V:
+				this.firstPersonMode = !this.firstPersonMode;
+				break;
 			default:
 				break;
 		}
@@ -230,6 +242,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 				break;
 			case KeyEvent.VK_D:
 				this.dPressed = false;
+				break;
 			default:
 				break;
 		}
