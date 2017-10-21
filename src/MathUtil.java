@@ -78,7 +78,7 @@ public class MathUtil {
      */
     public static double[] multiply(double[][] m, double[] v) {
 
-        double[] u = new double[3];
+        double[] u = new double[4];
 
         for (int i = 0; i < 4; i++) {
             u[i] = 0;

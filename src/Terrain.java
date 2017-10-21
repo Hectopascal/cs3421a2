@@ -125,31 +125,95 @@ public class Terrain {
      * @param z
      * @return
      */
-    public double altitude(double x, double z) {
+   /* public double altitude(double x, double z) {
         double altitude = 0;
-        int xInt = (int) x;
-        int zInt = (int) z;
-        if(xInt == x && zInt == z) {
-        	altitude = getGridAltitude(xInt, zInt);
+        int x1 = (int) Math.floor(x);
+        int x2 = (int) Math.ceil(x);
+        int z1 = (int) Math.floor(z);
+        int z2 = (int) Math.ceil(z);
+        if(x1 == x2 && z1 == z2) {
+        	altitude = getGridAltitude(x1, z1);
         }
         else {
-	        int x1 = (int) Math.floor(x);
-	        int x2 = (int) Math.ceil(x);
-	        int z1 = (int) Math.floor(z);
-	        int z2 = (int) Math.ceil(z);
-	        
+
 	        double r1 = (((x2 - x) / (x2 - x1)) * getGridAltitude(x1, z1));
 	        r1 += (((x - x1) / (x2 - x1)) * getGridAltitude(x2, z1));
-	        double r2 = (((x2 - x) / (x2 - x1)) * getGridAltitude(x1, z2));
+	         r2 = (((x2 - x) / (x2 - x1)) * getGridAltitude(x1, z2));
 	        r2 += (((x - x1) / (x2 - x1)) * getGridAltitude(x2, z2));
-	        
-	        double p = (((z2 - z) / (z2 - z1)) * r1);
+
+	        System.out.println("R1");
+	        System.out.println(r1);
+	        System.out.println("R2");
+	        System.out.println(r2);
+	        System.out.println(z2-z);
+	        System.out.println(z2-z1);
+	        if(z2-z1==0) {
+	        	p=0;
+	        }else {
+	         p = (((z2 - z) / (z2 - z1)) * r1);
 	        p += (((z - z1) / (z2 - z1)) * r2);
-	        
+	        }
 	        altitude = p;
         }
         return altitude;
+    }*/
+    
+    public double altitude(double x, double z) {
+    	/*This will probably come in handy: https://stackoverflow.com/questions/8697521/interpolation-of-a-triangle*/
+        double[] point = {x,0,z};
+        double ceilX = x;
+        double ceilZ = z;
+
+        if (x==Math.floor(x) && z==Math.floor(z)) {
+        	return myAltitude[(int)x][(int)z];
+        }
+        if (x==Math.ceil(x)) {
+        	if (x+1 < this.mySize.getWidth()) {
+        		ceilX = x+1;
+        	}
+        } else {
+        	ceilX = Math.ceil(x);
+        }
+        if (z==Math.ceil(z)) {
+        	if (z+1 < this.mySize.getHeight()) {
+        		ceilZ = z+1;
+        	}
+        } else {
+        	ceilZ = Math.ceil(z);
+        }
+        double[] botLeft = {ceilX,myAltitude[(int)Math.ceil(ceilX)][(int)Math.floor(z)],Math.floor(z)};
+        double[] botRight = {Math.floor(x),myAltitude[(int)Math.floor(x)][(int)Math.floor(z)],Math.floor(z)};
+        double[] topLeft = {ceilX,myAltitude[(int)Math.ceil(ceilX)][(int)Math.ceil(ceilZ)],ceilZ};
+        double[] topRight = {Math.floor(x),myAltitude[(int)Math.floor(x)][(int)Math.ceil(ceilZ)],ceilZ};
+
+
+        if (distance(point, botLeft) <= distance(point, topRight)) {
+        	double x1 = interpX(point, botRight, botLeft);
+        	double x2 = interpX(point, botRight, topLeft);
+        	
+        	double z1 = (point[0]-Math.floor(x))*Math.tan((Math.PI/180)*45);
+        	z1 = z1+Math.floor(z);
+        	double[] r1 = {point[0],x1,Math.floor(z)};
+        	double[] r2 = {point[0],x2,z1};
+  
+        	double altitude = interpZ(point, r1, r2);
+            return altitude;
+        } else {
+        	double x1 = interpX(point, botRight, topLeft);
+        	double x2 = interpX(point, topRight, topLeft);
+        	double z1 = (point[0]-Math.floor(x))/Math.tan((Math.PI/180)*45);
+        	z1 = z1+Math.floor(z);
+        	double[] r1 = {point[0],x1,z1};
+        	double[] r2 = {point[0],x2,ceilZ};
+        	
+
+        	 double altitude = interpZ(point, r1, r2);
+             return altitude;
+        }
     }
+
+
+
     public void initAll(GL2 gl) {
     	for(Tree t : this.myTrees) {
     		t.init(gl);
@@ -203,6 +267,8 @@ public class Terrain {
 		 float width = mySize.width;
 		 float height = mySize.height;
          //a grimy calculation for triangle mesh that works
+
+	    gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_LINE);
         for (int x = 0; x+1 < width; x+=1.0) {
 	        for (int z = 0; z+1 < height; z+=1.0) {
 	        	//Corners for top left triangle
@@ -211,6 +277,8 @@ public class Terrain {
 	            double[] topLeft = {x+1, myAltitude[x+1][z], z};
 	            double[] normals = getNormal(botLeft, topRight, topLeft);
 		        gl.glBindTexture(GL2.GL_TEXTURE_2D, myTextures[0].getTextureId());
+
+
 	            gl.glBegin(GL2.GL_TRIANGLES);{
 	            	gl.glNormal3d(normals[0], normals[1], normals[2]);
 	            	gl.glTexCoord2d(botLeft[0],botLeft[2]);
@@ -243,6 +311,8 @@ public class Terrain {
 		            	
 		     }
                  
+	      
+       
 	     } 
     }
     
@@ -267,7 +337,7 @@ public class Terrain {
      * @param z
      */
     public void addRoad(double width, double[] spine) {
-        Road road = new Road(width, spine);
+        Road road = new Road(width, spine,this);
         myRoads.add(road);        
     }
     /*Copied from week 4 Exercises */
@@ -286,5 +356,57 @@ public class Terrain {
     	double v[] = {p2[0] - p0[0], p2[1] - p0[1], p2[2] - p0[2]}; 	
     	return cross(u,v);   	
     }
+    public double interpX(double[] point, double[] x1, double[] x2) {
+    	double t1;
+    	double top1 = (point[0]-x1[0]);
+    	double bot1 = (x2[0]-x1[0]);
+    	if (top1 == 0 || bot1 == 0) {
+    		t1 = 0;
+    	} else {
+    		t1 = top1/bot1*x2[1];
+    	}
 
+    	
+    	double t2;
+    	double top2 = (x2[0]-point[0]);
+    	double bot2 = (x2[0]-x1[0]);
+    	if (top2 == 0 || bot2 == 0) {
+    		t2 = 0;
+    	} else {
+    		t2 = top2/bot2*x1[1];
+    	}
+    	
+
+    	double r = t1 + t2;
+    	return r;
+    }
+    
+
+    public double interpZ(double[] point, double[] r1, double[] r2) {
+    	double t1;
+    	double top1 = (point[2]-r1[2]);
+    	double bot1 = (r2[2]-r1[2]);
+    	if (top1 == 0 || bot1 == 0) {
+    		t1 = 0;
+    	} else {
+    		t1 = top1/bot1*r2[1];
+    	}
+    	
+    	double t2;
+    	double top2 = (r2[2]-point[2]);
+    	double bot2 = (r2[2]-r1[2]);
+    	if (top2 == 0 || bot2 == 0) {
+    		t2 = 0;
+    	} else {
+    		t2 = top2/bot2*r1[1];
+    	}
+
+    	double r = t1 + t2;
+    	return r;
+    }
+
+
+    public double distance(double[] p1, double[] p2) {
+    	return Math.sqrt( Math.pow((p2[2]-p1[2]), 2) + Math.pow((p2[0]-p1[0]), 2));
+    }
 }
