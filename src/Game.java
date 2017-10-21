@@ -150,7 +150,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     	float lightPos[] = myTerrain.getSunlight(); 	
     	
     	
-    	gl.glEnable(GL2.GL_LIGHT0); // Enable particular light source.
+    	gl.glEnable(GL2.GL_LIGHT0); 
     	globAmb[0] = 0.1f;
     	globAmb[1] = 0.1f;
     	globAmb[2] = 0.1f;
@@ -160,9 +160,9 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, lightDifAndSpec,0);
 
     	gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, lightPos,0);
-    	gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, globAmb,0); // Global ambient light.
-    	gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL2.GL_TRUE); // Enable two-sided lighting.
-    	gl.glLightModeli(GL2.GL_LIGHT_MODEL_LOCAL_VIEWER, GL2.GL_TRUE); // Enable local viewpoint.
+    	gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, globAmb,0);
+    	gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL2.GL_TRUE);
+    	gl.glLightModeli(GL2.GL_LIGHT_MODEL_LOCAL_VIEWER, GL2.GL_TRUE); 
     	
     	gl.glLightf(GL2.GL_LIGHT0,GL2.GL_CONSTANT_ATTENUATION, 2);
     	gl.glLightf(GL2.GL_LIGHT0,GL2.GL_LINEAR_ATTENUATION, 1);
@@ -225,11 +225,11 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 	}
 	public void goForwards() {
 		myAvatar.goForwards(myTerrain.size());
-		myAvatar.setAltitude(myTerrain.getGridAltitude((int)myAvatar.getPosition()[0], (int)myAvatar.getPosition()[2]));
+		myAvatar.setAltitude(myTerrain.altitude(myAvatar.getPosition()[0], myAvatar.getPosition()[2]));
 	}
 	public void goBackwards() {
 		myAvatar.goBackwards(myTerrain.size());
-		myAvatar.setAltitude(myTerrain.getGridAltitude((int)myAvatar.getPosition()[0], (int)myAvatar.getPosition()[2]));
+		myAvatar.setAltitude(myTerrain.altitude(myAvatar.getPosition()[0], myAvatar.getPosition()[2]));
 	}
 
 	@Override

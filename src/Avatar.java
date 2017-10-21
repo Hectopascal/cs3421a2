@@ -64,7 +64,7 @@ public class Avatar{
 			System.out.println("Y" + this.myPosition[1]);
 			System.out.println("Z" + this.myPosition[2]);*/
 			//Move to position
-			gl.glTranslated(this.myPosition[0], this.myPosition[1], this.myPosition[2]);
+			gl.glTranslated(this.myPosition[0], this.myPosition[1]+0.1, this.myPosition[2]);
 			gl.glRotated(getRotation(), 0, 1, 0);
 			GLUT glut = new GLUT();
 			gl.glPushMatrix();
@@ -74,7 +74,7 @@ public class Avatar{
 				gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif2,0);
 		    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, matSpec,0);
 		    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, matShine,0);
-				glut.glutSolidTeapot(0.4);
+				glut.glutSolidTeapot(0.2);
 			gl.glPopMatrix();
 		gl.glPopMatrix();
 	}
@@ -94,7 +94,7 @@ public class Avatar{
 		double angleFromQuadrant = this.myRotation % 90;
 		double xMove = (movement/Math.sin(Math.toRadians(angleFromQuadrant))) * (Math.sin(Math.toRadians(90-angleFromQuadrant)));
 		double zMove = (movement/Math.sin(Math.toRadians(90-angleFromQuadrant))) * (Math.sin(Math.toRadians(angleFromQuadrant)));
-		double temp;
+		double temp = 0;
 		switch (myDirection) {
 
 			case 0: 
