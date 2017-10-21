@@ -1,6 +1,6 @@
 # compiled class files
 *.class
-
+/bin/*.class
 # Windows image file caches
 Thumbs.db
 ehthumbs.db

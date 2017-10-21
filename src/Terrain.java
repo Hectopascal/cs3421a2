@@ -263,6 +263,8 @@ public class Terrain {
 		 float width = mySize.width;
 		 float height = mySize.height;
          //a grimy calculation for triangle mesh that works
+
+	    gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_LINE);
         for (int x = 0; x+1 < width; x+=1.0) {
 	        for (int z = 0; z+1 < height; z+=1.0) {
 	        	//Corners for top left triangle
@@ -271,6 +273,8 @@ public class Terrain {
 	            double[] topLeft = {x+1, myAltitude[x+1][z], z};
 	            double[] normals = getNormal(botLeft, topRight, topLeft);
 		        gl.glBindTexture(GL2.GL_TEXTURE_2D, myTextures[0].getTextureId());
+
+
 	            gl.glBegin(GL2.GL_TRIANGLES);{
 	            	gl.glNormal3d(normals[0], normals[1], normals[2]);
 	            	gl.glTexCoord2d(botLeft[0],botLeft[2]);
@@ -303,6 +307,8 @@ public class Terrain {
 		            	
 		     }
                  
+	      
+       
 	     } 
     }
     
@@ -327,7 +333,7 @@ public class Terrain {
      * @param z
      */
     public void addRoad(double width, double[] spine) {
-        Road road = new Road(width, spine);
+        Road road = new Road(width, spine,this);
         myRoads.add(road);        
     }
     /*Copied from week 4 Exercises */

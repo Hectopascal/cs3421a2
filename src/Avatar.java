@@ -201,26 +201,26 @@ public class Avatar{
 		switch (myDirection) {
 		
 		case 0: 
-			xMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
-			zMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
+			xMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
+			zMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
 			break;
 		case 1: 
 			//Positive x, negative z
-			xMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
-			zMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
+			xMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
+			zMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
 			zMove = -zMove;
 			break;
 		case 2: 
 			//Negative x, negative z
-			xMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
-			zMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
+			xMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
+			zMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
 			xMove = -xMove;
 			zMove = -zMove;
 			break;
 		case 3: 
 			//Negative x, positive z
-			xMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
-			zMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
+			xMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
+			zMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
 			xMove = -xMove;
 			break;
 		default:

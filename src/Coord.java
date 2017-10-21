@@ -1,3 +1,5 @@
+import com.jogamp.opengl.GL2;
+
 public class Coord {
     public double x;
     public double y;
@@ -38,7 +40,34 @@ public class Coord {
         z = result.z;
         return this;
     }
-
+    public void draw(GL2 gl) {
+        gl.glVertex3d(x,y,z);
+    }
+    
+    public Coord transform(double[][] m) {
+        double[] p = new double[4];
+        
+        p[0] = x;
+        p[1] = y;
+        p[2] = z;
+        p[3] = 1;
+        
+        double[] q = MathUtil.multiply(m, p);
+        return new Coord(q[0],q[1],q[2]);        
+    }
+    
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("(");
+        sb.append(x);
+        sb.append(", ");
+        sb.append(y);
+        sb.append(", ");
+        sb.append(z);
+        sb.append(")");
+        
+        return sb.toString();
+    }
     public static Coord multiply(Coord left, double right){
         return new Coord(left.x*right,left.y*right,left.z*right);
     }
