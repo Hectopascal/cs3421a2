@@ -69,7 +69,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
           setVisible(true);
           setDefaultCloseOperation(EXIT_ON_CLOSE); 
           
-          myAvatar = new Avatar(0,myTerrain.getGridAltitude(0, 0),0);
+          myAvatar = new Avatar(0.1,myTerrain.altitude(0.1, 0.1),0.1);
     }
     
     /**
@@ -150,7 +150,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     	gl.glEnable(GL2.GL_LIGHTING);
     	gl.glEnable(GL2.GL_NORMALIZE);
     	gl.glEnable(GL2.GL_TEXTURE_2D); 
-    	//setLighting(gl);
+
     	this.myTerrain.init(gl);
     	this.myAvatar.init(gl);
 	}
