@@ -17,6 +17,8 @@ public class Avatar{
 	private double myRotation;
 	private int myDirection;
 	
+	private Coord portalEntrance;
+	private Coord portalExit;
 	private String textureFileName1 = "src/textures/water.bmp";
 	private String bmpExt = "bmp";
 	
@@ -33,6 +35,11 @@ public class Avatar{
 	}
 	public double getRotation() {
 		return this.myRotation;
+	}
+	
+	public void setPortals(Coord in, Coord out) {
+		portalEntrance = in;
+		portalExit = out;
 	}
 	public void setAltitude(double height) {
 		this.myPosition[1] = height;
@@ -129,6 +136,16 @@ public class Avatar{
 				this.myPosition[2] += zMove;
 			}
 		}
+		if(inPortalRange()) {
+			myPosition[0]=portalExit.x;
+			myPosition[2]=portalExit.z;
+		}
+	}
+	
+	private boolean inPortalRange() {
+		double range = 0.10;
+		return (myPosition[0] > portalEntrance.x -range && myPosition[0] < portalEntrance.x +range
+				&& myPosition[2] > portalEntrance.z -range &&myPosition[2] > portalEntrance.z +range);				
 	}
 	public void goBackwards(Dimension size) {
 				/*               |       Use trig to find x and z lengths (Q1)
@@ -181,6 +198,11 @@ public class Avatar{
 				this.myPosition[2] += zMove;
 			}
 		}
+		
+		if(inPortalRange()) {
+			myPosition[0]=portalExit.x;
+			myPosition[2]=portalExit.z;
+		}
 	}
 	public void goLeft(Dimension size) {
 				/*               |       Use trig to find x and z lengths (Q1)
@@ -232,6 +254,10 @@ public class Avatar{
 				this.myPosition[0] += zMove;
 				this.myPosition[2] += xMove;
 			}
+		}
+		if(inPortalRange()) {
+			myPosition[0]=portalExit.x;
+			myPosition[2]=portalExit.z;
 		}
 	}
 	public void goRight(Dimension size) {

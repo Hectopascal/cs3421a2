@@ -1,5 +1,4 @@
 import com.jogamp.opengl.GL2;
-import jdk.nashorn.internal.codegen.CompilationException;
 
 import java.io.*;
 

@@ -70,6 +70,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
           setDefaultCloseOperation(EXIT_ON_CLOSE); 
           
           myAvatar = new Avatar(0,myTerrain.altitude(0, 0),0);
+          myAvatar.setPortals(myTerrain.getEntrancePortal(), myTerrain.getExitPortal());
     }
     
     /**
@@ -268,6 +269,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 		
         gl.glMatrixMode(GL2.GL_MODELVIEW);
 	}
+	
 	public void goForwards() {
 		myAvatar.goForwards(myTerrain.size());
 		myAvatar.setAltitude(myTerrain.altitude(myAvatar.getPosition()[0], myAvatar.getPosition()[2]));
