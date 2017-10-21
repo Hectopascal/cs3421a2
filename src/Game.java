@@ -22,7 +22,6 @@ import com.jogamp.opengl.util.gl2.GLUT;
 public class Game extends JFrame implements GLEventListener, KeyListener {
 
     private Terrain myTerrain;
-    private Camera myCamera;
     private Avatar myAvatar;
     
     private float globAmb[] = {0.1f, 0.1f, 0.1f, 1.0f};
