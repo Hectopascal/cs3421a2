@@ -219,9 +219,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
         
         // Perspective camera       
         GLU glu = new GLU();
-
-        	System.out.println("Third person");
-		    glu.gluPerspective(90, (width/height), 0.1, 30);
+		glu.gluPerspective(90, (width/height), 0.1, 30);
 
         gl.glMatrixMode(GL2.GL_MODELVIEW);
 	}

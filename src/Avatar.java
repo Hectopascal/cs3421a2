@@ -65,6 +65,7 @@ public class Avatar{
 			System.out.println("Z" + this.myPosition[2]);*/
 			//Move to position
 			gl.glTranslated(this.myPosition[0], this.myPosition[1], this.myPosition[2]);
+			gl.glRotated(getRotation(), 0, 1, 0);
 			GLUT glut = new GLUT();
 			gl.glPushMatrix();
 				gl.glTranslated(0, 0.3, 0);
@@ -78,16 +79,32 @@ public class Avatar{
 		gl.glPopMatrix();
 	}
 	public void goForwards(Dimension size) {
+		/*               |       sin rule: a/sin(A) == b/sin(B) == c/sin(C)
+		             |\  |--/    We move 0.05 on the diagonal so
+		             | \ | /     b = 0.05/sin(90) * sin(B)
+		             |  \|/      c = 0.05/sin(90) * sin(90-B)
+		          -------------- Where b is X movement in quadrant 1/3, and Z movement in quad 2/4  
+		                /|\    | c is X movement in quad 2/4, and Z movement in quad 1/3
+		               / | \   | Q1: +X +Z
+		              /  |  \  | Q2: +X -Z
+		             /   |   \ | Q3: -X -Z
+		            /----|    \| Q4: -X +Z
+		*/
 		final double movement = 0.05;
 		double angleFromQuadrant = this.myRotation % 90;
 		double xMove = (movement/Math.sin(Math.toRadians(angleFromQuadrant))) * (Math.sin(Math.toRadians(90-angleFromQuadrant)));
 		double zMove = (movement/Math.sin(Math.toRadians(90-angleFromQuadrant))) * (Math.sin(Math.toRadians(angleFromQuadrant)));
+		double temp;
 		switch (myDirection) {
+
 			case 0: 
 				//Do nothing, both positive
 				break;
-			case 3: 
+			case 1: 
 				//Positive x, negative z
+				temp = xMove;
+				xMove = zMove;
+				zMove = temp;
 				zMove = -zMove;
 				break;
 			case 2: 
@@ -95,8 +112,11 @@ public class Avatar{
 				xMove = -xMove;
 				zMove = -zMove;
 				break;
-			case 1: 
+			case 3: 
 				//Negative x, positive z
+				temp = xMove;
+				xMove = zMove;
+				zMove = temp;
 				xMove = -xMove;
 				break;
 		}
@@ -108,27 +128,46 @@ public class Avatar{
 		}
 	}
 	public void goBackwards(Dimension size) {
+		/*               |       sin rule: a/sin(A) == b/sin(B) == c/sin(C)
+		        |\  |--/    We move 0.05 on the diagonal so
+		        | \ | /     b = 0.05/sin(90) * sin(B)
+		        |  \|/      c = 0.05/sin(90) * sin(90-B)
+		     -------------- Where b is X movement in quadrant 1/3, and Z movement in quad 2/4  
+		           /|\    | c is X movement in quad 2/4, and Z movement in quad 1/3
+		          / | \   | Q1: +X +Z
+		         /  |  \  | Q2: +X -Z
+		        /   |   \ | Q3: -X -Z
+		       /----|    \| Q4: -X +Z
+		*/
 		final double movement = -0.05;
 		double angleFromQuadrant = this.myRotation % 90;
 		double xMove = (movement/Math.sin(Math.toRadians(angleFromQuadrant))) * (Math.sin(Math.toRadians(90-angleFromQuadrant)));
 		double zMove = (movement/Math.sin(Math.toRadians(90-angleFromQuadrant))) * (Math.sin(Math.toRadians(angleFromQuadrant)));
+		double temp;
 		switch (myDirection) {
-			case 0: 
-				//Do nothing, both positive
-				break;
-			case 1: 
-				//Positive x, negative z
-				zMove = -zMove;
-				break;
-			case 2: 
-				//Negative x, negative z
-				xMove = -xMove;
-				zMove = -zMove;
-				break;
-			case 3: 
-				//Negative x, positive z
-				xMove = -xMove;
-				break;
+		
+		case 0: 
+			//Do nothing, both positive
+			break;
+		case 1: 
+			//Positive x, negative z
+			temp = xMove;
+			xMove = zMove;
+			zMove = temp;
+			zMove = -zMove;
+			break;
+		case 2: 
+			//Negative x, negative z
+			xMove = -xMove;
+			zMove = -zMove;
+			break;
+		case 3: 
+			//Negative x, positive z
+			temp = xMove;
+			xMove = zMove;
+			zMove = temp;
+			xMove = -xMove;
+			break;
 		}
 		if(this.myPosition[0] + xMove >= 0 && this.myPosition[0] + xMove <= size.width - 1){
 			if(this.myPosition[2]+zMove >= 0 && this.myPosition[2] + zMove <= size.height - 1) {
