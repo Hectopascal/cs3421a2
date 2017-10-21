@@ -31,7 +31,9 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     private boolean backwardsPressed = false;
     private boolean leftPressed = false;
     private boolean rightPressed = false;
-    
+
+    private vboObject o = null;
+
     private boolean wPressed = false;
     private boolean aPressed = false;
     private boolean sPressed = false;
@@ -42,7 +44,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     public Game(Terrain terrain) {
     	super("Assignment 2");
         myTerrain = terrain;
-   
+   		angleC = -1;
     }
     
     /** 
@@ -116,7 +118,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     		this.myAvatar.rotateLeft();
     	}
     	if(rightPressed) {
-    		this.myAvatar.rotateRight();
+    		this.myAvatar.rotateRight();s
     	}
     	if(wPressed) {
     		goForwards();
