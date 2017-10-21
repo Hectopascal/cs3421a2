@@ -69,7 +69,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
           setVisible(true);
           setDefaultCloseOperation(EXIT_ON_CLOSE); 
           
-          myAvatar = new Avatar(0.1,myTerrain.altitude(0.1, 0.1),0.1);
+          myAvatar = new Avatar(0,myTerrain.altitude(0, 0),0);
     }
     
     /**
