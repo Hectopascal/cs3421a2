@@ -3,11 +3,15 @@ import java.io.FileNotFoundException;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.TimerTask;
+import java.util.Timer;
+
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.glu.GLU;
 
-import javax.swing.JFrame;
+import javax.swing.*;
+
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.gl2.GLUT;
 
@@ -41,6 +45,9 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 
     private float[] lightPos = new float[3];
 	private int angleC;
+	private Timer timer;
+	private TimerTask tt;
+
     public Game(Terrain terrain) {
     	super("Assignment 2");
         myTerrain = terrain;
@@ -149,6 +156,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     	//setLighting(gl);
     	this.myTerrain.init(gl);
     	this.myAvatar.init(gl);
+    	timer();
 	}
 
 
@@ -324,4 +332,17 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_EMISSION, emm,0);
 	}
 
+
+	public void timer(){
+		timer = new Timer();
+		tt = new TimerTask(){
+			public void run(){
+				if(angleC == 359){
+					angleC = -1;
+				}
+				angleC ++;
+			}
+		};
+		timer.schedule(tt,40,40);
+	}
 }
