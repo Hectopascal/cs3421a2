@@ -243,6 +243,7 @@ public class Terrain {
 		        	gl.glTexCoord2d(topRight[0], topRight[2]);
 		        	gl.glVertex3d(topRight[0], topRight[1], topRight[2]);
 		        }
+
 		        gl.glEnd();
 		            	
 		     }
