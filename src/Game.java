@@ -118,7 +118,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     		this.myAvatar.rotateLeft();
     	}
     	if(rightPressed) {
-    		this.myAvatar.rotateRight();s
+    		this.myAvatar.rotateRight();
     	}
     	if(wPressed) {
     		goForwards();
