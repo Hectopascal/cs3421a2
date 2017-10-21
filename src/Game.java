@@ -94,13 +94,13 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     	
         GLU glu = new GLU();
         if(this.firstPersonMode) {
-	 		gl.glTranslated(0, -1.25, -1);
+	 		gl.glTranslated(0, -1.3, 0);
 		 	gl.glRotated(-myAvatar.getRotation(), 0, 1, 0);
 	 		glu.gluLookAt(myAvatar.getPosition()[0], myAvatar.getPosition()[1], myAvatar.getPosition()[2], myAvatar.getPosition()[0], 
 					myAvatar.getPosition()[1], myAvatar.getPosition()[2]+1, 0.0, 1.0, 0.0);
         }
         else {
-	 		gl.glTranslated(0, -1.3, 0);
+	 		gl.glTranslated(0, -1.25, -1);
 		 	gl.glRotated(-myAvatar.getRotation(), 0, 1, 0);
 	 		glu.gluLookAt(myAvatar.getPosition()[0], myAvatar.getPosition()[1], myAvatar.getPosition()[2], myAvatar.getPosition()[0], 
 					myAvatar.getPosition()[1], myAvatar.getPosition()[2]+1, 0.0, 1.0, 0.0);
@@ -259,8 +259,13 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
         
         // Perspective camera       
         GLU glu = new GLU();
-		glu.gluPerspective(90, (width/height), 0.1, 30);
-
+	
+	    if (this.firstPersonMode) {
+	       	glu.gluPerspective(30, (width/height), 0, 10);
+	    } else {
+	     	glu.gluPerspective(90, (width/height), 0.1, 30);
+	    }
+		
         gl.glMatrixMode(GL2.GL_MODELVIEW);
 	}
 	public void goForwards() {
