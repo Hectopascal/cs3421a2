@@ -137,15 +137,23 @@ public class Terrain {
 	        int x2 = (int) Math.ceil(x);
 	        int z1 = (int) Math.floor(z);
 	        int z2 = (int) Math.ceil(z);
-	        
-	        double r1 = (((x2 - x) / (x2 - x1)) * getGridAltitude(x1, z1));
+	        double r1,r2,p;
+	        if(x2-x1==0) {
+	        	r1 = 0;
+	        	r2=0;
+	        }else {
+	         r1 = (((x2 - x) / (x2 - x1)) * getGridAltitude(x1, z1));
 	        r1 += (((x - x1) / (x2 - x1)) * getGridAltitude(x2, z1));
-	        double r2 = (((x2 - x) / (x2 - x1)) * getGridAltitude(x1, z2));
+	         r2 = (((x2 - x) / (x2 - x1)) * getGridAltitude(x1, z2));
 	        r2 += (((x - x1) / (x2 - x1)) * getGridAltitude(x2, z2));
+	        }
 	        
-	        double p = (((z2 - z) / (z2 - z1)) * r1);
+	        if(z2-z1==0) {
+	        	p=0;
+	        }else {
+	         p = (((z2 - z) / (z2 - z1)) * r1);
 	        p += (((z - z1) / (z2 - z1)) * r2);
-	        
+	        }
 	        altitude = p;
         }
         return altitude;
