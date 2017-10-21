@@ -17,7 +17,7 @@ public class Road {
     private Color Material;
     private ArrayList<double[]> bezierPoints;
     private ArrayList<double[]> vertexLevel;
-    private int numSegment = 100;
+    private int numSegment = 10;
     private Terrain myTerrain;
     private MyTexture[] textures;
     private Polygon myCrossSection;
@@ -87,7 +87,9 @@ public class Road {
         myPoints = new ArrayList<Coord>();
         System.out.println(myTerrain.altitude(spine[0], spine[1]));
         for (int i = 0; i < spine.length; i+=2) {
-        	Coord toAdd = new Coord(spine[i],myTerrain.altitude(spine[i], spine[i+1]),spine[i+1]);
+        	//Coord toAdd = new Coord(spine[i],myTerrain.altitude(spine[i], spine[i+1]),spine[i+1]);
+        	Coord toAdd = new Coord(spine[i],0,spine[i+1]);
+        	
         	System.out.println(toAdd.toString());
             myPoints.add(toAdd);
         }
@@ -234,7 +236,7 @@ public class Road {
         double tIncrement = ((double)this.size())/numPoints;
         gl.glBindTexture(GL2.GL_TEXTURE_2D, textures[0].getTextureId());
         double inc = 1/(double)numSegment;
-	        for (int i = 1; (double)i/(double)numSegment   < (double)this.size()/2; i++) {
+	        for (int i = 1; (double)i/(double)numSegment   < (double)this.size()*6/2; i++) {
 	        	double t = i/(double)numSegment;
 	        	//double[] normalAtT = getNormal(normalAtT, normalAtT, normalAtT);
 	        	double[] topLeft = {this.point(t)[0], 
@@ -293,8 +295,8 @@ public class Road {
 		     }
     		
 	}
-    */
     
+    */
     public void draw(GL2 gl) {
     	
     	List<Polygon> mesh = getMesh();
@@ -349,10 +351,13 @@ public class Road {
         addPoints(crossSection, vertices, pCurr, pCurr, pNext);
         
         // mid points
-        for (int i = 1; i < myPoints.size() - 1; i++) {
+        for (int i = 1; (double)i/(double)numSegment < (double)myPoints.size()-3; i++) {
+        	double t=(double)i/(double)numSegment;
             pPrev = pCurr;
             pCurr = pNext;
-            pNext = spine.get(i+1);
+            pNext = new Coord(point(t)[0],
+	            		myTerrain.altitude(point(t)[0], point(t)[1]),
+	            		point(t)[1]);
             addPoints(crossSection, vertices, pPrev, pCurr, pNext);            
         }
         
@@ -366,7 +371,7 @@ public class Road {
         int n = crossSection.size();
         
         // for each point along the spine
-        for (int i = 0; i < myPoints.size() - 1; i++) {
+        for (int i = 0;  (double)i/(double)numSegment   < (double)myPoints.size()-2; i++) {
 
             // for each point in the cross section
             for (int j = 0; j < n; j++) {

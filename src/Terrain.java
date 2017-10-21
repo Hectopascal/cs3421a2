@@ -135,20 +135,24 @@ public class Terrain {
         	altitude = getGridAltitude(x1, z1);
         }
         else {
+
 	        double r1 = (((x2 - x) / (x2 - x1)) * getGridAltitude(x1, z1));
 	        r1 += (((x - x1) / (x2 - x1)) * getGridAltitude(x2, z1));
-	        double r2 = (((x2 - x) / (x2 - x1)) * getGridAltitude(x1, z2));
+	         r2 = (((x2 - x) / (x2 - x1)) * getGridAltitude(x1, z2));
 	        r2 += (((x - x1) / (x2 - x1)) * getGridAltitude(x2, z2));
+
 	        System.out.println("R1");
 	        System.out.println(r1);
 	        System.out.println("R2");
 	        System.out.println(r2);
 	        System.out.println(z2-z);
 	        System.out.println(z2-z1);
-	        
-	        double p = (((z2 - z) / (z2 - z1)) * r1);
+	        if(z2-z1==0) {
+	        	p=0;
+	        }else {
+	         p = (((z2 - z) / (z2 - z1)) * r1);
 	        p += (((z - z1) / (z2 - z1)) * r2);
-	        
+	        }
 	        altitude = p;
         }
         return altitude;
