@@ -45,7 +45,6 @@ public class Tree {
     }
     
     public void draw(GL2 gl) {
-
         gl.glColor3d(0.0, 0.0, 0.0);
         gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, new float[]{material.ambient.x, material.ambient.y, material.ambient.z}, 0);
         gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_DIFFUSE, new float[]{material.diffuse.x, material.diffuse.y, material.diffuse.z}, 0);
@@ -54,8 +53,8 @@ public class Tree {
 
     	GLUT glut = new GLUT();
     	
-    	gl.glEnable(gl.GL_TEXTURE_GEN_S); //enable texture coordinate generation
-	    gl.glEnable(gl.GL_TEXTURE_GEN_T);
+    	//gl.glEnable(gl.GL_TEXTURE_GEN_S); //enable texture coordinate generation
+	    //gl.glEnable(gl.GL_TEXTURE_GEN_T);
     	//Trunk
     	gl.glPushMatrix();
 	    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif2,0);
@@ -76,7 +75,7 @@ public class Tree {
     		//glut.glutSolidSphere(0.55, 40, 40);
     	gl.glPopMatrix();
     	
-    	gl.glDisable(gl.GL_TEXTURE_GEN_S); //enable texture coordinate generation
-	    gl.glDisable(gl.GL_TEXTURE_GEN_T);
+    	//gl.glDisable(gl.GL_TEXTURE_GEN_S); //enable texture coordinate generation
+	    //gl.glDisable(gl.GL_TEXTURE_GEN_T);
     }
 }

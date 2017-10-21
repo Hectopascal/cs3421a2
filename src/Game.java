@@ -32,6 +32,11 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     private boolean leftPressed = false;
     private boolean rightPressed = false;
     
+    private boolean wPressed = false;
+    private boolean aPressed = false;
+    private boolean sPressed = false;
+    private boolean dPressed = false;
+    
     public Game(Terrain terrain) {
     	super("Assignment 2");
         myTerrain = terrain;
@@ -111,7 +116,18 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     	if(rightPressed) {
     		this.myAvatar.rotateRight();
     	}
-    	
+    	if(wPressed) {
+    		goForwards();
+    	}
+    	if(aPressed) {
+    		goLeft();
+    	}
+    	if(sPressed) {
+    		goBackwards();
+    	}
+    	if(dPressed) {
+    		goRight();
+    	}
 	}
 
 	@Override
@@ -173,6 +189,17 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 			case KeyEvent.VK_RIGHT:
 				this.rightPressed = true;
 				break;
+			case KeyEvent.VK_W:
+				this.wPressed = true;
+				break;
+			case KeyEvent.VK_A:
+				this.aPressed = true;
+				break;
+			case KeyEvent.VK_S:
+				this.sPressed = true;
+				break;
+			case KeyEvent.VK_D:
+				this.dPressed = true;
 			default:
 				break;
 		}
@@ -192,6 +219,17 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 			case KeyEvent.VK_RIGHT:
 				this.rightPressed = false;
 				break;
+			case KeyEvent.VK_W:
+				this.wPressed = false;
+				break;
+			case KeyEvent.VK_A:
+				this.aPressed = false;
+				break;
+			case KeyEvent.VK_S:
+				this.sPressed = false;
+				break;
+			case KeyEvent.VK_D:
+				this.dPressed = false;
 			default:
 				break;
 		}
@@ -220,7 +258,14 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 		myAvatar.goBackwards(myTerrain.size());
 		myAvatar.setAltitude(myTerrain.altitude(myAvatar.getPosition()[0], myAvatar.getPosition()[2]));
 	}
-
+	public void goRight() {
+		myAvatar.goRight(myTerrain.size());
+		myAvatar.setAltitude(myTerrain.altitude(myAvatar.getPosition()[0], myAvatar.getPosition()[2]));
+	}
+	public void goLeft() {
+		myAvatar.goLeft(myTerrain.size());
+		myAvatar.setAltitude(myTerrain.altitude(myAvatar.getPosition()[0], myAvatar.getPosition()[2]));
+	}
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub

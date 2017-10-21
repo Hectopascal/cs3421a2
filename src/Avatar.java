@@ -182,4 +182,108 @@ public class Avatar{
 			}
 		}
 	}
+	public void goLeft(Dimension size) {
+				/*               |       Use trig to find x and z lengths (Q1)
+		        |\  |--/    sin(angle) * 0.5 = x
+		        | \ | /     cos(angle) * 0.5 = z
+		        |  \|/      
+		     -------------- Where b is X movement in quadrant 1/3, and Z movement in quad 2/4  
+		           /|\    | c is X movement in quad 2/4, and Z movement in quad 1/3
+		          / | \   | Q1: +X +Z
+		         /  |  \  | Q2: +X -Z
+		        /   |   \ | Q3: -X -Z
+		       /----|    \| Q4: -X +Z
+		*/
+		final double movement = 0.05;
+		double angleFromQuadrant = this.myRotation % 90;
+		double xMove;
+		double zMove;
+		switch (myDirection) {
+		
+		case 0: 
+			xMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
+			zMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
+			break;
+		case 1: 
+			//Positive x, negative z
+			xMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
+			zMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
+			zMove = -zMove;
+			break;
+		case 2: 
+			//Negative x, negative z
+			xMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
+			zMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
+			xMove = -xMove;
+			zMove = -zMove;
+			break;
+		case 3: 
+			//Negative x, positive z
+			xMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
+			zMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
+			xMove = -xMove;
+			break;
+		default:
+			xMove = 0;
+			zMove = 0;
+		}
+		if(this.myPosition[0] + zMove >= 0 && this.myPosition[0] + zMove <= size.width - 1){
+			if(this.myPosition[2]+xMove >= 0 && this.myPosition[2] + xMove <= size.height - 1) {
+				this.myPosition[0] += zMove;
+				this.myPosition[2] += xMove;
+			}
+		}
+	}
+	public void goRight(Dimension size) {
+				/*               |       Use trig to find x and z lengths (Q1)
+		        |\  |--/    sin(angle) * 0.5 = x
+		        | \ | /     cos(angle) * 0.5 = z
+		        |  \|/      
+		     -------------- Where b is X movement in quadrant 1/3, and Z movement in quad 2/4  
+		           /|\    | c is X movement in quad 2/4, and Z movement in quad 1/3
+		          / | \   | Q1: +X +Z
+		         /  |  \  | Q2: +X -Z
+		        /   |   \ | Q3: -X -Z
+		       /----|    \| Q4: -X +Z
+		*/
+		final double movement = -0.05;
+		double angleFromQuadrant = this.myRotation % 90;
+		double xMove;
+		double zMove;
+		switch (myDirection) {
+		
+		case 0: 
+			xMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
+			zMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
+			break;
+		case 1: 
+			//Positive x, negative z
+			xMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
+			zMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
+			zMove = -zMove;
+			break;
+		case 2: 
+			//Negative x, negative z
+			xMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
+			zMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
+			xMove = -xMove;
+			zMove = -zMove;
+			break;
+		case 3: 
+			//Negative x, positive z
+			xMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
+			zMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
+			xMove = -xMove;
+			break;
+		default:
+			xMove = 0;
+			zMove = 0;
+		}
+		if(this.myPosition[0] + zMove >= 0 && this.myPosition[0] + zMove <= size.width - 1){
+			if(this.myPosition[2]+xMove >= 0 && this.myPosition[2] + xMove <= size.height - 1) {
+				this.myPosition[0] += zMove;
+				this.myPosition[2] += xMove;
+			}
+		}
+	}
 }
