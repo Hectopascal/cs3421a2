@@ -20,7 +20,9 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 *.idea
-*.settings 
+*.settings
+*.imi
+*.class
 # =========================
 # Operating System Files
 # =========================
