@@ -23,7 +23,7 @@ public class Terrain {
     private Coord portalExit;
     private MyTexture[] myTextures;
     
-    private String textureFileName1 = "src/textures/water.bmp";
+    private String textureFileName1 = "src/textures/grass.bmp";
     private String bmpExt = "bmp";
     /**
      * Create a new terrain
@@ -303,13 +303,14 @@ public class Terrain {
     }
     public void drawTerrain(GL2 gl) {
     	 gl.glEnable(GL2.GL_TEXTURE_2D);
-		 float matAmbAndDif1[] = {0.0f, 0.0f, 0.0f, 1.0f};
-		 float matAmbAndDif2[] = {0.0f, 0.9f, 0.0f, 1.0f};
+		 //float matAmbAndDif1[] = {0.0f, 0.0f, 0.0f, 1.0f}; //Use this for darker grass
+		 //float matAmbAndDif2[] = {0.0f, 0.9f, 0.0f, 1.0f};//Use this for greener grass
+    	 float matAmbAndDif3[] = {1.0f, 1.0f, 1.0f, 1.0f}; //Use this for normal colored grass
 		 float matSpec[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		 float matShine[] = { 20.0f };
 
-		 gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif2,0);
-		 gl.glMaterialfv(GL2.GL_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif1,0);
+		 gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif3,0);
+		 gl.glMaterialfv(GL2.GL_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif3,0);
 		 gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, matSpec,0);
 		 gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, matShine,0);
 		 
