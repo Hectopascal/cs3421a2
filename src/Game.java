@@ -22,22 +22,11 @@ import com.jogamp.opengl.util.gl2.GLUT;
 public class Game extends JFrame implements GLEventListener, KeyListener {
 
     private Terrain myTerrain;
-    private Camera myCamera;
     private Avatar myAvatar;
     
     private float globAmb[] = {0.1f, 0.1f, 0.1f, 1.0f};
-	private float xAngle = 0.0f, yAngle = 0.0f; // Rotation angles of white light.
 	private int p = 1; // Positional light 1, directional 0
-	
-    
-    // Camera positioning
-    private static int xAngleCam = 0;
-    private static int yAngleCam = 0;
-    private static int zAngleCam = 0;
-    private static double x = 0;
-    private static double y = -1;
-    private static double z = -1;
-	
+
     private boolean forwardPressed = false;
     private boolean backwardsPressed = false;
     private boolean leftPressed = false;
@@ -98,7 +87,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     	gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
     	
         GLU glu = new GLU();
- 		gl.glTranslated(x, y-0.25, -1);
+ 		gl.glTranslated(0, -1.25, -1);
 	 	gl.glRotated(-myAvatar.getRotation(), 0, 1, 0);
  		glu.gluLookAt(myAvatar.getPosition()[0], myAvatar.getPosition()[1], myAvatar.getPosition()[2], myAvatar.getPosition()[0], 
 				myAvatar.getPosition()[1], myAvatar.getPosition()[2]+1, 0.0, 1.0, 0.0);
@@ -150,7 +139,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     	float lightPos[] = myTerrain.getSunlight(); 	
     	
     	
-    	gl.glEnable(GL2.GL_LIGHT0); // Enable particular light source.
+    	gl.glEnable(GL2.GL_LIGHT0); 
     	globAmb[0] = 0.1f;
     	globAmb[1] = 0.1f;
     	globAmb[2] = 0.1f;
@@ -160,9 +149,9 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, lightDifAndSpec,0);
 
     	gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, lightPos,0);
-    	gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, globAmb,0); // Global ambient light.
-    	gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL2.GL_TRUE); // Enable two-sided lighting.
-    	gl.glLightModeli(GL2.GL_LIGHT_MODEL_LOCAL_VIEWER, GL2.GL_TRUE); // Enable local viewpoint.
+    	gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, globAmb,0);
+    	gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL2.GL_TRUE);
+    	gl.glLightModeli(GL2.GL_LIGHT_MODEL_LOCAL_VIEWER, GL2.GL_TRUE); 
     	
     	gl.glLightf(GL2.GL_LIGHT0,GL2.GL_CONSTANT_ATTENUATION, 2);
     	gl.glLightf(GL2.GL_LIGHT0,GL2.GL_LINEAR_ATTENUATION, 1);
@@ -225,11 +214,11 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 	}
 	public void goForwards() {
 		myAvatar.goForwards(myTerrain.size());
-		myAvatar.setAltitude(myTerrain.getGridAltitude((int)myAvatar.getPosition()[0], (int)myAvatar.getPosition()[2]));
+		myAvatar.setAltitude(myTerrain.altitude(myAvatar.getPosition()[0], myAvatar.getPosition()[2]));
 	}
 	public void goBackwards() {
 		myAvatar.goBackwards(myTerrain.size());
-		myAvatar.setAltitude(myTerrain.getGridAltitude((int)myAvatar.getPosition()[0], (int)myAvatar.getPosition()[2]));
+		myAvatar.setAltitude(myTerrain.altitude(myAvatar.getPosition()[0], myAvatar.getPosition()[2]));
 	}
 
 	@Override
