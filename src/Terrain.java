@@ -151,7 +151,6 @@ public class Terrain {
         return altitude;
     }
     public void initAll(GL2 gl) {
-    	init(gl);
     	for(Tree t : this.myTrees) {
     		t.init(gl);
     	}
@@ -162,10 +161,13 @@ public class Terrain {
     public void init(GL2 gl) {
     	myTextures = new MyTexture[1];
     	myTextures[0] = new MyTexture(gl, textureFileName1, bmpExt,true);
-    	
+    	initAll(gl);
     }
     public void draw(GL2 gl) {
-    	drawTerrain(gl);
+    	gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
+    	gl.glPushMatrix();
+    		drawTerrain(gl);
+    	gl.glPopMatrix();
     	drawTrees(gl);
     	drawRoads(gl);
     }
@@ -187,13 +189,11 @@ public class Terrain {
     }
     public void drawTerrain(GL2 gl) {
     	 gl.glEnable(GL2.GL_TEXTURE_2D);
-		 gl.glPushMatrix();
 		 float matAmbAndDif1[] = {0.0f, 0.0f, 0.0f, 1.0f};
 		 float matAmbAndDif2[] = {0.0f, 0.9f, 0.0f, 1.0f};
 		 float matSpec[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		 float matShine[] = { 20.0f };
-		
-		 // Material properties
+
 		 gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif2,0);
 		 gl.glMaterialfv(GL2.GL_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif1,0);
 		 gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, matSpec,0);
@@ -241,8 +241,6 @@ public class Terrain {
 		     }
                  
 	     } 
-         gl.glPopMatrix();
-
     }
     
     /**

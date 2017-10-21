@@ -39,12 +39,12 @@ public class Avatar{
 	}
 	
 	public void rotateLeft() {
-		this.myRotation = (this.myRotation - 1) % 360;
+		this.myRotation = (this.myRotation + 1) % 360;
 		this.myDirection = (int)(this.myRotation/90);
 		System.out.println(this.myRotation);
 	}
 	public void rotateRight() {
-		this.myRotation = (this.myRotation + 1) % 360;
+		this.myRotation = (this.myRotation - 1) % 360;
 		if(this.myRotation < 0.0) {
 			this.myRotation = 360 + this.myRotation;
 		}
@@ -58,63 +58,83 @@ public class Avatar{
     	this.texture = new MyTexture(gl,textureFileName1,bmpExt,true);
     }
 	public void draw(GL2 gl) {
+
 		gl.glPushMatrix();
-		gl.glTranslated(this.myPosition[0], this.myPosition[1], this.myPosition[2]);
-		GLUT glut = new GLUT();
-		gl.glPushMatrix();
-		gl.glBindTexture(GL2.GL_TEXTURE_2D, texture.getTextureId()); 
-		glut.glutSolidTeapot(0.4);
-		gl.glPopMatrix();
+			/*System.out.println("X" + this.myPosition[0]);
+			System.out.println("Y" + this.myPosition[1]);
+			System.out.println("Z" + this.myPosition[2]);*/
+			//Move to position
+			gl.glTranslated(this.myPosition[0], this.myPosition[1], this.myPosition[2]);
+			GLUT glut = new GLUT();
+			gl.glPushMatrix();
+				gl.glTranslated(0, 0.3, 0);
+				gl.glBindTexture(GL2.GL_TEXTURE_2D, texture.getTextureId()); 
+				gl.glRotated(-90, 0, 1, 0);
+				gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif2,0);
+		    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, matSpec,0);
+		    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, matShine,0);
+				glut.glutSolidTeapot(0.4);
+			gl.glPopMatrix();
 		gl.glPopMatrix();
 	}
 	public void goForwards(Dimension size) {
-		System.out.println(myPosition[0]);
-		System.out.println(myPosition[1]);
-		System.out.println(myPosition[2]);
-		switch(myDirection) {
-			case 0:
-				if((this.myPosition[2]+0.05) <= size.height-1) {
-					this.myPosition[2] += 0.05;
-				}
+		final double movement = 0.05;
+		double angleFromQuadrant = this.myRotation % 90;
+		double xMove = (movement/Math.sin(Math.toRadians(angleFromQuadrant))) * (Math.sin(Math.toRadians(90-angleFromQuadrant)));
+		double zMove = (movement/Math.sin(Math.toRadians(90-angleFromQuadrant))) * (Math.sin(Math.toRadians(angleFromQuadrant)));
+		switch (myDirection) {
+			case 0: 
+				//Do nothing, both positive
 				break;
-			case 1:
-				if((this.myPosition[0]+0.05) <= size.width-1) {
-					this.myPosition[0] += 0.05;
-				}
+			case 3: 
+				//Positive x, negative z
+				zMove = -zMove;
 				break;
-			case 2:
-				if((this.myPosition[2]-0.05) >= 0) {
-					this.myPosition[2] -= 0.05;
-				}
+			case 2: 
+				//Negative x, negative z
+				xMove = -xMove;
+				zMove = -zMove;
 				break;
-			case 3:
-				if((this.myPosition[0] - 0.05) >= 0) {
-					this.myPosition[0] -= 0.05;
-				}
+			case 1: 
+				//Negative x, positive z
+				xMove = -xMove;
 				break;
+		}
+		if(this.myPosition[0] + xMove >= 0 && this.myPosition[0] + xMove <= size.width - 1){
+			if(this.myPosition[2]+zMove >= 0 && this.myPosition[2] + zMove <= size.height - 1) {
+				this.myPosition[0] += xMove;
+				this.myPosition[2] += zMove;
+			}
 		}
 	}
 	public void goBackwards(Dimension size) {
-		System.out.println(myPosition[0]);
-		System.out.println(myPosition[1]);
-		System.out.println(myPosition[2]);
-    	switch (this.myDirection) {
-    	case 0: 
-    		if ((this.myPosition[2]-0.05) >= 0)
-    			this.myPosition[2] -= 0.05;
-    		break;
-    	case 1: 
-    		if ((this.myPosition[0]-0.05) >= 0)
-    			this.myPosition[0] -= 0.05;
-    		break;
-    	case 2: 
-    		if ((this.myPosition[2]+0.05) <= size.height-1)
-    			this.myPosition[2] += 0.05;
-    		break;
-    	case 3: 
-    		if ((this.myPosition[0]+0.05) <= size.width-1)
-    			this.myPosition[0] += 0.05;
-    		break;
-    	}
+		final double movement = -0.05;
+		double angleFromQuadrant = this.myRotation % 90;
+		double xMove = (movement/Math.sin(Math.toRadians(angleFromQuadrant))) * (Math.sin(Math.toRadians(90-angleFromQuadrant)));
+		double zMove = (movement/Math.sin(Math.toRadians(90-angleFromQuadrant))) * (Math.sin(Math.toRadians(angleFromQuadrant)));
+		switch (myDirection) {
+			case 0: 
+				//Do nothing, both positive
+				break;
+			case 1: 
+				//Positive x, negative z
+				zMove = -zMove;
+				break;
+			case 2: 
+				//Negative x, negative z
+				xMove = -xMove;
+				zMove = -zMove;
+				break;
+			case 3: 
+				//Negative x, positive z
+				xMove = -xMove;
+				break;
+		}
+		if(this.myPosition[0] + xMove >= 0 && this.myPosition[0] + xMove <= size.width - 1){
+			if(this.myPosition[2]+zMove >= 0 && this.myPosition[2] + zMove <= size.height - 1) {
+				this.myPosition[0] += xMove;
+				this.myPosition[2] += zMove;
+			}
+		}
 	}
 }
