@@ -33,7 +33,7 @@ public class Road {
             currPoint = point(tmp);
             bezierPoints.add(currPoint);
         }
-
+        generateVertexLevel();
         myPoints.add(x0);
         myPoints.add(y0);
     }
@@ -43,7 +43,22 @@ public class Road {
         double x;
         double z;
         for(int i = 0; i < this.bezierPoints.size(); ++i){
-            corners = calculateCorner(bezierPoints.get(i-1),bezierPoints.get(i));
+            if(i == this.bezierPoints.size()-1){
+                corners = calculateCorner(bezierPoints.get(i-1),bezierPoints.get(i));
+                x = bezierPoints.get(i)[0] - bezierPoints.get(i-1)[0];
+                z = bezierPoints.get(i)[1] - bezierPoints.get(i-1)[1];
+                corners[0][0] += x;
+                corners[0][2] += z;
+                corners[1][0] += x;
+                corners[1][2] += z;
+                vertexLevel.add(corners[0]);
+                vertexLevel.add(corners[1]);
+            }else{
+                corners = calculateCorner(bezierPoints.get(i),bezierPoints.get(i+1));
+                vertexLevel.add(corners[0]);
+                vertexLevel.add(corners[1]);
+            }
+
         }
 
     }
@@ -82,6 +97,15 @@ public class Road {
         for (int i = 0; i < spine.length; i++) {
             myPoints.add(spine[i]);
         }
+        bezierPoints = new ArrayList<double[]>();
+        vertexLevel = new ArrayList<double[]>();
+        double[] currPoint;
+        for (int i = 0; i < this.numSegment;++i){
+            double tmp = (double)i/(double)this.numSegment;
+            currPoint = point(tmp);
+            bezierPoints.add(currPoint);
+        }
+        generateVertexLevel();
     }
 
     /**
@@ -197,6 +221,11 @@ public class Road {
     }
 
 
+    private double distanceBetweenTwoP(double[] p1, double[] p2){
+        return Math.sqrt(Math.pow(p2[0]-p1[0],2) + Math.pow(p2[1]-p1[1],2));
+    }
+
+
     public void init(GL2 gl) {
         gl.glEnable(GL2.GL_TEXTURE_2D);
         textures = new MyTexture[2];
@@ -215,71 +244,91 @@ public class Road {
         gl.glMaterialfv(GL.GL_FRONT,GL2.GL_SPECULAR,new float[]{Material.specular.x,Material.specular.y,Material.specular.z},0);
         gl.glMaterialfv(GL.GL_FRONT,GL2.GL_SHININESS,new float[]{Material.phong.x,Material.phong.y,Material.phong.z},0);
 
+
+        gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);
+
         gl.glTexEnvf(GL.GL_TEXTURE2,GL2.GL_TEXTURE_ENV_MODE,GL2.GL_MODULATE);
         gl.glTexParameteri(GL2.GL_TEXTURE_2D,GL2.GL_TEXTURE_WRAP_S,GL2.GL_CLAMP_TO_EDGE);
         gl.glTexParameteri(GL2.GL_TEXTURE_2D,GL2.GL_TEXTURE_WRAP_T,GL2.GL_REPEAT);
 
-        gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);
 
-//        double scale = 0.25;
-//        double spineDist = 0;
-//        double count = 0;
+
+
+        gl.glBegin(GL2.GL_TRIANGLE_STRIP);
+        double scale = 0.25;
+        double spineDist = 0;
+        int count = 0;
+
+        for(int i = this.vertexLevel.size()-2; i >= 0; i-=2){
+            if(count+1 < this.bezierPoints.size()){
+                spineDist += distanceBetweenTwoP(this.bezierPoints.get(count),this.bezierPoints.get(count+1));
+            }
+            gl.glTexCoord2d(0,spineDist * scale);
+            gl.glNormal3d(0.0,1.0,0.0);
+            gl.glVertex3d(this.vertexLevel.get(i)[0],this.vertexLevel.get(i)[1],this.vertexLevel.get(i)[2]);
+
+            gl.glTexCoord2d(1.0,spineDist * scale);
+            gl.glNormal3d(0.0,1.0,0.0);
+            gl.glVertex3d(this.vertexLevel.get(i+1)[0],this.vertexLevel.get(i+1)[1],this.vertexLevel.get(i+1)[2]);
+            count++;
+        }
+        gl.glEnd();
         
-        double[] p1 = this.point(0);	
-    	double alt = myTerrain.altitude(p1[0], p1[1]) + 0.1; //added manual offset as the polygon offset works poorly
-    	double width = myWidth/2;
-        double tIncrement = ((double)this.size())/numPoints;
-        gl.glBindTexture(GL2.GL_TEXTURE_2D, textures[0].getTextureId());
-        double inc = 1/(double)numSegment;
-	        for (int i = 1; (double)i/(double)numSegment   < (double)this.size()/2; i++) {
-	        	double t = i/(double)numSegment;
-	        	System.out.println(t+" testing");
-	        	//Corners for top left triangle
-	        	double[] topLeft = {this.point(t)[0]-width, 
-	        						myTerrain.altitude(this.point(t)[0]-width, this.point(t)[1])+0.1, 
-	        						this.point(t)[1]};
-	    	    double[] topRight = {this.point(t)[0]+width, 
-	    	    					myTerrain.altitude(this.point(t)[0]+width,this.point(t)[1])+0.1, 
-	    	    					this.point(t)[1]};
-	            double[] botLeft = {this.point(t+inc)[0]-width, 
-	            					myTerrain.altitude(this.point(t+inc)[0]-width, this.point(t+inc)[1])+0.1, 
-	            					this.point(t+inc)[1]};
-	            double[] botRight = {this.point(t+inc)[0]+width, 
-						myTerrain.altitude(this.point(t+inc)[0]+width, this.point(t+inc)[1])+0.1, 
-						this.point(t+inc)[1]};
-	            double[] normals = getNormal(botLeft, topRight, topLeft);
-		        gl.glBindTexture(GL2.GL_TEXTURE_2D, textures[0].getTextureId());
-	            gl.glBegin(GL2.GL_TRIANGLES);{
-	            	gl.glNormal3d(normals[0], normals[1], normals[2]);
-	            	gl.glTexCoord2d(botLeft[0],botLeft[2]);
-		        	gl.glVertex3d(botLeft[0],botLeft[1],botLeft[2]);
-		        	
-		        	gl.glNormal3d(normals[0], normals[1], normals[2]);
-		        	gl.glTexCoord2d(topRight[0], topRight[2]);
-		        	gl.glVertex3d(topRight[0],topRight[1],topRight[2]);
-		        	
-		        	gl.glNormal3d(normals[0], normals[1], normals[2]);
-		        	gl.glTexCoord2d(topLeft[0], topLeft[2]);
-		        	gl.glVertex3d(topLeft[0],topLeft[1],topLeft[2]);
-	        	}gl.glEnd();   		
-		        //Corner for bottom right triangle
-		        
-		        normals = getNormal(botLeft, botRight, topRight);
-		        gl.glBindTexture(GL2.GL_TEXTURE_2D, textures[0].getTextureId());
-		        gl.glBegin(GL2.GL_TRIANGLES);{
-		        	gl.glNormal3d(normals[0], normals[1], normals[2]);
-		        	gl.glTexCoord2d(botLeft[0], botLeft[2]);
-		        	gl.glVertex3d(botLeft[0], botLeft[1], botLeft[2]);
-		        	gl.glNormal3d(normals[0], normals[1], normals[2]);
-		        	gl.glTexCoord2d(botRight[0], botRight[2]);
-		        	gl.glVertex3d(botRight[0], botRight[1], botRight[2]);
-		        	gl.glNormal3d(normals[0], normals[1], normals[2]);
-		        	gl.glTexCoord2d(topRight[0], topRight[2]);
-		        	gl.glVertex3d(topRight[0], topRight[1], topRight[2]);
-		        }
-		        gl.glEnd();
-		            	
-		     }
+//        double[] p1 = this.point(0);
+//    	double alt = myTerrain.altitude(p1[0], p1[1]) + 0.1; //added manual offset as the polygon offset works poorly
+//    	double width = myWidth/2;
+//        double tIncrement = ((double)this.size())/numPoints;
+//        gl.glBindTexture(GL2.GL_TEXTURE_2D, textures[0].getTextureId());
+//        double inc = 1/(double)numSegment;
+//	        for (int i = 1; (double)i/(double)numSegment   < (double)this.size()/2; i++) {
+//	        	double t = i/(double)numSegment;
+//	        	System.out.println(t+" testing");
+//	        	//Corners for top left triangle
+//	        	double[] topLeft = {this.point(t)[0]-width,
+//	        						myTerrain.altitude(this.point(t)[0]-width, this.point(t)[1])+0.1,
+//	        						this.point(t)[1]};
+//	    	    double[] topRight = {this.point(t)[0]+width,
+//	    	    					myTerrain.altitude(this.point(t)[0]+width,this.point(t)[1])+0.1,
+//	    	    					this.point(t)[1]};
+//	            double[] botLeft = {this.point(t+inc)[0]-width,
+//	            					myTerrain.altitude(this.point(t+inc)[0]-width, this.point(t+inc)[1])+0.1,
+//	            					this.point(t+inc)[1]};
+//	            double[] botRight = {this.point(t+inc)[0]+width,
+//						myTerrain.altitude(this.point(t+inc)[0]+width, this.point(t+inc)[1])+0.1,
+//						this.point(t+inc)[1]};
+//	            double[] normals = getNormal(botLeft, topRight, topLeft);
+//		        gl.glBindTexture(GL2.GL_TEXTURE_2D, textures[0].getTextureId());
+//	            gl.glBegin(GL2.GL_TRIANGLES);{
+//	            	gl.glNormal3d(normals[0], normals[1], normals[2]);
+//	            	gl.glTexCoord2d(botLeft[0],botLeft[2]);
+//		        	gl.glVertex3d(botLeft[0],botLeft[1],botLeft[2]);
+//
+//		        	gl.glNormal3d(normals[0], normals[1], normals[2]);
+//		        	gl.glTexCoord2d(topRight[0], topRight[2]);
+//		        	gl.glVertex3d(topRight[0],topRight[1],topRight[2]);
+//
+//		        	gl.glNormal3d(normals[0], normals[1], normals[2]);
+//		        	gl.glTexCoord2d(topLeft[0], topLeft[2]);
+//		        	gl.glVertex3d(topLeft[0],topLeft[1],topLeft[2]);
+//	        	}gl.glEnd();
+//		        //Corner for bottom right triangle
+//
+//		        normals = getNormal(botLeft, botRight, topRight);
+//		        gl.glBindTexture(GL2.GL_TEXTURE_2D, textures[0].getTextureId());
+//		        gl.glBegin(GL2.GL_TRIANGLES);{
+//		        	gl.glNormal3d(normals[0], normals[1], normals[2]);
+//		        	gl.glTexCoord2d(botLeft[0], botLeft[2]);
+//		        	gl.glVertex3d(botLeft[0], botLeft[1], botLeft[2]);
+//		        	gl.glNormal3d(normals[0], normals[1], normals[2]);
+//		        	gl.glTexCoord2d(botRight[0], botRight[2]);
+//		        	gl.glVertex3d(botRight[0], botRight[1], botRight[2]);
+//		        	gl.glNormal3d(normals[0], normals[1], normals[2]);
+//		        	gl.glTexCoord2d(topRight[0], topRight[2]);
+//		        	gl.glVertex3d(topRight[0], topRight[1], topRight[2]);
+//		        }
+//		        gl.glEnd();
+//
+//		     }
     		
 	}
     
