@@ -62,6 +62,27 @@ public class Polygon {
         }
         gl.glEnd();
     }
+    public void drawAlt(GL2 gl,Terrain t) {
+
+        double red = myColor.getRed() / 255.0;
+        double green = myColor.getGreen() / 255.0;
+        double blue = myColor.getBlue() / 255.0;
+
+        gl.glColor3d(red, green, blue);
+
+        gl.glBegin(GL2.GL_POLYGON);
+
+        if (myNormal == null) {
+            computeNormal();
+        }
+
+        // all vertices have the same normal
+        gl.glNormal3d(myNormal[0], myNormal[1], myNormal[2]);
+        for (Coord p : myPoints) {
+            p.drawAlt(gl,t);
+        }
+        gl.glEnd();
+    }
 
     //This normal has not been normalised.
     //Implementation of Newell's method for calculating face normals

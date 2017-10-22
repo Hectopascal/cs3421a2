@@ -10,6 +10,7 @@ import com.jogamp.opengl.GL2;
  */
 public class Road {
 
+    private boolean pressGround = false;
     private List<Double> myPoints;
     private double myWidth;
     private static final double SCALE = 0.3;
@@ -20,7 +21,7 @@ public class Road {
     // the current extruded mesh
     private List<Polygon> myMesh = null;
     private List<Coord> mySpine = null;
-    private final double SLICES = 20;
+    private final double SLICES = 100;
     private Terrain myTerrain;
     /** 
      * Create a new road starting at the specified point
@@ -65,7 +66,7 @@ public class Road {
     	for(double i = 0; i<SLICES*size(); i+=1) {
     		double[] slice = point(i/SLICES);
     		mySpine.add(new Coord(slice[0],
-    				myTerrain.altitude(slice[0],slice[1])+0.1,
+    				myTerrain.altitude(slice[0],slice[1])+0.001,
     				slice[1]));
     	}
     }
@@ -159,8 +160,17 @@ public class Road {
             gl.glColor4d(1, 1, 1, 1);
             gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
             gl.glPushMatrix();
-            for (Polygon p : mesh) {
-                p.draw(gl);                
+            int i=0;
+            int j=0;
+            double height =0;
+            if(pressGround) {
+	            for (Polygon p : mesh) {
+	            	p.drawAlt(gl,myTerrain);
+	            }
+            } else {
+            	for (Polygon p : mesh) {
+                	p.draw(gl);
+                }
             }
             gl.glPopMatrix();
         }

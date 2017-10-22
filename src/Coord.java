@@ -4,7 +4,6 @@ public class Coord {
     public double x;
     public double y;
     public double z;
-
     // constructor
 
     // default constructor
@@ -48,7 +47,21 @@ public class Coord {
     public void draw(GL2 gl) {
         gl.glVertex3d(x,y,z);
     }
-    
+    public void drawAlt(GL2 gl, Terrain t) {
+    	double newX=x;
+    	double newZ=z;
+    	if(x<0) {
+    		newX=0;
+    	} else if (z>t.size().getWidth()) {
+    		newX = t.size().getWidth();
+    	}
+    	if(z<0) {
+    		newZ=0;
+    	} else if (z>t.size().getHeight()) {
+    		newZ = t.size().getHeight();
+    	} 
+        gl.glVertex3d(x,t.altitude(newX, newZ)+0.1,z);
+    }
     public Coord transform(double[][] m) {
         double[] p = new double[4];
         
