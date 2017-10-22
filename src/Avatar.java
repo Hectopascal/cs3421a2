@@ -144,7 +144,9 @@ public class Avatar{
 				    	gl.glRotated(90, 0, 90,0);
 				    	gl.glRotated(90, 0, 90,0);
 				    	gl.glBindTexture(GL2.GL_TEXTURE_2D, texture[3].getTextureId()); 
-				    	glut.glutSolidTeapot(0.05);
+			    		gl.glFrontFace(GL2.GL_CW);
+			    		glut.glutSolidTeapot(0.05);
+			    		gl.glFrontFace(GL2.GL_CCW);
 			    	gl.glPopMatrix();
 		    	gl.glPopMatrix();
 		    	//Head
