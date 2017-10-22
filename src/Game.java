@@ -103,6 +103,9 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     	gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
     	
         GLU glu = new GLU();
+
+
+
  		gl.glTranslated(0, -1.25, -1);
 	 	gl.glRotated(-myAvatar.getRotation(), 0, 1, 0);
  		glu.gluLookAt(myAvatar.getPosition()[0], myAvatar.getPosition()[1], myAvatar.getPosition()[2], myAvatar.getPosition()[0], 
