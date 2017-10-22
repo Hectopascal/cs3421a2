@@ -48,8 +48,9 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     private float[] lightPos = new float[3];
     private boolean firstPersonMode = false;
     private boolean nightMode = false;
+    private boolean sunView = false;
     
-	private int angleC;
+	private double angleC;
 
 
 	private Timer timer;
@@ -127,9 +128,17 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 					myAvatar.getPosition()[1], myAvatar.getPosition()[2]+1, 0.0,1,0);
         }
     	setLighting(gl);
-		changeLight(gl);
-        //o.draw(gl,lightPos);
-    	myTerrain.draw(gl);   	
+    	changeLight(gl);
+    	if(nightMode) {
+    		gl.glDisable(GL2.GL_LIGHT0);
+    	}
+    	else {
+    		gl.glEnable(GL2.GL_LIGHT0);
+    	}
+		if(sunView) {
+			o.draw(gl,lightPos);
+		}
+        myTerrain.draw(gl);   	
         myAvatar.draw(gl);
 
     	gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);
@@ -209,9 +218,9 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     	
     	
     	gl.glEnable(GL2.GL_LIGHT0); 
-    	globAmb[0] = 0.1f;
-    	globAmb[1] = 0.1f;
-    	globAmb[2] = 0.1f;
+    	globAmb[0] = 0.5f;
+    	globAmb[1] = 0.5f;
+    	globAmb[2] = 0.5f;
     		
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, lightAmb,0);
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, lightDifAndSpec,0);
@@ -289,6 +298,9 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 				break;
 			case KeyEvent.VK_O:
 				this.oPressed = true;
+				break;
+			case KeyEvent.VK_I:
+				this.sunView = !sunView;
 				break;
 			default:
 				break;
@@ -379,25 +391,26 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 
 		// Change Light Position
 		float ambVal;
-		double incAngle = (2 * Math.PI / 360);
+		double incAngle = (4 * Math.PI / 360);
 		double radius = Math.hypot((myTerrain.size().getWidth()/2-myTerrain.getSunlight()[0]),
 				(0-myTerrain.getSunlight()[1]));
 		double initAngle = Math.atan(myTerrain.getSunlight()[0]/myTerrain.getSunlight()[0]);
 
 		// Calculate new light position
 		lightPos[0] = (float) (radius * Math.sin(incAngle*angleC + initAngle));
-		lightPos[1] = (float) (radius * Math.cos(incAngle*angleC + initAngle));
+		lightPos[1] = ((float) (radius * Math.cos(incAngle*angleC + initAngle)));
 		lightPos[2] = myTerrain.getSunlight()[2];
-
+		System.out.println(lightPos[1]);
 		// Set Ambient Light
-		if (lightPos[1] >= 0) {
-			ambVal = (float) (lightPos[1]/radius + 0.1f);
-			float lightAmb[] = { ambVal, ambVal, ambVal, 1.0f };
-			gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, lightAmb,0);
-		} else {
-			float lightAmb[] = {0.3f, 0.3f, 0.3f, 1.0f};
+		//if (lightPos[1] >= 0) {
+		ambVal = -((float) (lightPos[1]/radius + 0.3f));
+		float lightAmb[] = { ambVal, ambVal, ambVal, 1.0f };
+		gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, lightAmb,0);
+		/*} else {
+			System.out.println("Lower");
+			float lightAmb[] = {0.1f, 0.1f, 0.1f, 1.0f};
 			gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, lightAmb,0); // Global ambient light.
-		}
+		}*/
 
 
 		float lightDif0[] = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -430,7 +443,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 				if (angleC - 1 == 359){
 						angleC = -1;
 				}
-				angleC ++;
+				angleC += 0.5;
 			}
 		};
 		timer.schedule(tt,40,40);
