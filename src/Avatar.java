@@ -202,9 +202,9 @@ public class Avatar{
 	}
 	
 	private boolean inPortalRange() {
-		double range = 0.015;
-		return (myPosition[0] > portalEntrance.x -range && myPosition[0] < portalEntrance.x +range
-				&& myPosition[2] > portalEntrance.z -range &&myPosition[2] > portalEntrance.z +range);				
+		double range = 0.1;
+		return (myPosition[0] > portalEntrance.x-range && myPosition[0] < portalEntrance.x +range
+				&& myPosition[2] > portalEntrance.z -range &&myPosition[2] <portalEntrance.z +range);				
 	}
 	public void goBackwards(Dimension size) {
 		this.animate();

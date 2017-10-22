@@ -19,8 +19,8 @@ public class Terrain {
     private List<Tree> myTrees;
     private List<Road> myRoads;
     private float[] mySunlight;
-    private Coord portalEntrance;
-    private Coord portalExit;
+    private Coord portalEntrance= new Coord(1,2,1);
+    private Coord portalExit= new Coord(2,0,5);
     private MyTexture[] myTextures;
     
     private String textureFileName1 = "src/textures/grass.bmp";
@@ -39,8 +39,7 @@ public class Terrain {
         myRoads = new ArrayList<Road>();
         mySunlight = new float[3];
         normals = new double[width][depth][2];
-        portalEntrance = new Coord(1,2,1);
-        portalExit = new Coord(2,3,2);
+
     }
 
     public Terrain(Dimension size) {
@@ -103,7 +102,7 @@ public class Terrain {
     		
 	    	gl.glTranslated(portalEntrance.x, altitude(portalEntrance.x,portalEntrance.z)+0.5,portalEntrance.z);
 	    	gl.glRotated(90, 0, 0,1);
-	    	gl.glTranslated(0,0,3.4);
+	    	//gl.glTranslated(0,0,);
 	    	gl.glColor3d(0., 0.6, 0.9);
 			gl.glEnable(gl.GL_COLOR_MATERIAL);
 	    	
@@ -117,9 +116,9 @@ public class Terrain {
 		gl.glPopMatrix();
 		
 		gl.glPushMatrix();
-	    	gl.glTranslated(portalExit.x, altitude(portalExit.x,portalExit.z)+0.5,portalEntrance.z);
+	    	gl.glTranslated(portalExit.x, altitude(portalExit.x,portalExit.z)+0.5,portalExit.z);
 	    	gl.glRotated(90, 0, 0,1);
-	    	gl.glTranslated(0,0,1);
+	    	//gl.glTranslated(0,0,1);
 			gl.glEnable(gl.GL_COLOR_MATERIAL);
 	    	gl.glColor3d(0.9, 0.7, 0.7);
 	        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif,0);

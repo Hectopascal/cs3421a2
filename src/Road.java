@@ -20,7 +20,7 @@ public class Road {
     // the current extruded mesh
     private List<Polygon> myMesh = null;
     private List<Coord> mySpine = null;
-    private final double SLICES = 50;
+    private final double SLICES = 20;
     private Terrain myTerrain;
     /** 
      * Create a new road starting at the specified point
@@ -148,15 +148,11 @@ public class Road {
         
     }
     public void draw(GL2 gl) {
-        // clear the window and the depth buffer 
-        //gl.glClearColor(1, 1, 1, 1);
-        //gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-
         // turn on a light
-        //gl.glEnable(GL2.GL_LIGHT0);
+        gl.glEnable(GL2.GL_LIGHT0);
        
         
-    	//gl.glBindTexture(GL2.GL_TEXTURE_2D, texture.getTextureId());
+    	gl.glBindTexture(GL2.GL_TEXTURE_2D, texture.getTextureId());
 
         List<Polygon> mesh = getMesh();
         if (mesh != null) {
