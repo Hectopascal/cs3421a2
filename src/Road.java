@@ -17,7 +17,7 @@ public class Road {
     private Color Material;
     private ArrayList<double[]> bezierPoints;
     private ArrayList<double[]> vertexLevel;
-    private int numSegment = 50;
+    private int numSegment = 100;
     private Terrain myTerrain;
     private MyTexture[] textures;
     private Polygon myCrossSection;
@@ -25,7 +25,7 @@ public class Road {
     /** 
      * Create a new road starting at the specified point
      */
-    public Road(double width, double x0, double y0,Terrain terrain) {
+    /*public Road(double width, double x0, double y0,Terrain terrain) {
         myWidth = width;
         myPoints = new ArrayList<Coord>();
         bezierPoints = new ArrayList<double[]>();
@@ -74,7 +74,7 @@ public class Road {
         c[0] = c1;
         c[1] = c2;
         return c;
-    }
+    }*/
     /**
      * Create a new road with the specified spine 
      *
@@ -184,13 +184,10 @@ public class Road {
         
         case 0:
             return (1-t) * (1-t) * (1-t);
-
         case 1:
             return 3 * (1-t) * (1-t) * t;
-            
         case 2:
             return 3 * (1-t) * t * t;
-
         case 3:
             return t * t * t;
         }
@@ -218,14 +215,15 @@ public class Road {
             gl.glColor4d(0, 0, 0, 1);
             gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
             gl.glBindTexture(GL2.GL_TEXTURE_2D, textures[0].getTextureId());
-            
-            for (Polygon p : mesh) {
-                p.draw(gl);                
-            }
+            gl.glPushMatrix();
+	            for (Polygon p : mesh) {
+	                p.draw(gl);                
+	            }
+            gl.glPopMatrix();
         }
-        
-        
     }
+    
+    
     /**
      * Get the extruded mesh
      * 
@@ -317,10 +315,10 @@ public class Road {
         //myCrossSection = new LinkedHashMap<String, Polygon>();
     	//"square"
         Polygon square = new Polygon();
-        square.addPoint(SCALE, myWidth*SCALE, 0);
-        square.addPoint(-SCALE, myWidth*SCALE, 0);
-        square.addPoint(-SCALE, -myWidth*SCALE, 0);
-        square.addPoint(SCALE, -myWidth*SCALE, 0);
+        square.addPoint(0, SCALE, 0.1);
+        square.addPoint(-0, SCALE, 0.1);
+        square.addPoint(-0, -SCALE, 0.1);
+        square.addPoint(0, -SCALE, 0.1);
         myCrossSection = square;
 
 
@@ -377,13 +375,36 @@ public class Road {
         // transform the points
        
         for (Coord cp : crossSection) {
-        
             Coord q = cp.transform(m);
-           
+
+        	System.out.println(cp.toString() + " vs "+ q.toString());
+        	
             vertices.add(q);
         }
     }
+    public double[] normal(double t){
+    	double[] normal = new double[2];
+    	int i = (int) Math.floor(t);
+        t = t - i;
+        
+        //i *= 6;
+        double x0 = myPoints.get(i).x;
+        double y0 = myPoints.get(i).z;
+        double x1 = myPoints.get(i+1).x;
+        double y1 = myPoints.get(i+1).z;
+        double x2 = myPoints.get(i+2).x;
+        double y2 = myPoints.get(i+2).z;
+        double x3 = myPoints.get(i+3).x;
+        double y3 = myPoints.get(i+3).z;
+        
+        normal[1] = 3 * ((1-t)*(1-t)*(y1-y0) + 2*(1-t)*t*(y2-y1) + t*t*(y3-y2));
+        normal[0] = 3 * ((1-t)*(1-t)*(x1-x0) + 2*(1-t)*t*(x2-x1) + t*t*(x3-x2));
 
+        normal[0] = (normal[0] / (Math.sqrt(normal[1] * normal[1] + normal[0] * normal[0])));
+        normal[1] = (normal[1] / (Math.sqrt(normal[1] * normal[1] + normal[0] * normal[0])));
+        
+		return normal;
+    }
 	double [] getNormal(double[] p0, double[] p1, double[] p2){
     	double u[] = {p1[0] - p0[0], p1[1] - p0[1], p1[2] - p0[2]};
     	double v[] = {p2[0] - p0[0], p2[1] - p0[1], p2[2] - p0[2]}; 	

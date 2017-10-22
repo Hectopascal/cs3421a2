@@ -25,6 +25,7 @@ public class Terrain {
     
     private String textureFileName1 = "src/textures/grass.bmp";
     private String bmpExt = "bmp";
+    private double[][][] normals;
     /**
      * Create a new terrain
      *
@@ -37,7 +38,7 @@ public class Terrain {
         myTrees = new ArrayList<Tree>();
         myRoads = new ArrayList<Road>();
         mySunlight = new float[3];
-        
+        normals = new double[width][depth][2];
         portalEntrance = new Coord(1,2,1);
         portalExit = new Coord(2,3,2);
     }
@@ -158,53 +159,6 @@ public class Terrain {
     public void setGridAltitude(int x, int z, double h) {
         myAltitude[x][z] = h;
     }
-
-    /**
-     * Get the altitude at an arbitrary point. 
-     * Non-integer points should be interpolated from neighbouring grid points
-     * 
-     * TO BE COMPLETED
-     * 
-     * Uses Bilinear Interpolation
-     * Reference: http://supercomputingblog.com/graphics/coding-bilinear-interpolation/
-     * 
-     * 
-     * @param x
-     * @param z
-     * @return
-     */
-   /* public double altitude(double x, double z) {
-        double altitude = 0;
-        int x1 = (int) Math.floor(x);
-        int x2 = (int) Math.ceil(x);
-        int z1 = (int) Math.floor(z);
-        int z2 = (int) Math.ceil(z);
-        if(x1 == x2 && z1 == z2) {
-        	altitude = getGridAltitude(x1, z1);
-        }
-        else {
-
-	        double r1 = (((x2 - x) / (x2 - x1)) * getGridAltitude(x1, z1));
-	        r1 += (((x - x1) / (x2 - x1)) * getGridAltitude(x2, z1));
-	         r2 = (((x2 - x) / (x2 - x1)) * getGridAltitude(x1, z2));
-	        r2 += (((x - x1) / (x2 - x1)) * getGridAltitude(x2, z2));
-
-	        System.out.println("R1");
-	        System.out.println(r1);
-	        System.out.println("R2");
-	        System.out.println(r2);
-	        System.out.println(z2-z);
-	        System.out.println(z2-z1);
-	        if(z2-z1==0) {
-	        	p=0;
-	        }else {
-	         p = (((z2 - z) / (z2 - z1)) * r1);
-	        p += (((z - z1) / (z2 - z1)) * r2);
-	        }
-	        altitude = p;
-        }
-        return altitude;
-    }*/
     
     public double altitude(double x, double z) {
     	/*This will probably come in handy: https://stackoverflow.com/questions/8697521/interpolation-of-a-triangle*/
@@ -326,6 +280,7 @@ public class Terrain {
 	            double[] topRight = {x+1, myAltitude[x+1][z+1], z+1};
 	            double[] topLeft = {x+1, myAltitude[x+1][z], z};
 	            double[] normals = getNormal(botLeft, topRight, topLeft);
+	            
 		        gl.glBindTexture(GL2.GL_TEXTURE_2D, myTextures[0].getTextureId());
 
 
@@ -396,7 +351,36 @@ public class Terrain {
     	
     	return crossProduct;
     }
+    public boolean inRange(Coord p) {
+    	return (p.x>=0 && p.z>=0 && p.x<mySize.getWidth()-1 && p.z<mySize.getHeight() );
+    }
+    public Coord getNorm(Coord point) {
+    	Coord norm = null; 
+    	if(inRange(point)) {
+    		Coord bottomLeft = new Coord(Math.floor(point.x),0,Math.floor(point.z));
+    		Coord topLeft = new Coord(Math.ceil(point.x),0,Math.floor(point.z));
+    		//Coord bottomRight = new Coord(Math.floor(point.x),0,Math.ceil(point.z));
+    		Coord topRight = new Coord(Math.ceil(point.x),0,Math.ceil(point.z));
+    		
+    		if(isInsideTriangle(topRight,topLeft,bottomLeft,point)) {
+    			
+    		} else {
+    			
+    		}
+    	}
+    	return norm;
+    }
+    private boolean isInsideTriangle(Coord A ,Coord B,Coord C,Coord P) {
+		double planeAB = (A.x-P.x)*(B.z-P.z)-(B.x-P.x)*(A.z-P.z);
+		double planeBC = (B.x-P.x)*(C.z-P.z)-(C.x - P.x)*(B.z-P.z);
+		double planeCA = (C.x-P.x)*(A.z-P.z)-(A.x - P.x)*(C.z-P.z);
     
+		return sign(planeAB)==sign(planeBC) && sign(planeBC)==sign(planeCA);
+	}
+	private int sign(double n) {
+		if(n==0) return 1;
+		return (int) ((int) Math.abs(n)/n);
+	}
     //Assumes correct winding order
     double [] getNormal(double[] p0, double[] p1, double[] p2){
     	double u[] = {p1[0] - p0[0], p1[1] - p0[1], p1[2] - p0[2]};

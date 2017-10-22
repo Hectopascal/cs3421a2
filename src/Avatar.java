@@ -98,7 +98,6 @@ public class Avatar{
 				myPosition[2] = zMove;
 		}
 
-		System.out.println("x is "+ myPosition[0]+" z is "+ myPosition[2] + " angle is "+myRotation);
 		if(inPortalRange()) {
 			myPosition[0]=portalExit.x;
 			myPosition[2]=portalExit.z;
@@ -106,7 +105,7 @@ public class Avatar{
 	}
 	
 	private boolean inPortalRange() {
-		double range = 0.05;
+		double range = 0.005;
 		return (myPosition[0] > portalEntrance.x -range && myPosition[0] < portalEntrance.x +range
 				&& myPosition[2] > portalEntrance.z -range &&myPosition[2] > portalEntrance.z +range);				
 	}
@@ -129,8 +128,6 @@ public class Avatar{
 			}
 		}
 
-		System.out.println("x is "+ myPosition[0]+" z is "+ myPosition[2] + " angle is "+myRotation);
-		
 		if(inPortalRange()) {
 			myPosition[0]=portalExit.x;
 			myPosition[2]=portalExit.z;
@@ -150,7 +147,6 @@ public class Avatar{
 				myPosition[2] = zMove;
 		}
 
-		System.out.println("x is "+ myPosition[0]+" z is "+ myPosition[2] + " angle is "+myRotation);
 		if(inPortalRange()) {
 			myPosition[0]=portalExit.x;
 			myPosition[2]=portalExit.z;
@@ -168,8 +164,6 @@ public class Avatar{
 				myPosition[0] = xMove;
 				myPosition[2] = zMove;
 		}
-
-		System.out.println("x is "+ myPosition[0]+" z is "+ myPosition[2] + " angle is "+myRotation);
 		if(inPortalRange()) {
 			myPosition[0]=portalExit.x;
 			myPosition[2]=portalExit.z;
