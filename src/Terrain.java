@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.util.gl2.GLUT;
 
 
 /**
@@ -18,6 +19,8 @@ public class Terrain {
     private List<Tree> myTrees;
     private List<Road> myRoads;
     private float[] mySunlight;
+    private Coord portalEntrance;
+    private Coord portalExit;
     private MyTexture[] myTextures;
     
     private String textureFileName1 = "src/textures/grass.bmp";
@@ -34,6 +37,9 @@ public class Terrain {
         myTrees = new ArrayList<Tree>();
         myRoads = new ArrayList<Road>();
         mySunlight = new float[3];
+        
+        portalEntrance = new Coord(1,2,1);
+        portalExit = new Coord(2,3,2);
     }
 
     public Terrain(Dimension size) {
@@ -88,7 +94,44 @@ public class Terrain {
             }
         }
     }
+    public void drawPortal(GL2 gl) {
+    	float matAmbAndDif[] = {0.0f, 0.0f, 0.0f, 1.0f};         
+        float matSpec[] = {1.0f, 1.0f, 1.0f, 1.0f};
+        float matShine[] = {150.0f};
+    	gl.glPushMatrix();
+	    	gl.glTranslated(portalEntrance.x, portalEntrance.y,portalEntrance.z);
+	    	gl.glRotated(90, 0, 0,1);
+	    	gl.glTranslated(0,0,1);
+	    	gl.glColor3d(0., 0.6, 0.9);
+			gl.glEnable(gl.GL_COLOR_MATERIAL);
+	    	// Material property vectors.
+	        
+	    	// Material properties of the sphere 
+	        // The sphere is closed and the interior/back faces are never seen.
+	        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif,0);
+	        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, matSpec,0);
 
+	        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SHININESS, matShine,0);
+
+			GLUT glut = new GLUT();
+			glut.glutSolidTorus(0.1, 0.3, 10, 50);
+			gl.glDisable(gl.GL_COLOR_MATERIAL);
+		gl.glPopMatrix();
+		
+		gl.glPushMatrix();
+	    	gl.glTranslated(portalExit.x, portalEntrance.y,portalEntrance.z);
+	    	gl.glRotated(90, 0, 0,1);
+	    	gl.glTranslated(0,0,1);
+			gl.glEnable(gl.GL_COLOR_MATERIAL);
+	    	gl.glColor3d(0.9, 0.7, 0.7);
+	        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif,0);
+	        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, matSpec,0);
+	        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SHININESS, matShine,0);
+	
+			glut.glutSolidTorus(0.1, 0.3, 10, 50);
+			gl.glDisable(gl.GL_COLOR_MATERIAL);
+		gl.glPopMatrix();
+    }
     /**
      * Get the altitude at a grid point
      * 
@@ -99,7 +142,12 @@ public class Terrain {
     public double getGridAltitude(int x, int z) {
         return myAltitude[x][z];
     }
-
+    public Coord getExitPortal() {
+    	return portalExit;
+    }
+    public Coord getEntrancePortal() {
+    	return portalEntrance;
+    }
     /**
      * Set the altitude at a grid point
      * 
@@ -219,7 +267,7 @@ public class Terrain {
     		t.init(gl);
     	}
     	for(Road r : this.myRoads) {
-    		r.setTerrain(this);
+    		//r.setTerrain(this);
     		r.init(gl);
     	}
     }
@@ -235,6 +283,7 @@ public class Terrain {
     	gl.glPopMatrix();
     	drawTrees(gl);
     	drawRoads(gl);
+    	drawPortal(gl);
     }
     
     public void drawTrees(GL2 gl) {
@@ -269,7 +318,7 @@ public class Terrain {
 		 float height = mySize.height;
          //a grimy calculation for triangle mesh that works
 
-	    gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);
+	    gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_LINE);
         for (int x = 0; x+1 < width; x+=1.0) {
 	        for (int z = 0; z+1 < height; z+=1.0) {
 	        	//Corners for top left triangle

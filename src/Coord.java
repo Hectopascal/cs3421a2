@@ -18,6 +18,11 @@ public class Coord {
         this.y = y;
         this.z = z;
     }
+    public Coord(double[] point){
+        this.x = point[0];
+        this.y = point[1];
+        this.z = point[2];
+    }
 
     // should be need x,y,0/0,y,z/x,0,z? it depends;
 

@@ -15,8 +15,11 @@ public class Avatar{
 	private float matShine2[] = { 100.0f };
 	
 	private double myRotation;
+	private double myTilt;
 	private int myDirection;
 	
+	private Coord portalEntrance;
+	private Coord portalExit;
 	private String textureFileName1 = "src/textures/water.bmp";
 	private String bmpExt = "bmp";
 	
@@ -34,22 +37,26 @@ public class Avatar{
 	public double getRotation() {
 		return this.myRotation;
 	}
+	
+	public void setPortals(Coord in, Coord out) {
+		portalEntrance = in;
+		portalExit = out;
+	}
 	public void setAltitude(double height) {
 		this.myPosition[1] = height;
 	}
 	
 	public void rotateLeft() {
-		this.myRotation = (this.myRotation + 1) % 360;
-		this.myDirection = (int)(this.myRotation/90);
-		System.out.println(this.myRotation);
+		myRotation = myRotation+1;
 	}
 	public void rotateRight() {
-		this.myRotation = (this.myRotation - 1) % 360;
-		if(this.myRotation < 0.0) {
-			this.myRotation = 360 + this.myRotation;
-		}
-		this.myDirection = (int)(this.myRotation/90);
-		System.out.println(this.myRotation);
+		myRotation = myRotation-1;
+	}
+	public void lookUp() {
+		if(myTilt-1< 45) myTilt +=1;
+	}
+	public void lookDown() {
+		if(myTilt-1> -45) myTilt -=1;
 	}
 	public double[] getPosition() {
 		return this.myPosition;
@@ -79,211 +86,96 @@ public class Avatar{
 		gl.glPopMatrix();
 	}
 	public void goForwards(Dimension size) {
-		/*               |       Use trig to find x and z lengths (Q1)
-		             |\  |--/    sin(angle) * 0.5 = x
-		             | \ | /     cos(angle) * 0.5 = z
-		             |  \|/      
-		          -------------- Where b is X movement in quadrant 1/3, and Z movement in quad 2/4  
-		                /|\    | c is X movement in quad 2/4, and Z movement in quad 1/3
-		               / | \   | Q1: +X +Z
-		              /  |  \  | Q2: +X -Z
-		             /   |   \ | Q3: -X -Z
-		            /----|    \| Q4: -X +Z
-		*/
 		final double movement = 0.05;
-		double angleFromQuadrant = this.myRotation % 90;
-		double xMove;
-		double zMove;
-		switch (myDirection) {
-
-			case 0: 
-				xMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
-				zMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
-				break;
-			case 1: 
-				//Positive x, negative z
-				xMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
-				zMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
-				zMove = -zMove;
-				break;
-			case 2: 
-				//Negative x, negative z
-				xMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
-				zMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
-				xMove = -xMove;
-				zMove = -zMove;
-				break;
-			case 3: 
-				//Negative x, positive z
-				xMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
-				zMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
-				xMove = -xMove;
-				break;
-			default:
-				xMove = 0;
-				zMove = 0;
+		double xMove=myPosition[0];
+		double zMove=myPosition[2];
+		xMove += Math.sin(Math.toRadians(myRotation%360)) * movement;
+		zMove += Math.cos(Math.toRadians(myRotation%360)) * movement;
+			
+		if( xMove >= 0 && xMove <= size.width - 1
+		&& zMove >= 0 && zMove <= size.height - 1) {
+				myPosition[0] = xMove;
+				myPosition[2] = zMove;
 		}
-		if(this.myPosition[0] + xMove >= 0 && this.myPosition[0] + xMove <= size.width - 1){
-			if(this.myPosition[2]+zMove >= 0 && this.myPosition[2] + zMove <= size.height - 1) {
-				this.myPosition[0] += xMove;
-				this.myPosition[2] += zMove;
-			}
+
+		System.out.println("x is "+ myPosition[0]+" z is "+ myPosition[2] + " angle is "+myRotation);
+		if(inPortalRange()) {
+			myPosition[0]=portalExit.x;
+			myPosition[2]=portalExit.z;
 		}
 	}
+	
+	private boolean inPortalRange() {
+		double range = 0.05;
+		return (myPosition[0] > portalEntrance.x -range && myPosition[0] < portalEntrance.x +range
+				&& myPosition[2] > portalEntrance.z -range &&myPosition[2] > portalEntrance.z +range);				
+	}
 	public void goBackwards(Dimension size) {
-				/*               |       Use trig to find x and z lengths (Q1)
-		        |\  |--/    sin(angle) * 0.5 = x
-		        | \ | /     cos(angle) * 0.5 = z
-		        |  \|/      
-		     -------------- Where b is X movement in quadrant 1/3, and Z movement in quad 2/4  
-		           /|\    | c is X movement in quad 2/4, and Z movement in quad 1/3
-		          / | \   | Q1: +X +Z
-		         /  |  \  | Q2: +X -Z
-		        /   |   \ | Q3: -X -Z
-		       /----|    \| Q4: -X +Z
-		*/
-		final double movement = -0.05;
-		double angleFromQuadrant = this.myRotation % 90;
-		double xMove;
-		double zMove;
-		switch (myDirection) {
 		
-		case 0: 
-			xMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
-			zMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
-			break;
-		case 1: 
-			//Positive x, negative z
-			xMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
-			zMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
-			zMove = -zMove;
-			break;
-		case 2: 
-			//Negative x, negative z
-			xMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
-			zMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
-			xMove = -xMove;
-			zMove = -zMove;
-			break;
-		case 3: 
-			//Negative x, positive z
-			xMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
-			zMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
-			xMove = -xMove;
-			break;
-		default:
-			xMove = 0;
-			zMove = 0;
-		}
-		if(this.myPosition[0] + xMove >= 0 && this.myPosition[0] + xMove <= size.width - 1){
-			if(this.myPosition[2]+zMove >= 0 && this.myPosition[2] + zMove <= size.height - 1) {
-				this.myPosition[0] += xMove;
-				this.myPosition[2] += zMove;
+		final double movement = -0.05;
+		//double angleFromQuadrant = this.myRotation % 90;
+		double xMove=myPosition[0];
+		double zMove=myPosition[2];
+		System.out.println("lol");
+		xMove += Math.sin(Math.toRadians(myRotation%360)) * movement;
+		zMove += Math.cos(Math.toRadians(myRotation%360)) * movement;
+		
+		if( xMove >= 0 && xMove <= size.width - 1){
+			if(zMove >= 0 && zMove <= size.height - 1) {
+
+				myPosition[0] = xMove;
+				myPosition[2] = zMove;
+				
 			}
+		}
+
+		System.out.println("x is "+ myPosition[0]+" z is "+ myPosition[2] + " angle is "+myRotation);
+		
+		if(inPortalRange()) {
+			myPosition[0]=portalExit.x;
+			myPosition[2]=portalExit.z;
 		}
 	}
 	public void goLeft(Dimension size) {
-				/*               |       Use trig to find x and z lengths (Q1)
-		        |\  |--/    sin(angle) * 0.5 = x
-		        | \ | /     cos(angle) * 0.5 = z
-		        |  \|/      
-		     -------------- Where b is X movement in quadrant 1/3, and Z movement in quad 2/4  
-		           /|\    | c is X movement in quad 2/4, and Z movement in quad 1/3
-		          / | \   | Q1: +X +Z
-		         /  |  \  | Q2: +X -Z
-		        /   |   \ | Q3: -X -Z
-		       /----|    \| Q4: -X +Z
-		*/
 		final double movement = 0.05;
-		double angleFromQuadrant = this.myRotation % 90;
-		double xMove;
-		double zMove;
-		switch (myDirection) {
-		
-		case 0: 
-			xMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
-			zMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
-			break;
-		case 1: 
-			//Positive x, negative z
-			xMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
-			zMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
-			zMove = -zMove;
-			break;
-		case 2: 
-			//Negative x, negative z
-			xMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
-			zMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
-			xMove = -xMove;
-			zMove = -zMove;
-			break;
-		case 3: 
-			//Negative x, positive z
-			xMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
-			zMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
-			xMove = -xMove;
-			break;
-		default:
-			xMove = 0;
-			zMove = 0;
+		double xMove=myPosition[0];
+		double zMove=myPosition[2];
+
+		xMove += Math.sin(Math.toRadians((myRotation+90)%360)) * movement;
+		zMove += Math.cos(Math.toRadians((myRotation+90)%360)) * movement;
+			
+		if( xMove >= 0 && xMove <= size.width - 1
+		&& zMove >= 0 && zMove <= size.height - 1) {
+				myPosition[0] = xMove;
+				myPosition[2] = zMove;
 		}
-		if(this.myPosition[0] + zMove >= 0 && this.myPosition[0] + zMove <= size.width - 1){
-			if(this.myPosition[2]+xMove >= 0 && this.myPosition[2] + xMove <= size.height - 1) {
-				this.myPosition[0] += zMove;
-				this.myPosition[2] += xMove;
-			}
+
+		System.out.println("x is "+ myPosition[0]+" z is "+ myPosition[2] + " angle is "+myRotation);
+		if(inPortalRange()) {
+			myPosition[0]=portalExit.x;
+			myPosition[2]=portalExit.z;
 		}
 	}
 	public void goRight(Dimension size) {
-				/*               |       Use trig to find x and z lengths (Q1)
-		        |\  |--/    sin(angle) * 0.5 = x
-		        | \ | /     cos(angle) * 0.5 = z
-		        |  \|/      
-		     -------------- Where b is X movement in quadrant 1/3, and Z movement in quad 2/4  
-		           /|\    | c is X movement in quad 2/4, and Z movement in quad 1/3
-		          / | \   | Q1: +X +Z
-		         /  |  \  | Q2: +X -Z
-		        /   |   \ | Q3: -X -Z
-		       /----|    \| Q4: -X +Z
-		*/
-		final double movement = -0.05;
-		double angleFromQuadrant = this.myRotation % 90;
-		double xMove;
-		double zMove;
-		switch (myDirection) {
-		
-		case 0: 
-			xMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
-			zMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
-			break;
-		case 1: 
-			//Positive x, negative z
-			xMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
-			zMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
-			zMove = -zMove;
-			break;
-		case 2: 
-			//Negative x, negative z
-			xMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
-			zMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
-			xMove = -xMove;
-			zMove = -zMove;
-			break;
-		case 3: 
-			//Negative x, positive z
-			xMove = Math.cos(Math.toRadians(angleFromQuadrant)) * movement;
-			zMove = Math.sin(Math.toRadians(angleFromQuadrant)) * movement;
-			xMove = -xMove;
-			break;
-		default:
-			xMove = 0;
-			zMove = 0;
+		final double movement = 0.05;
+		double xMove=myPosition[0];
+		double zMove=myPosition[2];
+		xMove -= Math.sin(Math.toRadians((myRotation+90)%360)) * movement;
+		zMove -= Math.cos(Math.toRadians((myRotation+90)%360)) * movement;
+			
+		if( xMove >= 0 && xMove <= size.width - 1
+		&& zMove >= 0 && zMove <= size.height - 1) {
+				myPosition[0] = xMove;
+				myPosition[2] = zMove;
 		}
-		if(this.myPosition[0] + zMove >= 0 && this.myPosition[0] + zMove <= size.width - 1){
-			if(this.myPosition[2]+xMove >= 0 && this.myPosition[2] + xMove <= size.height - 1) {
-				this.myPosition[0] += zMove;
-				this.myPosition[2] += xMove;
-			}
+
+		System.out.println("x is "+ myPosition[0]+" z is "+ myPosition[2] + " angle is "+myRotation);
+		if(inPortalRange()) {
+			myPosition[0]=portalExit.x;
+			myPosition[2]=portalExit.z;
 		}
+	}
+	public double getTilt() {
+		return myTilt;
 	}
 }

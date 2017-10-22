@@ -13,11 +13,11 @@ public class Road {
     private static final double SCALE = 0.2;
     
     private List<Coord> myPoints;
-    private double myWidth;
+    private final double myWidth;
     private Color Material;
     private ArrayList<double[]> bezierPoints;
     private ArrayList<double[]> vertexLevel;
-    private int numSegment = 10;
+    private int numSegment = 50;
     private Terrain myTerrain;
     private MyTexture[] textures;
     private Polygon myCrossSection;
@@ -87,10 +87,7 @@ public class Road {
         myPoints = new ArrayList<Coord>();
         System.out.println(myTerrain.altitude(spine[0], spine[1]));
         for (int i = 0; i < spine.length; i+=2) {
-        	//Coord toAdd = new Coord(spine[i],myTerrain.altitude(spine[i], spine[i+1]),spine[i+1]);
         	Coord toAdd = new Coord(spine[i],0,spine[i+1]);
-        	
-        	System.out.println(toAdd.toString());
             myPoints.add(toAdd);
         }
     }
@@ -157,16 +154,14 @@ public class Road {
         int i = (int)Math.floor(t);
         t = t - i;
         
-        //i *= 6;
-        
         double x0 = myPoints.get(i).x;
-        double y0 = myPoints.get(i).y;
+        double y0 = myPoints.get(i).z;
         double x1 = myPoints.get(i+1).x;
-        double y1 = myPoints.get(i+1).y;
+        double y1 = myPoints.get(i+1).z;
         double x2 = myPoints.get(i+2).x;
-        double y2 = myPoints.get(i+2).y;
+        double y2 = myPoints.get(i+2).z;
         double x3 = myPoints.get(i+3).x;
-        double y3 = myPoints.get(i+3).y;
+        double y3 = myPoints.get(i+3).z;
         
         double[] p = new double[2];
 
@@ -214,101 +209,22 @@ public class Road {
         Material = new Color();
         Material.diffuse = new ColorObject(0.5f,0.5f,0.5f,1.0f);
     }
-    /*
-	public void draw(GL2 gl) {
-
-		int numPoints = myPoints.size();
-        gl.glEnable(GL.GL_TEXTURE_2D);
-        gl.glMaterialfv(GL.GL_FRONT,GL2.GL_AMBIENT,new float[]{Material.ambient.x,Material.ambient.y,Material.ambient.z},0);
-        gl.glMaterialfv(GL.GL_FRONT,GL2.GL_DIFFUSE,new float[]{Material.diffuse.x,Material.diffuse.y,Material.diffuse.z},0);
-        gl.glMaterialfv(GL.GL_FRONT,GL2.GL_SPECULAR,new float[]{Material.specular.x,Material.specular.y,Material.specular.z},0);
-        gl.glMaterialfv(GL.GL_FRONT,GL2.GL_SHININESS,new float[]{Material.phong.x,Material.phong.y,Material.phong.z},0);
-
-        gl.glTexEnvf(GL.GL_TEXTURE2,GL2.GL_TEXTURE_ENV_MODE,GL2.GL_MODULATE);
-        gl.glTexParameteri(GL2.GL_TEXTURE_2D,GL2.GL_TEXTURE_WRAP_S,GL2.GL_CLAMP_TO_EDGE);
-        gl.glTexParameteri(GL2.GL_TEXTURE_2D,GL2.GL_TEXTURE_WRAP_T,GL2.GL_REPEAT);
-
-        gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);
-
-        double[] p1 = this.point(0);	
-    	double alt = myTerrain.altitude(p1[0], p1[1]) + 0.1; //added manual offset as the polygon offset works poorly
-    	double width = myWidth/2;
-        double tIncrement = ((double)this.size())/numPoints;
-        gl.glBindTexture(GL2.GL_TEXTURE_2D, textures[0].getTextureId());
-        double inc = 1/(double)numSegment;
-	        for (int i = 1; (double)i/(double)numSegment   < (double)this.size()*6/2; i++) {
-	        	double t = i/(double)numSegment;
-	        	//double[] normalAtT = getNormal(normalAtT, normalAtT, normalAtT);
-	        	double[] topLeft = {this.point(t)[0], 
-	        						myTerrain.altitude(this.point(t)[0]-width, this.point(t)[1])+0.1, 
-	        						this.point(t)[1]};
-	    	    double[] topRight = {this.point(t)[0]+width, 
-	    	    					myTerrain.altitude(this.point(t)[0]+width,this.point(t)[1])+0.1, 
-	    	    					this.point(t)[1]};
-	            double[] botLeft = {this.point(t+inc)[0]-width, 
-	            					myTerrain.altitude(this.point(t+inc)[0]-width, this.point(t+inc)[1])+0.1, 
-	            					this.point(t+inc)[1]};
-	            double[] botRight = {this.point(t+inc)[0]+width, 
-									myTerrain.altitude(this.point(t+inc)[0]+width, this.point(t+inc)[1])+0.1, 
-									this.point(t+inc)[1]};
-	        	
-
-	        	System.out.println("TOPLEFT " +this.point(t)[0]+ " "+
-						(myTerrain.altitude(this.point(t)[0]-width, this.point(t)[1])+0.1) + " "+
-						this.point(t)[1]);
-	        	
-	            
-	            double[] normals = getNormal(botLeft, topRight, topLeft);
-		        gl.glBindTexture(GL2.GL_TEXTURE_2D, textures[0].getTextureId());
-	            gl.glBegin(GL2.GL_TRIANGLES);
-	            {
-	            	gl.glNormal3d(normals[0], -normals[1], normals[2]);
-	            	gl.glTexCoord2d(botLeft[0],botLeft[2]);
-		        	gl.glVertex3d(botLeft[0],botLeft[1],botLeft[2]);
-		        	
-		        	gl.glNormal3d(normals[0], -normals[1], normals[2]);
-		        	gl.glTexCoord2d(topRight[0], topRight[2]);
-		        	gl.glVertex3d(topRight[0],topRight[1],topRight[2]);
-		        	
-		        	gl.glNormal3d(normals[0], -normals[1], normals[2]);
-		        	gl.glTexCoord2d(topLeft[0], topLeft[2]);
-		        	gl.glVertex3d(topLeft[0],topLeft[1],topLeft[2]);
-	        	}gl.glEnd();   		
-		        //Corner for bottom right triangle
-		        
-		        normals = getNormal(botLeft, botRight, topRight);
-		        gl.glBindTexture(GL2.GL_TEXTURE_2D, textures[0].getTextureId());
-		        gl.glBegin(GL2.GL_TRIANGLES);
-		        {
-		        	gl.glNormal3d(normals[0], -normals[1], normals[2]);
-		        	gl.glTexCoord2d(botLeft[0], botLeft[2]);
-		        	gl.glVertex3d(botLeft[0], botLeft[1], botLeft[2]);
-		        	gl.glNormal3d(normals[0], -normals[1], normals[2]);
-		        	gl.glTexCoord2d(botRight[0], botRight[2]);
-		        	gl.glVertex3d(botRight[0], botRight[1], botRight[2]);
-		        	gl.glNormal3d(normals[0], -normals[1], normals[2]);
-		        	gl.glTexCoord2d(topRight[0], topRight[2]);
-		        	gl.glVertex3d(topRight[0], topRight[1], topRight[2]);
-		        }
-		        gl.glEnd();
-		            	
-		     }
-    		
-	}
-    
-    */
+  
     public void draw(GL2 gl) {
     	
     	List<Polygon> mesh = getMesh();
+
         if (mesh != null) {
             gl.glColor4d(0, 0, 0, 1);
-            gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
+            gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
             gl.glBindTexture(GL2.GL_TEXTURE_2D, textures[0].getTextureId());
             
             for (Polygon p : mesh) {
                 p.draw(gl);                
             }
         }
+        
+        
     }
     /**
      * Get the extruded mesh
@@ -322,6 +238,18 @@ public class Road {
         }
         return myMesh;
     }
+    private List<Coord> getCurve(List<Coord> points){
+    	
+    	ArrayList<Coord> curveSpine = new ArrayList<Coord>();
+    	for(double i = 0; i/(double) numSegment < points.size()-3;i+=1) {
+    		double[] tInc = point(i/numSegment);
+    		System.out.println(tInc[0]+ "  " +tInc[1]);
+    		curveSpine.add(new Coord(tInc[0],myTerrain.altitude(tInc[0], tInc[1]),tInc[1]));
+    	}
+    	return curveSpine;
+    	
+    }
+    
     /**
      * The extrusion code.
      * 
@@ -336,7 +264,7 @@ public class Road {
         }
         
         List<Coord> crossSection = cs.getPoints();
-        List<Coord> spine = myPoints;
+        List<Coord> spine = getCurve(myPoints);
         if (spine == null) {
             return;
         }
@@ -346,18 +274,15 @@ public class Road {
         Coord pPrev;
         Coord pCurr = spine.get(0);
         Coord pNext = spine.get(1);
-        
         // first point is a special case
         addPoints(crossSection, vertices, pCurr, pCurr, pNext);
         
         // mid points
-        for (int i = 1; (double)i/(double)numSegment < (double)myPoints.size()-3; i++) {
-        	double t=(double)i/(double)numSegment;
+        for (int i = 1; i<spine.size()-1; i++) {
+        	//double t=(double)(i+1)/(double)numSegment;
             pPrev = pCurr;
             pCurr = pNext;
-            pNext = new Coord(point(t)[0],
-	            		myTerrain.altitude(point(t)[0], point(t)[1]),
-	            		point(t)[1]);
+            pNext = spine.get(i+1);
             addPoints(crossSection, vertices, pPrev, pCurr, pNext);            
         }
         
@@ -370,13 +295,13 @@ public class Road {
 
         int n = crossSection.size();
         
-        // for each point along the spine
-        for (int i = 0;  (double)i/(double)numSegment   < (double)myPoints.size()-2; i++) {
+        // for each point along the 
+        for (int i = 0; i<spine.size()-1 ; i++) {
 
             // for each point in the cross section
             for (int j = 0; j < n; j++) {
                 
-                Polygon quad = new Polygon();                
+                Polygon quad = new Polygon();               
                 quad.addPoint(vertices.get(i * n + j));
                 quad.addPoint(vertices.get(i * n + (j+1) % n));
                 quad.addPoint(vertices.get((i+1) * n + (j+1) % n));
@@ -458,33 +383,7 @@ public class Road {
             vertices.add(q);
         }
     }
-/*
-    public double[] normal(double t){
-    	double[] normal = new double[2];
-    	int i = (int) Math.floor(t);
-        t = t - i;
-        
-        i *= 6;
-        
-        double x1 = myPoints.get(i++);
-        double y1 = myPoints.get(i++);
-        double x2 = myPoints.get(i++);
-        double y2 = myPoints.get(i++);
-        double x3 = myPoints.get(i++);
-        double y3 = myPoints.get(i++);
-        double x4 = myPoints.get(i++);
-        double y4 = myPoints.get(i++);
-        
-        
-        normal[0] = 3 * ((1-t)*(1-t)*(y2-y1) + 2*(1-t)*t*(y3-y2) + t*t*(y4-y3));
-        normal[1] = 3 * ((1-t)*(1-t)*(x2-x1) + 2*(1-t)*t*(x3-x2) + t*t*(x4-x3));
 
-        normal[0] = (normal[0] / (Math.sqrt(normal[1] * normal[1] + normal[0] * normal[0])));
-        normal[1] = (normal[1] / (Math.sqrt(normal[1] * normal[1] + normal[0] * normal[0])));
-        
-		return normal;
-    }
-*/
 	double [] getNormal(double[] p0, double[] p1, double[] p2){
     	double u[] = {p1[0] - p0[0], p1[1] - p0[1], p1[2] - p0[2]};
     	double v[] = {p2[0] - p0[0], p2[1] - p0[1], p2[2] - p0[2]}; 	
