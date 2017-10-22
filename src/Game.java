@@ -27,7 +27,6 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 
     private Terrain myTerrain;
     private Avatar myAvatar;
-	private Camera myCamera;
 
     private float globAmb[] = {0.1f, 0.1f, 0.1f, 1.0f};
 	private int p = 1; // Positional light 1, directional 0
@@ -40,10 +39,12 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     private boolean aPressed = false;
     private boolean sPressed = false;
     private boolean dPressed = false;
-
+    private boolean pPressed = false;
+    private boolean oPressed = false;
 
     private vboObject o = null;
-    private int camStage;
+    private complexModel cm = null;
+
     private float[] lightPos = new float[3];
     private boolean firstPersonMode = false;
     private boolean nightMode = false;
@@ -58,8 +59,6 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     	super("Assignment 2");
         myTerrain = terrain;
 		angleC = -1;
-		camStage = 0;
-		myCamera = new Camera();
     }
     
     /** 
@@ -115,19 +114,25 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 
         if(this.firstPersonMode) {
 	 		gl.glTranslated(0, -1.3, 0);
+
 		 	gl.glRotated(-myAvatar.getRotation(), 0, 1, 0);
 	 		glu.gluLookAt(myAvatar.getPosition()[0], myAvatar.getPosition()[1], myAvatar.getPosition()[2], myAvatar.getPosition()[0], 
 					myAvatar.getPosition()[1], myAvatar.getPosition()[2]+1, 0.0,1, 0);
         }
         else {
 	 		gl.glTranslated(0, -1.25, -1);
+
 		 	gl.glRotated(-myAvatar.getRotation(), 0, 1, 0);
 	 		glu.gluLookAt(myAvatar.getPosition()[0], myAvatar.getPosition()[1], myAvatar.getPosition()[2], myAvatar.getPosition()[0], 
 					myAvatar.getPosition()[1], myAvatar.getPosition()[2]+1, 0.0,1,0);
         }
     	setLighting(gl);
 		//changeLight(gl);
+        o.draw(gl,lightPos);
+		cm.draw(gl,myTerrain);
         //o.draw(gl,lightPos);
+		changeLight(gl);
+
     	myTerrain.draw(gl);   	
         myAvatar.draw(gl);
 
@@ -157,6 +162,12 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     	if(dPressed) {
     		goRight();
     	}
+    	if(pPressed) {
+    		this.myAvatar.rotateIndepRight();
+    	}
+    	if(oPressed) {
+    		this.myAvatar.rotateIndepLeft();
+    	}
 	}
 
 	
@@ -180,9 +191,10 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 
     	this.myTerrain.init(gl);
     	this.myAvatar.init(gl);
-    	//o = new vboObject(gl);
+    	o = new vboObject(gl);
+    	cm = new complexModel(gl);
 
-    	//timer();
+    	timer();
 
 	}
 
@@ -230,27 +242,17 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
             gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_SPECULAR, lightDifAndSpec,0);
     		gl.glPushMatrix();
     			double[] pos = myAvatar.getPosition();
-    			//gl.glTranslated(pos[0], pos[1], pos[2]);
-    			float[] floatPos = {(float)pos[0],(float)pos[1],(float)(pos[2]+0.75),1.0f};
+    			float[] floatPos = {(float)(pos[0]),(float)pos[1],(float)(pos[2]),1.0f};
     			gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, floatPos, 0);
     		gl.glPopMatrix();
     		gl.glLightf(GL2.GL_LIGHT1, GL2.GL_SPOT_CUTOFF, 30);
     		gl.glLightf(GL2.GL_LIGHT1, GL2.GL_SPOT_EXPONENT, 4);
-    		float[] direction = {(float)pos[0],(float)pos[1],(float)(pos[2]+0.75),1.0f};
+    		float[] direction = new float[] {0.0f, 0.5f, 0.0f};
+    		double rotation = this.myAvatar.getRotation();
+    		direction[0] = (float)Math.sin(Math.toRadians(rotation));
+    		direction[2] = (float)Math.cos(Math.toRadians(rotation));
     		gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_SPOT_DIRECTION, direction, 0);
     		gl.glPopMatrix();
-    		System.out.print(pos[0]);
-    		System.out.print(" ");
-    		System.out.print(pos[1]);
-    		System.out.print(" ");
-    		System.out.print(pos[2]);
-    		System.out.println();
-    		System.out.print(direction[0]);
-    		System.out.print(" ");
-    		System.out.print(direction[1]);
-    		System.out.print(" ");
-    		System.out.print(direction[2]);
-    		System.out.println();
     	}
     	
     	gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
@@ -287,6 +289,12 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 			case KeyEvent.VK_N:
 				this.nightMode = !this.nightMode;
 				break;
+			case KeyEvent.VK_P:
+				this.pPressed = true;
+				break;
+			case KeyEvent.VK_O:
+				this.oPressed = true;
+				break;
 			default:
 				break;
 		}
@@ -317,6 +325,12 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 				break;
 			case KeyEvent.VK_D:
 				this.dPressed = false;
+				break;
+			case KeyEvent.VK_P:
+				this.pPressed = false;
+				break;
+			case KeyEvent.VK_O:
+				this.oPressed = false;
 				break;
 			default:
 				break;
