@@ -27,7 +27,8 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 
     private Terrain myTerrain;
     private Avatar myAvatar;
-
+    private complexModel cm;
+    
     private float globAmb[] = {0.1f, 0.1f, 0.1f, 1.0f};
 	private int p = 1; // Positional light 1, directional 0
 
@@ -138,7 +139,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 		}
         myTerrain.draw(gl);   	
         myAvatar.draw(gl);
-
+        cm.draw(gl, this.myTerrain);
     	gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);
     	
     	if(forwardPressed) {
@@ -195,7 +196,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     	this.myTerrain.init(gl);
     	this.myAvatar.init(gl);
     	o = new vboObject(gl);
-
+    	this.cm = new complexModel(gl);
     	timer();
 
 	}
@@ -397,7 +398,6 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 		lightPos[0] = (float) (radius * Math.sin(incAngle*angleC + initAngle));
 		lightPos[1] = ((float) (radius * Math.cos(incAngle*angleC + initAngle)));
 		lightPos[2] = myTerrain.getSunlight()[2];
-		System.out.println(lightPos[1]);
 		// Set Ambient Light
 		//if (lightPos[1] >= 0) {
 		ambVal = -((float) (lightPos[1]/radius + 0.3f));

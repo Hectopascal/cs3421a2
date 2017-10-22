@@ -63,7 +63,7 @@ public class complexModel {
         myTexture = new MyTexture[1];
         myTexture[0] =  new MyTexture(gl,this.texturefileName,this.textureext1,false);
 
-        gl.glTexEnvf(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);
+        //gl.glTexEnvf(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE);
         gl.glGenBuffers(2,this.bufferIds,0);
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER,this.bufferIds[0]);
         long len = test.getVertice().length*Float.SIZE/8 + test.getTexture().length*Float.SIZE/8+ test.getNormal().length*Float.SIZE/8;;
