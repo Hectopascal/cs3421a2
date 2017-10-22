@@ -101,7 +101,7 @@ public class Terrain {
     	gl.glPushMatrix();
 	    	gl.glTranslated(portalEntrance.x, portalEntrance.y,portalEntrance.z);
 	    	gl.glRotated(90, 0, 0,1);
-	    	gl.glTranslated(0,0,0.3);
+	    	gl.glTranslated(0,0,1);
 	    	gl.glColor3d(0., 0.6, 0.9);
 			gl.glEnable(gl.GL_COLOR_MATERIAL);
 	    	// Material property vectors.
@@ -268,7 +268,7 @@ public class Terrain {
     	}
     	for(Road r : this.myRoads) {
     		//r.setTerrain(this);
-    		//r.init(gl);
+    		r.init(gl);
     	}
     }
     public void init(GL2 gl) {
@@ -280,10 +280,10 @@ public class Terrain {
     	gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
     	gl.glPushMatrix();
     		drawTerrain(gl);
-        	drawPortal(gl);
     	gl.glPopMatrix();
     	drawTrees(gl);
     	drawRoads(gl);
+    	drawPortal(gl);
     }
     
     public void drawTrees(GL2 gl) {
@@ -318,7 +318,7 @@ public class Terrain {
 		 float height = mySize.height;
          //a grimy calculation for triangle mesh that works
 
-	    gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);
+	    gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_LINE);
         for (int x = 0; x+1 < width; x+=1.0) {
 	        for (int z = 0; z+1 < height; z+=1.0) {
 	        	//Corners for top left triangle
