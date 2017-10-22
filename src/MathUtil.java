@@ -30,7 +30,7 @@ public class MathUtil {
      * @param q A 3x3 matrix
      * @return
      */
-    public static double[][] multiply(double[][] p, double[][] q) {
+    public static double[][] multiply3(double[][] p, double[][] q) {
 
         double[][] m = new double[3][3];
 
@@ -47,13 +47,13 @@ public class MathUtil {
     }
 
     /**
-     * Multiply two matrices
-     *
-     * @param p A 4x4 matrix
-     * @param q A 4x4 matrix
+     * COMMENT: matrixMultiply
+     * 
+     * @param t
+     * @param r
      * @return
      */
-    public static double[][] multiply4(double[][] p, double[][] q) {
+    public static double[][] multiply(double[][] p, double[][] q) {
 
         double[][] m = new double[4][4];
 
@@ -61,7 +61,7 @@ public class MathUtil {
             for (int j = 0; j < 4; j++) {
                 m[i][j] = 0;
                 for (int k = 0; k < 4; k++) {
-                    m[i][j] += p[i][k] * q[k][j];
+                   m[i][j] += p[i][k] * q[k][j]; 
                 }
             }
         }
@@ -69,13 +69,6 @@ public class MathUtil {
         return m;
     }
 
-    /**
-     * Multiply a vector by a matrix
-     *
-     * @param m A 4x4 matrix
-     * @param v A 4x1 vector
-     * @return
-     */
     public static double[] multiply(double[][] m, double[] v) {
 
         double[] u = new double[4];
@@ -190,7 +183,7 @@ public class MathUtil {
 
 
     public static double[][] rotationMatrixXYZ(Coord r){
-        return MathUtil.multiply4(MathUtil.multiply4(MathUtil.rotationMatrixX(r.x),
+        return MathUtil.multiply(MathUtil.multiply(MathUtil.rotationMatrixX(r.x),
                 MathUtil.rotationMatrixY(r.y)),MathUtil.rotationMatrixZ(r.z));
     }
     /**
