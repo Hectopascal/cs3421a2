@@ -47,7 +47,8 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     private float[] lightPos = new float[3];
     private boolean firstPersonMode = false;
 	private int angleC;
-
+	private double gX = 0;
+	private double gZ = 0;
 
 	private Timer timer;
 	private TimerTask tt;
@@ -111,6 +112,19 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     	
         GLU glu = new GLU();
 
+//        if(camStage == 1){
+//        	double axis = myTerrain.size().getWidth()/2;
+//        	glu.gluLookAt(axis,myTerrain.existAltitude(axis,-9+gX),-9+gX,myTerrain.size().getWidth()/2,
+//					myTerrain.existAltitude(axis,-9+gX),-8+gX,0,1,0);
+//        	gl.glTranslated(0,-1,0);
+//        	changeLight(gl);
+//        	gl.glPushMatrix();{
+//        		gl.glTranslated(axis,axis,axis);
+//        		gl.glRotated(gZ,0,1,0);
+//        		gl.glTranslated(-axis,-axis,-axis);
+//        		myTerrain.draw(gl,my);
+//			}
+//		}
         if(this.firstPersonMode) {
 	 		gl.glTranslated(0, -1.3, 0);
 		 	gl.glRotated(-myAvatar.getRotation(), 0, 1, 0);
@@ -123,7 +137,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 	 		glu.gluLookAt(myAvatar.getPosition()[0], myAvatar.getPosition()[1], myAvatar.getPosition()[2], myAvatar.getPosition()[0], 
 					myAvatar.getPosition()[1], myAvatar.getPosition()[2]+1, 0.0,1,0);
         }
-    	//setLighting(gl);
+    	setLighting(gl);
 		changeLight(gl);
         o.draw(gl,lightPos);
     	myTerrain.draw(gl);   	

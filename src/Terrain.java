@@ -62,6 +62,13 @@ public class Terrain {
         return mySunlight;
     }
 
+    public double existAltitude(double x, double z){
+    	if ( x>= 0 && x<=mySize.getWidth() -1 && z>=0 && z<=mySize.getHeight()-1){
+    		return altitude(x,z);
+		} else {
+    		return 0;
+		}
+	}
     /**
      * Set the sunlight direction. 
      * 
