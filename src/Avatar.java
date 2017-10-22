@@ -115,7 +115,7 @@ public class Avatar{
 		gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);
 		gl.glPushMatrix();
 			//Move to position
-			gl.glTranslated(this.myPosition[0], this.myPosition[1]+0.1, this.myPosition[2]);
+			gl.glTranslated(this.myPosition[0], this.myPosition[1]+0.01, this.myPosition[2]);
 			gl.glRotated(getRotation(), 0, 1, 0);
 			gl.glRotated(this.independentRotation, 0, 1, 0);
 			GLUT glut = new GLUT();
@@ -186,8 +186,10 @@ public class Avatar{
 		final double movement = 0.05;
 		double xMove=myPosition[0];
 		double zMove=myPosition[2];
-		xMove += Math.sin(Math.toRadians(myRotation%360)) * movement;
-		zMove += Math.cos(Math.toRadians(myRotation%360)) * movement;
+		double dX = Math.sin(Math.toRadians(myRotation%360)) * movement;
+		double dY= Math.cos(Math.toRadians(myRotation%360)) * movement;
+		xMove += dX;
+		zMove +=dY;
 			
 		if( xMove >= 0 && xMove <= size.width - 1
 		&& zMove >= 0 && zMove <= size.height - 1) {
@@ -195,16 +197,41 @@ public class Avatar{
 				myPosition[2] = zMove;
 		}
 
-		if(inPortalRange()) {
-			myPosition[0]=portalExit.x;
-			myPosition[2]=portalExit.z;
+		if(inPortalInRange()) {
+			if(dX >0) {
+				myPosition[0]=portalExit.x+0.1;
+			}else {
+				myPosition[0]=portalExit.x-0.1;
+			}
+			if(dY > 0) {
+				myPosition[2]=portalExit.z+0.1;
+			} else {
+				myPosition[2]=portalExit.z-0.1;
+			}
+			
+		} else if(inPortalOutRange()) {
+			if(dX >0) {
+				myPosition[0]=portalEntrance.x+0.1;
+			}else {
+				myPosition[0]=portalEntrance.x-0.1;
+			}
+			if(dY > 0) {
+				myPosition[2]=portalEntrance.z+0.1;
+			} else {
+				myPosition[2]=portalEntrance.z-0.1;
+			}
 		}
 	}
 	
-	private boolean inPortalRange() {
+	private boolean inPortalInRange() {
 		double range = 0.1;
 		return (myPosition[0] > portalEntrance.x-range && myPosition[0] < portalEntrance.x +range
 				&& myPosition[2] > portalEntrance.z -range &&myPosition[2] <portalEntrance.z +range);				
+	}
+	private boolean inPortalOutRange() {
+		double range = 0.1;
+		return (myPosition[0] > portalExit.x-range && myPosition[0] < portalExit.x +range
+				&& myPosition[2] > portalExit.z -range &&myPosition[2] <portalExit.z +range);				
 	}
 	public void goBackwards(Dimension size) {
 		this.animate();
@@ -212,9 +239,10 @@ public class Avatar{
 		//double angleFromQuadrant = this.myRotation % 90;
 		double xMove=myPosition[0];
 		double zMove=myPosition[2];
-		System.out.println("lol");
-		xMove += Math.sin(Math.toRadians(myRotation%360)) * movement;
-		zMove += Math.cos(Math.toRadians(myRotation%360)) * movement;
+		double dX = Math.sin(Math.toRadians(myRotation%360)) * movement;
+		double dY = Math.cos(Math.toRadians(myRotation%360)) * movement;
+		xMove += dX;
+		zMove += dY;
 		
 		if( xMove >= 0 && xMove <= size.width - 1){
 			if(zMove >= 0 && zMove <= size.height - 1) {
@@ -225,45 +253,108 @@ public class Avatar{
 			}
 		}
 
-		if(inPortalRange()) {
-			myPosition[0]=portalExit.x;
-			myPosition[2]=portalExit.z;
+		if(inPortalInRange()) {
+			if(dX >0) {
+				myPosition[0]=portalExit.x+0.1;
+			}else {
+				myPosition[0]=portalExit.x-0.1;
+			}
+			if(dY > 0) {
+				myPosition[2]=portalExit.z+0.1;
+			} else {
+				myPosition[2]=portalExit.z-0.1;
+			}
+			
+		} else if(inPortalOutRange()) {
+			if(dX >0) {
+				myPosition[0]=portalEntrance.x+0.1;
+			}else {
+				myPosition[0]=portalEntrance.x-0.1;
+			}
+			if(dY > 0) {
+				myPosition[2]=portalEntrance.z+0.1;
+			} else {
+				myPosition[2]=portalEntrance.z-0.1;
+			}
 		}
 	}
 	public void goLeft(Dimension size) {
 		final double movement = 0.05;
 		double xMove=myPosition[0];
 		double zMove=myPosition[2];
-
-		xMove += Math.sin(Math.toRadians((myRotation+90)%360)) * movement;
-		zMove += Math.cos(Math.toRadians((myRotation+90)%360)) * movement;
-			
+		double dX = Math.sin(Math.toRadians((myRotation+90)%360)) * movement; 
+		double dY =Math.cos(Math.toRadians((myRotation+90)%360)) * movement; 
+		xMove +=dX;
+		zMove += dY;
+		
 		if( xMove >= 0 && xMove <= size.width - 1
 		&& zMove >= 0 && zMove <= size.height - 1) {
 				myPosition[0] = xMove;
 				myPosition[2] = zMove;
 		}
 
-		if(inPortalRange()) {
-			myPosition[0]=portalExit.x;
-			myPosition[2]=portalExit.z;
+		if(inPortalInRange()) {
+			if(dX >0) {
+				myPosition[0]=portalExit.x+0.1;
+			}else {
+				myPosition[0]=portalExit.x-0.1;
+			}
+			if(dY > 0) {
+				myPosition[2]=portalExit.z+0.1;
+			} else {
+				myPosition[2]=portalExit.z-0.1;
+			}
+			
+		} else if(inPortalOutRange()) {
+			if(dX >0) {
+				myPosition[0]=portalEntrance.x+0.1;
+			}else {
+				myPosition[0]=portalEntrance.x-0.1;
+			}
+			if(dY > 0) {
+				myPosition[2]=portalEntrance.z+0.1;
+			} else {
+				myPosition[2]=portalEntrance.z-0.1;
+			}
 		}
 	}
 	public void goRight(Dimension size) {
 		final double movement = 0.05;
 		double xMove=myPosition[0];
 		double zMove=myPosition[2];
-		xMove -= Math.sin(Math.toRadians((myRotation+90)%360)) * movement;
-		zMove -= Math.cos(Math.toRadians((myRotation+90)%360)) * movement;
+		double dX = Math.sin(Math.toRadians((myRotation+90)%360)) * movement;
+		double dY = Math.cos(Math.toRadians((myRotation+90)%360)) * movement;
+		xMove -= dX;
+		zMove -= dY;
 			
 		if( xMove >= 0 && xMove <= size.width - 1
 		&& zMove >= 0 && zMove <= size.height - 1) {
 				myPosition[0] = xMove;
 				myPosition[2] = zMove;
 		}
-		if(inPortalRange()) {
-			myPosition[0]=portalExit.x;
-			myPosition[2]=portalExit.z;
+		if(inPortalInRange()) {
+			if(dX >0) {
+				myPosition[0]=portalExit.x+0.1;
+			}else {
+				myPosition[0]=portalExit.x-0.1;
+			}
+			if(dY > 0) {
+				myPosition[2]=portalExit.z+0.1;
+			} else {
+				myPosition[2]=portalExit.z-0.1;
+			}
+			
+		} else if(inPortalOutRange()) {
+			if(dX >0) {
+				myPosition[0]=portalEntrance.x+0.1;
+			}else {
+				myPosition[0]=portalEntrance.x-0.1;
+			}
+			if(dY > 0) {
+				myPosition[2]=portalEntrance.z+0.1;
+			} else {
+				myPosition[2]=portalEntrance.z-0.1;
+			}
 		}
 	}
 	public double getTilt() {
