@@ -107,8 +107,8 @@ public class Avatar{
     }
     public double[] handAnimation() {
     	double[] pos = new double[] {0,0,0};
-	    pos[1] += 0.2/(animationLength - this.animationFrame);
-	    pos[2] += 0.2/(animationLength - this.animationFrame);
+	    pos[1] += 0.1*(this.animationFrame/animationLength);
+	    pos[2] += 0.1*(this.animationFrame/animationLength);
     	return pos;
     }
 	public void draw(GL2 gl) {
