@@ -354,33 +354,8 @@ public class Terrain {
     public boolean inRange(Coord p) {
     	return (p.x>=0 && p.z>=0 && p.x<mySize.getWidth()-1 && p.z<mySize.getHeight() );
     }
-    public Coord getNorm(Coord point) {
-    	Coord norm = null; 
-    	if(inRange(point)) {
-    		Coord bottomLeft = new Coord(Math.floor(point.x),0,Math.floor(point.z));
-    		Coord topLeft = new Coord(Math.ceil(point.x),0,Math.floor(point.z));
-    		//Coord bottomRight = new Coord(Math.floor(point.x),0,Math.ceil(point.z));
-    		Coord topRight = new Coord(Math.ceil(point.x),0,Math.ceil(point.z));
-    		
-    		if(isInsideTriangle(topRight,topLeft,bottomLeft,point)) {
-    			
-    		} else {
-    			
-    		}
-    	}
-    	return norm;
-    }
-    private boolean isInsideTriangle(Coord A ,Coord B,Coord C,Coord P) {
-		double planeAB = (A.x-P.x)*(B.z-P.z)-(B.x-P.x)*(A.z-P.z);
-		double planeBC = (B.x-P.x)*(C.z-P.z)-(C.x - P.x)*(B.z-P.z);
-		double planeCA = (C.x-P.x)*(A.z-P.z)-(A.x - P.x)*(C.z-P.z);
     
-		return sign(planeAB)==sign(planeBC) && sign(planeBC)==sign(planeCA);
-	}
-	private int sign(double n) {
-		if(n==0) return 1;
-		return (int) ((int) Math.abs(n)/n);
-	}
+  
     //Assumes correct winding order
     double [] getNormal(double[] p0, double[] p1, double[] p2){
     	double u[] = {p1[0] - p0[0], p1[1] - p0[1], p1[2] - p0[2]};

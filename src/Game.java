@@ -27,6 +27,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 
     private Terrain myTerrain;
     private Avatar myAvatar;
+	private Camera myCamera;
 
     private float globAmb[] = {0.1f, 0.1f, 0.1f, 1.0f};
 	private int p = 1; // Positional light 1, directional 0
@@ -43,8 +44,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     private boolean oPressed = false;
 
     private vboObject o = null;
-    private complexModel cm = null;
-
+    private int camStage;
     private float[] lightPos = new float[3];
     private boolean firstPersonMode = false;
     private boolean nightMode = false;
@@ -59,6 +59,8 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     	super("Assignment 2");
         myTerrain = terrain;
 		angleC = -1;
+		camStage = 0;
+		myCamera = new Camera();
     }
     
     /** 
@@ -114,25 +116,19 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 
         if(this.firstPersonMode) {
 	 		gl.glTranslated(0, -1.3, 0);
-
 		 	gl.glRotated(-myAvatar.getRotation(), 0, 1, 0);
 	 		glu.gluLookAt(myAvatar.getPosition()[0], myAvatar.getPosition()[1], myAvatar.getPosition()[2], myAvatar.getPosition()[0], 
 					myAvatar.getPosition()[1], myAvatar.getPosition()[2]+1, 0.0,1, 0);
         }
         else {
 	 		gl.glTranslated(0, -1.25, -1);
-
 		 	gl.glRotated(-myAvatar.getRotation(), 0, 1, 0);
 	 		glu.gluLookAt(myAvatar.getPosition()[0], myAvatar.getPosition()[1], myAvatar.getPosition()[2], myAvatar.getPosition()[0], 
 					myAvatar.getPosition()[1], myAvatar.getPosition()[2]+1, 0.0,1,0);
         }
     	setLighting(gl);
-		//changeLight(gl);
-        o.draw(gl,lightPos);
-		cm.draw(gl,myTerrain);
-        //o.draw(gl,lightPos);
 		changeLight(gl);
-
+        //o.draw(gl,lightPos);
     	myTerrain.draw(gl);   	
         myAvatar.draw(gl);
 
@@ -192,7 +188,6 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     	this.myTerrain.init(gl);
     	this.myAvatar.init(gl);
     	o = new vboObject(gl);
-    	cm = new complexModel(gl);
 
     	timer();
 
