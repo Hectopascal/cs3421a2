@@ -98,29 +98,26 @@ public class Terrain {
     public void drawPortal(GL2 gl) {
     	float matAmbAndDif[] = {0.0f, 0.0f, 0.0f, 1.0f};         
         float matSpec[] = {1.0f, 1.0f, 1.0f, 1.0f};
-        float matShine[] = {150.0f};
+        float matShine[] = {120.0f};
     	gl.glPushMatrix();
-	    	gl.glTranslated(portalEntrance.x, portalEntrance.y,portalEntrance.z);
+    		
+	    	gl.glTranslated(portalEntrance.x, altitude(portalEntrance.x,portalEntrance.z)+0.5,portalEntrance.z);
 	    	gl.glRotated(90, 0, 0,1);
-	    	gl.glTranslated(0,0,1);
+	    	gl.glTranslated(0,0,3.4);
 	    	gl.glColor3d(0., 0.6, 0.9);
 			gl.glEnable(gl.GL_COLOR_MATERIAL);
-	    	// Material property vectors.
-	        
-	    	// Material properties of the sphere 
-	        // The sphere is closed and the interior/back faces are never seen.
-	        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif,0);
+	    	
+			gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif,0);
 	        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, matSpec,0);
-
 	        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SHININESS, matShine,0);
 
 			GLUT glut = new GLUT();
-			glut.glutSolidTorus(0.1, 0.3, 10, 50);
+			glut.glutSolidTorus(0.05, 0.3, 10, 50);
 			gl.glDisable(gl.GL_COLOR_MATERIAL);
 		gl.glPopMatrix();
 		
 		gl.glPushMatrix();
-	    	gl.glTranslated(portalExit.x, portalEntrance.y,portalEntrance.z);
+	    	gl.glTranslated(portalExit.x, altitude(portalExit.x,portalExit.z)+0.5,portalEntrance.z);
 	    	gl.glRotated(90, 0, 0,1);
 	    	gl.glTranslated(0,0,1);
 			gl.glEnable(gl.GL_COLOR_MATERIAL);
@@ -129,7 +126,7 @@ public class Terrain {
 	        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, matSpec,0);
 	        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SHININESS, matShine,0);
 	
-			glut.glutSolidTorus(0.1, 0.3, 10, 50);
+			glut.glutSolidTorus(0.05, 0.3, 10, 50);
 			gl.glDisable(gl.GL_COLOR_MATERIAL);
 		gl.glPopMatrix();
     }
