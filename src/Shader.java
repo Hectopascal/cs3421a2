@@ -57,7 +57,7 @@ public class Shader {
         gl.glAttachShader(shaderprogram,fragmentShader.myID);
         gl.glLinkProgram(shaderprogram);
 
-        int[] error = new int[2];
+        int[] error = new int[0];
         gl.glGetProgramiv(shaderprogram,GL2.GL_LINK_STATUS,error,9);
         if(error[0] != GL2.GL_TRUE){
             int[] logLength = new int[1];

@@ -37,6 +37,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     private boolean dPressed = false;
     
     private boolean firstPersonMode = false;
+    private boolean nightMode = false;
     
     public Game(Terrain terrain) {
     	super("Assignment 2");
@@ -157,9 +158,16 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 
 
 	public void setLighting(GL2 gl){
-    	float lightAmb[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-    	float lightDifAndSpec[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-    	
+		float lightAmb[];
+		float lightDifAndSpec[];
+		if(this.nightMode) {
+			lightAmb = new float[] {0.0f, 0.0f, 0.0f, 1.0f};
+			lightDifAndSpec = new float[] {0.0f, 0.0f, 0.0f, 1.0f};
+		}
+		else {
+	    	lightAmb = new float[] { 0.5f, 0.5f, 0.5f, 1.0f };
+	    	lightDifAndSpec = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
+		}
     	float lightPos[] = myTerrain.getSunlight(); 	
     	
     	
@@ -181,6 +189,40 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     	gl.glLightf(GL2.GL_LIGHT0,GL2.GL_LINEAR_ATTENUATION, 1);
     	gl.glLightf(GL2.GL_LIGHT0,GL2.GL_QUADRATIC_ATTENUATION, 0.5f);
 
+    	if(this.nightMode) {
+    		lightAmb = new float[] { 0.5f, 0.5f, 0.5f, 1.0f };
+	    	lightDifAndSpec = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
+    		gl.glEnable(GL2.GL_LIGHT1);
+    		GLUT glut = new GLUT();
+    		//Position the spotlight
+            gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_AMBIENT, lightAmb,0);
+            gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_DIFFUSE, lightDifAndSpec,0);
+            gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_SPECULAR, lightDifAndSpec,0);
+    		gl.glPushMatrix();
+    			double[] pos = myAvatar.getPosition();
+    			//gl.glTranslated(pos[0], pos[1], pos[2]);
+    			float[] floatPos = {(float)pos[0],(float)pos[1],(float)(pos[2]+0.75),1.0f};
+    			gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, floatPos, 0);
+    		gl.glPopMatrix();
+    		gl.glLightf(GL2.GL_LIGHT1, GL2.GL_SPOT_CUTOFF, 30);
+    		gl.glLightf(GL2.GL_LIGHT1, GL2.GL_SPOT_EXPONENT, 4);
+    		float[] direction = {(float)pos[0],(float)pos[1],(float)(pos[2]+0.75),1.0f};
+    		gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_SPOT_DIRECTION, direction, 0);
+    		gl.glPopMatrix();
+    		System.out.print(pos[0]);
+    		System.out.print(" ");
+    		System.out.print(pos[1]);
+    		System.out.print(" ");
+    		System.out.print(pos[2]);
+    		System.out.println();
+    		System.out.print(direction[0]);
+    		System.out.print(" ");
+    		System.out.print(direction[1]);
+    		System.out.print(" ");
+    		System.out.print(direction[2]);
+    		System.out.println();
+    	}
+    	
     	gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
 	}
 	public void keyPressed(KeyEvent e) {
@@ -211,6 +253,9 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 				break;
 			case KeyEvent.VK_V:
 				this.firstPersonMode = !this.firstPersonMode;
+				break;
+			case KeyEvent.VK_N:
+				this.nightMode = !this.nightMode;
 				break;
 			default:
 				break;
