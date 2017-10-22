@@ -403,6 +403,11 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 		ambVal = -((float) (lightPos[1]/radius + 0.3f));
 		float lightAmb[] = { ambVal, ambVal, ambVal, 1.0f };
 		gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, lightAmb,0);
+		/*if(lightPos[1] > 0) {
+			gl.glDisable(GL2.GL_LIGHT0);
+		}else {
+			gl.glEnable(GL2.GL_LIGHT0);
+		}*/
 		/*} else {
 			System.out.println("Lower");
 			float lightAmb[] = {0.1f, 0.1f, 0.1f, 1.0f};
