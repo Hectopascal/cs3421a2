@@ -7,8 +7,7 @@ import com.jogamp.opengl.util.gl2.GLUT;
 public class Avatar{
 	private double[] myPosition;
 	
-	private float matAmbAndDif1[] = {1f, 1f, 1f, 1.0f};
-	private float matAmbAndDif2[] = {0.7f, 1.0f, 0.8f, 1.0f};
+	private float matAmbAndDif[] = {1f, 1f, 1f, 1.0f};
 	private float matSpec[] = { 0.8f, 0.8f, 0.8f, 1.0f };
 	private float matSpec2[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	private float matShine[] = { 25.0f };
@@ -67,9 +66,6 @@ public class Avatar{
 	public void draw(GL2 gl) {
 
 		gl.glPushMatrix();
-			/*System.out.println("X" + this.myPosition[0]);
-			System.out.println("Y" + this.myPosition[1]);
-			System.out.println("Z" + this.myPosition[2]);*/
 			//Move to position
 			gl.glTranslated(this.myPosition[0], this.myPosition[1]+0.1, this.myPosition[2]);
 			gl.glRotated(getRotation(), 0, 1, 0);
@@ -78,7 +74,7 @@ public class Avatar{
 				gl.glTranslated(0, 0.3, 0);
 				gl.glBindTexture(GL2.GL_TEXTURE_2D, texture.getTextureId()); 
 				gl.glRotated(-90, 0, 1, 0);
-				gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif2,0);
+				gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif,0);
 		    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, matSpec,0);
 		    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, matShine,0);
 				glut.glutSolidTeapot(0.2);
@@ -178,4 +174,5 @@ public class Avatar{
 	public double getTilt() {
 		return myTilt;
 	}
+
 }

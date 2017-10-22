@@ -230,27 +230,17 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
             gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_SPECULAR, lightDifAndSpec,0);
     		gl.glPushMatrix();
     			double[] pos = myAvatar.getPosition();
-    			//gl.glTranslated(pos[0], pos[1], pos[2]);
-    			float[] floatPos = {(float)pos[0],(float)pos[1],(float)(pos[2]+0.75),1.0f};
+    			float[] floatPos = {(float)(pos[0]),(float)pos[1],(float)(pos[2]),1.0f};
     			gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, floatPos, 0);
     		gl.glPopMatrix();
     		gl.glLightf(GL2.GL_LIGHT1, GL2.GL_SPOT_CUTOFF, 30);
     		gl.glLightf(GL2.GL_LIGHT1, GL2.GL_SPOT_EXPONENT, 4);
-    		float[] direction = {(float)pos[0],(float)pos[1],(float)(pos[2]+0.75),1.0f};
+    		float[] direction = new float[] {0.0f, 0.5f, 0.0f};
+    		double rotation = this.myAvatar.getRotation();
+    		direction[0] = (float)Math.sin(Math.toRadians(rotation));
+    		direction[2] = (float)Math.cos(Math.toRadians(rotation));
     		gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_SPOT_DIRECTION, direction, 0);
     		gl.glPopMatrix();
-    		System.out.print(pos[0]);
-    		System.out.print(" ");
-    		System.out.print(pos[1]);
-    		System.out.print(" ");
-    		System.out.print(pos[2]);
-    		System.out.println();
-    		System.out.print(direction[0]);
-    		System.out.print(" ");
-    		System.out.print(direction[1]);
-    		System.out.print(" ");
-    		System.out.print(direction[2]);
-    		System.out.println();
     	}
     	
     	gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
