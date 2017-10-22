@@ -30,7 +30,7 @@ public class complexModel {
     public void draw(GL2 gl, Terrain t){
         gl.glPushMatrix();{
             gl.glTranslated(2,t.altitude(2,2),2);
-            gl.glScaled(0.1,0.1,0.1);
+            gl.glScaled(0.2,0.2,0.2);
             gl.glMatrixMode(GL2.GL_MODELVIEW);
             gl.glPolygonMode(GL2.GL_FRONT_AND_BACK,GL2.GL_FILL);
             gl.glBindTexture(GL2.GL_TEXTURE_2D,myTexture[i].getTextureId());

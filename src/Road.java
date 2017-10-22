@@ -22,6 +22,7 @@ public class Road {
     private MyTexture[] textures;
     private Polygon myCrossSection;
     private ArrayList<Polygon> myMesh;
+    private List<Road> myRoads;
     /** 
      * Create a new road starting at the specified point
      */
@@ -200,6 +201,7 @@ public class Road {
     public void init(GL2 gl) {
     	initCrossSection();
         gl.glEnable(GL2.GL_TEXTURE_2D);
+        myRoads = new ArrayList<Road>();
         textures = new MyTexture[2];
     	textures[0] = new MyTexture(gl,"src/textures/bricks.bmp","bmp",true);
     	textures[1] = new MyTexture(gl,"src/textures/bricks.bmp","bmp",true);
@@ -217,10 +219,12 @@ public class Road {
             gl.glBindTexture(GL2.GL_TEXTURE_2D, textures[0].getTextureId());
             gl.glPushMatrix();
 	            for (Polygon p : mesh) {
-	                p.draw(gl);                
+	                p.draw(gl);
 	            }
             gl.glPopMatrix();
         }
+//        int numPoints = 49;
+//        for (Road r:)
     }
     
     
