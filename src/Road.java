@@ -153,10 +153,10 @@ public class Road {
         //gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
         // turn on a light
-        gl.glEnable(GL2.GL_LIGHT0);
+        //gl.glEnable(GL2.GL_LIGHT0);
        
         
-    	gl.glBindTexture(GL2.GL_TEXTURE_2D, texture.getTextureId());
+    	//gl.glBindTexture(GL2.GL_TEXTURE_2D, texture.getTextureId());
 
         List<Polygon> mesh = getMesh();
         if (mesh != null) {
