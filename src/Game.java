@@ -127,11 +127,11 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 					myAvatar.getPosition()[1], myAvatar.getPosition()[2]+1, 0.0,1,0);
         }
     	setLighting(gl);
-    	changeLight(gl);
     	if(nightMode) {
     		gl.glDisable(GL2.GL_LIGHT0);
     	}
     	else {
+    		changeLight(gl);
     		gl.glEnable(GL2.GL_LIGHT0);
     	}
 		if(sunView) {
