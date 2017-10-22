@@ -40,7 +40,8 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     private boolean aPressed = false;
     private boolean sPressed = false;
     private boolean dPressed = false;
-
+    private boolean pPressed = false;
+    private boolean oPressed = false;
 
     private vboObject o = null;
     private int camStage;
@@ -156,6 +157,12 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     	}
     	if(dPressed) {
     		goRight();
+    	}
+    	if(pPressed) {
+    		this.myAvatar.rotateIndepRight();
+    	}
+    	if(oPressed) {
+    		this.myAvatar.rotateIndepLeft();
     	}
 	}
 
@@ -277,6 +284,12 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 			case KeyEvent.VK_N:
 				this.nightMode = !this.nightMode;
 				break;
+			case KeyEvent.VK_P:
+				this.pPressed = true;
+				break;
+			case KeyEvent.VK_O:
+				this.oPressed = true;
+				break;
 			default:
 				break;
 		}
@@ -307,6 +320,12 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 				break;
 			case KeyEvent.VK_D:
 				this.dPressed = false;
+				break;
+			case KeyEvent.VK_P:
+				this.pPressed = false;
+				break;
+			case KeyEvent.VK_O:
+				this.oPressed = false;
 				break;
 			default:
 				break;

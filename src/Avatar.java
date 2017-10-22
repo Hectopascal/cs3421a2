@@ -1,6 +1,7 @@
 
 import java.awt.Dimension;
 
+import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.gl2.GLUT;
 
@@ -17,12 +18,16 @@ public class Avatar{
 	private double myTilt;
 	private int myDirection;
 	
+	private double independentRotation;
+	
 	private Coord portalEntrance;
 	private Coord portalExit;
-	private String textureFileName1 = "src/textures/water.bmp";
+	private String textureFileName1 = "src/textures/orange.bmp";
+	private String textureFileName2 = "src/textures/skin.bmp";
+	private String textureFileName3 = "src/textures/black.bmp";
 	private String bmpExt = "bmp";
 	
-	private MyTexture texture;
+	private MyTexture[] texture;
 	
 	public Avatar(double x, double y, double z) {
 		this.myPosition = new double[3];
@@ -32,11 +37,21 @@ public class Avatar{
 		
 		this.myRotation = 0;
 		this.myDirection = 0;
+		
+		this.independentRotation = 0;
 	}
 	public double getRotation() {
 		return this.myRotation;
 	}
-	
+	public void rotateIndepLeft() {
+		independentRotation = (independentRotation+1) % 360;
+	}
+	public void rotateIndepRight() {
+		independentRotation = independentRotation-1;
+		if(independentRotation < 0) {
+			independentRotation += 360;
+		}
+	}
 	public void setPortals(Coord in, Coord out) {
 		portalEntrance = in;
 		portalExit = out;
@@ -61,23 +76,50 @@ public class Avatar{
 		return this.myPosition;
 	}
     public void init(GL2 gl){
-    	this.texture = new MyTexture(gl,textureFileName1,bmpExt,true);
+    	this.texture = new MyTexture[3];
+    	this.texture[0] = new MyTexture(gl,textureFileName1,bmpExt,true);
+    	this.texture[1] = new MyTexture(gl,textureFileName2,bmpExt,true);
+    	this.texture[2] = new MyTexture(gl,textureFileName3,bmpExt,true);
     }
 	public void draw(GL2 gl) {
-
+		gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);
 		gl.glPushMatrix();
 			//Move to position
 			gl.glTranslated(this.myPosition[0], this.myPosition[1]+0.1, this.myPosition[2]);
 			gl.glRotated(getRotation(), 0, 1, 0);
+			gl.glRotated(this.independentRotation, 0, 1, 0);
 			GLUT glut = new GLUT();
 			gl.glPushMatrix();
 				gl.glTranslated(0, 0.3, 0);
-				gl.glBindTexture(GL2.GL_TEXTURE_2D, texture.getTextureId()); 
+				gl.glBindTexture(GL2.GL_TEXTURE_2D, texture[0].getTextureId()); 
 				gl.glRotated(-90, 0, 1, 0);
 				gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif,0);
 		    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, matSpec,0);
 		    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, matShine,0);
-				glut.glutSolidTeapot(0.2);
+				//glut.glutSolidTeapot(0.2);
+		    	gl.glRotated(90, -90, 0, 0);
+		    	glut.glutSolidCone(0.1, 0.3, 32, 16);
+		    	gl.glTranslated(0, 0, 0.3);
+		    	gl.glBindTexture(GL2.GL_TEXTURE_2D, texture[1].getTextureId()); 
+		    	glut.glutSolidSphere(0.1, 32, 32);
+		    	gl.glBindTexture(GL2.GL_TEXTURE_2D, texture[0].getTextureId()); 
+		    	gl.glPushMatrix();
+		    	gl.glTranslated(0, 0, 0.1);
+		    	gl.glRotated(30, 0, 30, 0);
+		    	gl.glTranslated(0.04, 0, 0);
+		    	glut.glutSolidCone(0.05, 0.25, 32, 16);
+		    	gl.glPopMatrix();
+		    	gl.glPushMatrix();
+		    	gl.glBindTexture(GL2.GL_TEXTURE_2D, texture[2].getTextureId()); 
+		    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, matSpec2,0);
+		    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, matShine2,0);
+		    	gl.glTranslated(-0.06, 0.04, 0.02);
+		    	gl.glScaled(1, 0.75, 3);
+		    	glut.glutSolidSphere(0.02, 32, 16);
+		    	gl.glPopMatrix();
+		    	gl.glTranslated(-0.06, -0.04, 0.02);
+		    	gl.glScaled(1, 0.75, 3);
+		    	glut.glutSolidSphere(0.02, 32, 16);
 			gl.glPopMatrix();
 		gl.glPopMatrix();
 	}
