@@ -123,9 +123,9 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 	 		glu.gluLookAt(myAvatar.getPosition()[0], myAvatar.getPosition()[1], myAvatar.getPosition()[2], myAvatar.getPosition()[0], 
 					myAvatar.getPosition()[1], myAvatar.getPosition()[2]+1, 0.0,1,0);
         }
-    	setLighting(gl);
-		//changeLight(gl);
-        //o.draw(gl,lightPos);
+    	//setLighting(gl);
+		changeLight(gl);
+        o.draw(gl,lightPos);
     	myTerrain.draw(gl);   	
         myAvatar.draw(gl);
 
@@ -178,9 +178,9 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 
     	this.myTerrain.init(gl);
     	this.myAvatar.init(gl);
-    	//o = new vboObject(gl);
+    	o = new vboObject(gl);
 
-    	//timer();
+    	timer();
 
 	}
 
