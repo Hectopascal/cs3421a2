@@ -114,14 +114,14 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 
         if(this.firstPersonMode) {
 	 		gl.glTranslated(0, -1.3, 0);
-			cm.draw(gl,myTerrain);
+
 		 	gl.glRotated(-myAvatar.getRotation(), 0, 1, 0);
 	 		glu.gluLookAt(myAvatar.getPosition()[0], myAvatar.getPosition()[1], myAvatar.getPosition()[2], myAvatar.getPosition()[0], 
 					myAvatar.getPosition()[1], myAvatar.getPosition()[2]+1, 0.0,1, 0);
         }
         else {
 	 		gl.glTranslated(0, -1.25, -1);
-			cm.draw(gl,myTerrain);
+
 		 	gl.glRotated(-myAvatar.getRotation(), 0, 1, 0);
 	 		glu.gluLookAt(myAvatar.getPosition()[0], myAvatar.getPosition()[1], myAvatar.getPosition()[2], myAvatar.getPosition()[0], 
 					myAvatar.getPosition()[1], myAvatar.getPosition()[2]+1, 0.0,1,0);
@@ -129,8 +129,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     	setLighting(gl);
 		//changeLight(gl);
         o.draw(gl,lightPos);
-
-		changeLight(gl);
+		cm.draw(gl,myTerrain);
         //o.draw(gl,lightPos);
     	myTerrain.draw(gl);   	
         myAvatar.draw(gl);
