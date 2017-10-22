@@ -131,6 +131,8 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
         o.draw(gl,lightPos);
 		cm.draw(gl,myTerrain);
         //o.draw(gl,lightPos);
+		changeLight(gl);
+
     	myTerrain.draw(gl);   	
         myAvatar.draw(gl);
 
