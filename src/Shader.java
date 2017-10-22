@@ -57,7 +57,7 @@ public class Shader {
         gl.glLinkProgram(shaderprogram);
 
         int[] error = new int[2];
-        gl.glGetProgramiv(shaderprogram,GL2.GL_LINK_STATUS,error,9);
+        gl.glGetProgramiv(shaderprogram,GL2.GL_LINK_STATUS,error,0);
         if(error[0] != GL2.GL_TRUE){
             int[] logLength = new int[1];
             gl.glGetProgramiv(shaderprogram,GL2.GL_INFO_LOG_LENGTH, logLength, 0);

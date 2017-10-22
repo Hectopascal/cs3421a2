@@ -3,11 +3,15 @@ import java.io.FileNotFoundException;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.TimerTask;
+import java.util.Timer;
+
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.glu.GLU;
 
-import javax.swing.JFrame;
+import javax.swing.*;
+
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.gl2.GLUT;
 
@@ -23,7 +27,8 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 
     private Terrain myTerrain;
     private Avatar myAvatar;
-    
+	private Camera myCamera;
+
     private float globAmb[] = {0.1f, 0.1f, 0.1f, 1.0f};
 	private int p = 1; // Positional light 1, directional 0
 
@@ -35,13 +40,24 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     private boolean aPressed = false;
     private boolean sPressed = false;
     private boolean dPressed = false;
-    
+
+
+    private vboObject o = null;
+    private int camStage;
+    private float[] lightPos = new float[3];
     private boolean firstPersonMode = false;
-    
+	private int angleC;
+
+
+	private Timer timer;
+	private TimerTask tt;
+
     public Game(Terrain terrain) {
     	super("Assignment 2");
         myTerrain = terrain;
-   
+		angleC = -1;
+		camStage = 0;
+		myCamera = new Camera();
     }
     
     /** 
@@ -106,8 +122,9 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 	 		glu.gluLookAt(myAvatar.getPosition()[0], myAvatar.getPosition()[1], myAvatar.getPosition()[2], myAvatar.getPosition()[0], 
 					myAvatar.getPosition()[1], myAvatar.getPosition()[2]+1, 0.0, 1.0, 0.0);
         }
-    	setLighting(gl);
-    	
+    	//setLighting(gl);
+		changeLight(gl);
+        o.draw(gl,lightPos);
     	myTerrain.draw(gl);   	
         myAvatar.draw(gl);
 
@@ -148,12 +165,21 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 	public void init(GLAutoDrawable drawable) {
     	GL2 gl = drawable.getGL().getGL2();
     	gl.glEnable(GL2.GL_DEPTH_TEST);
+
+    	gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT,GL2.GL_NICEST);
+
     	gl.glEnable(GL2.GL_LIGHTING);
-    	gl.glEnable(GL2.GL_NORMALIZE);
+    	gl.glEnable(GL2.GL_LIGHT0);
+    	gl.glTexEnvf(GL2.GL_TEXTURE_ENV,GL2.GL_TEXTURE_ENV_MODE,GL2.GL_MODULATE);
+    	//gl.glEnable(GL2.GL_NORMALIZE);
     	gl.glEnable(GL2.GL_TEXTURE_2D); 
 
     	this.myTerrain.init(gl);
     	this.myAvatar.init(gl);
+    	o = new vboObject(gl);
+
+    	timer();
+
 	}
 
 
@@ -292,5 +318,64 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 		
 	}
 
+	public void changeLight(GL2 gl) {
 
+		// Change Light Position
+		float ambVal;
+		double incAngle = (2 * Math.PI / 360);
+		double radius = Math.hypot((myTerrain.size().getWidth()/2-myTerrain.getSunlight()[0]),
+				(0-myTerrain.getSunlight()[1]));
+		double initAngle = Math.atan(myTerrain.getSunlight()[0]/myTerrain.getSunlight()[0]);
+
+		// Calculate new light position
+		lightPos[0] = (float) (radius * Math.sin(incAngle*angleC + initAngle));
+		lightPos[1] = (float) (radius * Math.cos(incAngle*angleC + initAngle));
+		lightPos[2] = myTerrain.getSunlight()[2];
+
+		// Set Ambient Light
+		if (lightPos[1] >= 0) {
+			ambVal = (float) (lightPos[1]/radius + 0.1f);
+			float lightAmb[] = { ambVal, ambVal, ambVal, 1.0f };
+			gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, lightAmb,0);
+		} else {
+			float lightAmb[] = {0.3f, 0.3f, 0.3f, 1.0f};
+			gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, lightAmb,0); // Global ambient light.
+		}
+
+
+		float lightDif0[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		float lightSpec0[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+		// Light0 properties.
+		gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, lightDif0,0);
+		gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, lightSpec0,0);
+		gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, lightPos,0);
+
+
+
+		// Material
+		float matAmbAndDif[] = {0.5f, 0.5f, 0.5f, 0.5f};
+		float matSpec[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		float matShine[] = { 50.0f };
+		float emm[] = {0.0f, 0.0f, 0.0f, 1.0f};
+
+		// Material properties of teapot
+		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif,0);
+		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, matSpec,0);
+		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, matShine,0);
+		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_EMISSION, emm,0);
+	}
+
+	public void timer(){
+		timer = new Timer();
+		tt = new TimerTask() {
+			public void run(){
+				if (angleC - 1 == 359){
+						angleC = -1;
+				}
+				angleC ++;
+			}
+		};
+		timer.schedule(tt,40,40);
+	}
 }
