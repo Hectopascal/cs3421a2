@@ -16,7 +16,8 @@ public class Avatar{
 	
 	private double myRotation;
 	private double myTilt;
-	private int myDirection;
+	private double animationFrame;
+	private boolean reverseAnimate;
 	
 	private double independentRotation;
 	
@@ -25,9 +26,12 @@ public class Avatar{
 	private String textureFileName1 = "src/textures/orange.bmp";
 	private String textureFileName2 = "src/textures/skin.bmp";
 	private String textureFileName3 = "src/textures/black.bmp";
+	private String textureFileName4 = "src/textures/water.bmp";
 	private String bmpExt = "bmp";
 	
 	private MyTexture[] texture;
+	
+	private static final int animationLength = 100;
 	
 	public Avatar(double x, double y, double z) {
 		this.myPosition = new double[3];
@@ -36,17 +40,36 @@ public class Avatar{
 		this.myPosition[2] = z;
 		
 		this.myRotation = 0;
-		this.myDirection = 0;
 		
-		this.independentRotation = 0;
+		this.independentRotation = 180;
+		this.animationFrame = 1;
+		this.reverseAnimate = false;
 	}
+	
+	public void animate() {
+		if(this.reverseAnimate) {
+			this.animationFrame --;
+			if(this.animationFrame == 1) {
+				this.reverseAnimate = false;
+			}
+		}
+		else {
+			this.animationFrame++;
+			if(this.animationFrame == animationLength) {
+				this.reverseAnimate = true;
+			}
+		}
+	}
+	
 	public double getRotation() {
 		return this.myRotation;
 	}
 	public void rotateIndepLeft() {
+		this.animate();
 		independentRotation = (independentRotation+1) % 360;
 	}
 	public void rotateIndepRight() {
+		this.animate();
 		independentRotation = independentRotation-1;
 		if(independentRotation < 0) {
 			independentRotation += 360;
@@ -76,10 +99,17 @@ public class Avatar{
 		return this.myPosition;
 	}
     public void init(GL2 gl){
-    	this.texture = new MyTexture[3];
+    	this.texture = new MyTexture[4];
     	this.texture[0] = new MyTexture(gl,textureFileName1,bmpExt,true);
     	this.texture[1] = new MyTexture(gl,textureFileName2,bmpExt,true);
     	this.texture[2] = new MyTexture(gl,textureFileName3,bmpExt,true);
+    	this.texture[3] = new MyTexture(gl,textureFileName4,bmpExt,true);
+    }
+    public double[] handAnimation() {
+    	double[] pos = new double[] {0,0,0};
+	    pos[1] += 0.2/(animationLength - this.animationFrame);
+	    pos[2] += 0.2/(animationLength - this.animationFrame);
+    	return pos;
     }
 	public void draw(GL2 gl) {
 		gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL2.GL_FILL);
@@ -98,32 +128,59 @@ public class Avatar{
 		    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, matShine,0);
 				//glut.glutSolidTeapot(0.2);
 		    	gl.glRotated(90, -90, 0, 0);
+		    	//Body
 		    	glut.glutSolidCone(0.1, 0.3, 32, 16);
-		    	gl.glTranslated(0, 0, 0.3);
-		    	gl.glBindTexture(GL2.GL_TEXTURE_2D, texture[1].getTextureId()); 
-		    	glut.glutSolidSphere(0.1, 32, 32);
-		    	gl.glBindTexture(GL2.GL_TEXTURE_2D, texture[0].getTextureId()); 
+		    	//Hands
 		    	gl.glPushMatrix();
-		    	gl.glTranslated(0, 0, 0.1);
-		    	gl.glRotated(30, 0, 30, 0);
-		    	gl.glTranslated(0.04, 0, 0);
-		    	glut.glutSolidCone(0.05, 0.25, 32, 16);
+			    	gl.glTranslated(-0.1, 0.1, 0.2);
+			    	//Animation
+			    	double[] anim = this.handAnimation();
+			    	gl.glTranslated(anim[0], anim[1], anim[2]);
+			    	glut.glutSolidSphere(0.03, 32, 32);
+			    	//Teapot in Hand
+			    	gl.glPushMatrix();
+				    	gl.glTranslated(-0.05, 0, 0);
+				    	gl.glRotated(90, 90,0,0);
+				    	gl.glRotated(90, 0, 90,0);
+				    	gl.glRotated(90, 0, 90,0);
+				    	gl.glBindTexture(GL2.GL_TEXTURE_2D, texture[3].getTextureId()); 
+				    	glut.glutSolidTeapot(0.05);
+			    	gl.glPopMatrix();
 		    	gl.glPopMatrix();
+		    	//Head
 		    	gl.glPushMatrix();
-		    	gl.glBindTexture(GL2.GL_TEXTURE_2D, texture[2].getTextureId()); 
-		    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, matSpec2,0);
-		    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, matShine2,0);
-		    	gl.glTranslated(-0.06, 0.04, 0.02);
-		    	gl.glScaled(1, 0.75, 3);
-		    	glut.glutSolidSphere(0.02, 32, 16);
+			    	gl.glTranslated(0, 0, 0.3);
+			    	gl.glBindTexture(GL2.GL_TEXTURE_2D, texture[1].getTextureId()); 
+			    	glut.glutSolidSphere(0.1, 32, 32);
+			    	gl.glBindTexture(GL2.GL_TEXTURE_2D, texture[0].getTextureId()); 
+			    	//Hat
+			    	gl.glPushMatrix();
+				    	gl.glTranslated(0, 0, 0.1);
+				    	gl.glRotated(30, 0, 30, 0);
+				    	gl.glTranslated(0.04, 0, 0);
+				    	glut.glutSolidCone(0.05, 0.25, 32, 16);
+			    	gl.glPopMatrix();
+			    	//Left eye
+			    	gl.glPushMatrix();
+				    	gl.glBindTexture(GL2.GL_TEXTURE_2D, texture[2].getTextureId()); 
+				    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, matSpec2,0);
+				    	gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, matShine2,0);
+				    	gl.glTranslated(-0.06, 0.04, 0.02);
+				    	gl.glScaled(1, 0.75, 3);
+				    	glut.glutSolidSphere(0.02, 32, 16);
+			    	gl.glPopMatrix();
+			    	//Right eye
+			    	gl.glPushMatrix();
+				    	gl.glTranslated(-0.06, -0.04, 0.02);
+				    	gl.glScaled(1, 0.75, 3);
+				    	glut.glutSolidSphere(0.02, 32, 16);
+				    gl.glPopMatrix();
 		    	gl.glPopMatrix();
-		    	gl.glTranslated(-0.06, -0.04, 0.02);
-		    	gl.glScaled(1, 0.75, 3);
-		    	glut.glutSolidSphere(0.02, 32, 16);
 			gl.glPopMatrix();
 		gl.glPopMatrix();
 	}
 	public void goForwards(Dimension size) {
+		this.animate();
 		final double movement = 0.05;
 		double xMove=myPosition[0];
 		double zMove=myPosition[2];
@@ -149,7 +206,7 @@ public class Avatar{
 				&& myPosition[2] > portalEntrance.z -range &&myPosition[2] > portalEntrance.z +range);				
 	}
 	public void goBackwards(Dimension size) {
-		
+		this.animate();
 		final double movement = -0.05;
 		//double angleFromQuadrant = this.myRotation % 90;
 		double xMove=myPosition[0];
