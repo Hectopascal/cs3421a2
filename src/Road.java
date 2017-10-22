@@ -12,7 +12,7 @@ public class Road {
 
     private List<Double> myPoints;
     private double myWidth;
-    private static final double SCALE = 0.5;
+    private static final double SCALE = 0.3;
     private Polygon myCrossSection;
     private MyTexture texture;
     private String textureFileName = "src/textures/bricks.bmp";
