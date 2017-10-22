@@ -27,7 +27,6 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
 
     private Terrain myTerrain;
     private Avatar myAvatar;
-	private Camera myCamera;
 
     private float globAmb[] = {0.1f, 0.1f, 0.1f, 1.0f};
 	private int p = 1; // Positional light 1, directional 0
@@ -61,7 +60,6 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
         myTerrain = terrain;
 		angleC = -1;
 		camStage = 0;
-		myCamera = new Camera();
     }
     
     /** 
@@ -239,7 +237,6 @@ public class Game extends JFrame implements GLEventListener, KeyListener {
     		lightAmb = new float[] { 0.5f, 0.5f, 0.5f, 1.0f };
 	    	lightDifAndSpec = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
     		gl.glEnable(GL2.GL_LIGHT1);
-    		GLUT glut = new GLUT();
     		//Position the spotlight
             gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_AMBIENT, lightAmb,0);
             gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_DIFFUSE, lightDifAndSpec,0);
