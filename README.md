@@ -13,7 +13,6 @@ Portals that will teleport the character and camera between them
 A VBO object (drawn using shaders rather than default 3d shapes with textures in OpenGL)
 Roads which are described in the world building text file (they can go up hills too!)
 
-Images:
 ![Internet's Slow?](https://puu.sh/y4jjj/c721a7242b.jpg)
 ![Internet's Slow.](https://puu.sh/y4jjY/8c2cc2586d.jpg)
 
